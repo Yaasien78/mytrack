@@ -10,7 +10,7 @@
   <button id="loginBtn" style="padding:10px 20px; font-size:16px;">Sign in with Pi</button>
 
   <script>
-  Pi.init({ version: "2.0", sandbox: false });
+  Pi.init({ version: "2.0", sandbox: true });
 
 document.getElementById("loginBtn").onclick = function() {
   Pi.authenticate(['username'], function(auth) {}, function(err){
