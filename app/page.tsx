@@ -1,28 +1,47 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+
+declare global {
+  interface Window {
+    Pi: any
+  }
+}
 
 export default function Home() {
+  const [piReady, setPiReady] = useState(false)
+
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.Pi) {
-      window.Pi.init({ version: "2.0", sandbox: true })
-    }
+    const checkPi = setInterval(() => {
+      if (window.Pi) {
+        window.Pi.init({ version: "2.0", sandbox: true })
+        setPiReady(true)
+        clearInterval(checkPi)
+      }
+    }, 100)
+    return () => clearInterval(checkPi)
   }, [])
 
   const handleLogin = async () => {
     try {
-      const auth = await window.Pi.authenticate(['username', 'payments'], () => {})
-      alert('Username Pi lu: ' + auth.user.username)
+      const scopes = ['username', 'payments']
+      const auth = await window.Pi.authenticate(scopes, () => {})
+      alert('Login berhasil! Username: ' + auth.user.username)
     } catch (e) {
-      alert('Error: ' + e)
+      alert('Error login: ' + JSON.stringify(e))
     }
   }
 
   return (
     <div style={{padding: '50px', textAlign: 'center'}}>
-      <h1>NFT Social</h1>
-      <button onClick={handleLogin} style={{padding: '10px 20px', fontSize: '16px'}}>
-        Sign in with Pi
+      <h1>Pi App is running</h1>
+      <p>Click button to sign in</p>
+      <button 
+        onClick={handleLogin} 
+        disabled={!piReady}
+        style={{padding: '10px 20px', fontSize: '16px'}}
+      >
+        {piReady ? 'Sign in with Pi' : 'Loading Pi SDK...'}
       </button>
     </div>
   )
-                      }
+}
