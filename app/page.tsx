@@ -1,33 +1,38 @@
-'use client'
+'use client'//
+import { useEffect } from 'react'
 
-declare global {
-  interface Window {
-    Pi: any
-  }
-}
+export default function LoginButton() {
+  useEffect(() => {
+    // Load Pi SDK
+    const script = document.createElement('script')
+    script.src = 'https://sdk.minepi.com/pi-sdk.js'
+    script.async = true
+    document.body.appendChild(script)
 
-export default function Home() {
-  const handleLogin = async () => {
-    if (!window.Pi) {
-      alert('Pi SDK not loaded!')
-      return
+    script.onload = () => {
+      window.Pi.init({ version: "2.0", sandbox: false })
     }
-    
+  }, [])
+
+  const handleLogin = async () => {
     try {
-      window.Pi.init({ version: "2.0", sandbox: true })
-      const auth = await window.Pi.authenticate(['username'], () => {})
-      alert('Success! Username: ' + auth.user.username)
-    } catch (e) {
-      alert('Error: ' + JSON.stringify(e))
+      // INI KUNCINYA BANG
+      const auth = await window.Pi.authenticate(
+        ['username', 'payments'], // scope
+        (payment) => { console.log('Incomplete payment', payment) } // callback
+      )
+      
+      console.log('Login berhasil:', auth)
+      // Kirim auth.user ke backend lu di /api/auth/callback/pi
+      
+    } catch (err) {
+      console.error('Login gagal:', err)
     }
   }
 
   return (
-    <div style={{padding: '50px', textAlign: 'center'}}>
-      <h1>Pi App is running</h1>
-      <button onClick={handleLogin} style={{padding: '10px 20px', fontSize: '16px'}}>
-        Sign in with Pi
-      </button>
-    </div>
+    <button onClick={handleLogin}>
+      Sign in with Pi
+    </button>
   )
-                                            }
+}
