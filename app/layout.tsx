@@ -1,10 +1,16 @@
-export default function RootLayout({ children }) {
+export const metadata = {
+  title: 'NFT Social',
+  description: 'Pi NFT App',
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html>
-      <head>
-        <script src="https://sdk.minepi.com/pi-sdk.js" async></script>
-      </head>
+    <html lang="en">
       <body>{children}</body>
     </html>
   )
-        }
+}
