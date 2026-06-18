@@ -1,43 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>NFT Social</title>
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NFT Social - Pi Network</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      color: white;
+      text-align: center;
+      padding: 50px 20px;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: rgba(255,255,255,0.1);
+      padding: 30px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+    h1 { margin-bottom: 10px; }
+    p { margin-bottom: 30px; opacity: 0.9; }
+    button {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #loginBtn {
+      background: #ffc700;
+      color: #000;
+    }
+    #buyBtn {
+      background: #4CAF50;
+      color: white;
+      display: none;
+    }
+    button:hover { opacity: 0.8; }
+    #status {
+      margin-top: 20px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Pi App is running</h1>
-  <p id="status">Click button to sign in</p>
-  <button id="loginBtn" style="padding:10px 20px; font-size:16px;">Sign in with Pi</button>
+  <div class="container">
+    <h1>🎨 NFT Social</h1>
+    <p>bagi kreator NFT di jaringan Pi Network dan dapatkan hadiah</p>
+    
+    <button id="loginBtn" onclick="login()">Login with Pi</button>
+    <button id="buyBtn" onclick="buyNFT()">Beli NFT 0.01 Pi</button>
+    
+    <div id="status">Belum login</div>
+  </div>
 
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
-  Pi.init({ version: "2.0", sandbox: true });
-
-document.getElementById("loginBtn").onclick = function() {
-  Pi.authenticate(['username'], function(auth) {}, function(err){
-    alert("Pi Login Error: " + JSON.stringify(err));
-    document.getElementById("status").innerText = "Error: " + err;
-  })
-  .then(function(auth) {
-    return fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        accessToken: auth.accessToken,
-        username: auth.user.username,
-        uid: auth.user.uid
-      })
+    // GANTI appId sesuai App ID lu di Pi Developer Portal
+    Pi.init({ 
+      version: "2.0", 
+      sandbox: true, // ganti false kalau udah live
+      appId: "nftsosial2846" 
     })
-  })
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById("status").innerText = "Signed in as " + data.user.username;
-    document.getElementById("loginBtn").style.display = "none";
-  })
-  .catch(function(error) {
-    document.getElementById("status").innerText = "Error: " + error;
-  });
-};
-    };
-  </script>
-</body>
-</html>
+
+    let currentUser = null;
+
+    async function login() {
+      document.getElementById('status').innerText = 'Loading...';
+      try {
+        const auth = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
+        currentUser = auth.user;
+        document.getElementById('status').innerText = 'Halo ' + currentUser.username + ' ✅';
+        document.getElementById('loginBtn').style.display = 'none';
+        document.getElementById('buyBtn').style.display = 'block';
+      } catch (err) {
+        console.error(err);
+        document.getElementById('status').innerText = 'Login gagal: ' + err.message;
+      }
+    }
+
+    function buyNFT() {
+      const paymentData = {
+        amount: 0.01,
+        memo: "Beli NFT Social",
+        metadata: { item: "NFT Digital", user: currentUser.username }
+      };
+
+      const paymentCallbacks = {
+        onReadyForServerApproval: function(paymentId) {
+          console.log("Approval:", paymentId);
+          document.getElementById('status').innerText = 'Menunggu approval server...';
+          // Nanti disini lu kirim paymentId ke backend lu
+        },
+        onReadyForServerCompletion: function(paymentId, txid) {
+          console.log("Completion:", paymentId, txid);
+          document.getElementById('status').innerText = 'Pembayaran sukses! TX: ' + txid;
+          alert('NFT berhasil dibeli! 🎉');
+        },
+        onCancel: function(paymentId) {
+          document.getElementById('status').innerText = 'Pembayaran dibatalkan';
+        },
+        onError: function(error, payment) {
+          console.error(error);
+          document.getElementById('status').innerText = 'Error: ' + error;
+        }
+      };
+
+      Pi.createPayment(paymentData, paymentCallbacks);
+    }
+
+    function onIncompletePaymentFound(payment) {
+      console.log("Incomplete payment found:", payment);
+      // Pi otomatis resume payment yg belum selesai
+    }
+  </
