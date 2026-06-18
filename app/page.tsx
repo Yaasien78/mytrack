@@ -1,78 +1,71 @@
-'use client'
-import { useState } from 'react'
+"use client"
+import { useEffect, useState } from "react"
 
 declare global {
   interface Window {
-    Pi: any;
+    Pi: any
   }
 }
 
-export default function Home() {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+export default function Page() {
+  const [piReady, setPiReady] = useState(false)
 
-  const handleLogin = async () => {
-    setLoading(true);
-    try {
-      await window.Pi.init({
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.Pi) {
+      window.Pi.init({
         version: "2.0",
-        sandbox: true
-        appId:"vz83ocyd1n24qre7bhayswur7gop1xzydavhmlvc5cimggyuad0wffenydytchkn"
+        sandbox: true,
+        appId: process.env.NEXT_PUBLIC_PI_CLIENT_KEY || "paste_client_key_lu_disini",
+        onIncompletePaymentFound: async (payment: any) => {
+          console.log("Opsi 9 - Incomplete payment found:", payment.identifier)
+          await fetch("/api/complete", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ paymentId: payment.identifier, txid: payment.transaction?.txid })
+          })
+        }
       })
-
-      const scopes = ['username'];
-
-      const auth = await window.Pi.authenticate(scopes, (payment: any) => {
-        console.log("Incomplete payment:", payment.identifier)
-      })
-
-      setUser(auth.user);
-      console.log("Login success:", auth.user);
-      setLoading(false);
-    } catch (e) {
-      console.error(e);
-      setLoading(false);
+      setPiReady(true)
     }
-  }
+  }, [])
 
-  const handlePayment = async () => {
+  const handleMint = async () => {
+    if (!piReady) return alert("Pi SDK belum ready")
+    
     const paymentData = {
-      amount: 1,
-      memo: "Mint NFT Genesis",
-      metadata: { item: "NFT Genesis" }
+      amount: 0.01,
+      memo: "Mint NFT 0.01 Pi",
+      metadata: { product: "nft_mint", price: 0.01 }
     }
 
-    const paymentId = await window.Pi.createPayment(paymentData, {
+    window.Pi.createPayment(paymentData, {
       onReadyForServerApproval: async (paymentId: string) => {
-        await fetch('/api/payments/approve', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
+        console.log("Opsi 10 - Approve:", paymentId)
+        await fetch("/api/approve", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ paymentId })
         })
       },
       onReadyForServerCompletion: async (paymentId: string, txid: string) => {
-        await fetch('/api/payments/complete', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
+        console.log("Opsi 11 - Complete:", paymentId)
+        await fetch("/api/complete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ paymentId, txid })
         })
-        alert("NFT Berhasil di-Mint! 🎉")
       },
-      onCancel: () => console.log("Cancel"),
-      onError: (error: any) => console.error(error)
+      onCancel: (paymentId: string) => console.log("Cancelled:", paymentId),
+      onError: (error: any) => console.error("Error:", error)
     })
   }
 
   return (
     <div>
-      <h1>NFT Social</h1>
-      {!user ? (
-        <button onClick={handleLogin} disabled={loading}>
-          {loading ? "Loading..." : "Login Pi"}
-        </button>
-      ) : (
-        <button onClick={handlePayment}>Mint NFT Genesis - 1 Pi</button>
-      )}
+      <h1>Mint NFT - 0.01 Pi</h1>
+      <button onClick={handleMint} disabled={!piReady}>
+        {piReady ? "Mint Sekarang" : "Loading Pi SDK..."}
+      </button>
     </div>
   )
-}
+                      }
