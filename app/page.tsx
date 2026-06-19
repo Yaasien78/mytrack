@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef, ChangeEvent } from "react";
-import { Sun, Moon, Camera, Trash2, RefreshCw, Save } from "lucide-react";
+import { useState } from 'react';
+import { Sun, Moon, Camera } from 'lucide-react';
 
-export default function CoverDepan() {
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+export default function Home() {
+  const [dark, setDark] = useState(false);
+  //
   const [foto, setFoto] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
