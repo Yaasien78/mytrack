@@ -10,6 +10,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+initpi();//  
   return (
     <html lang="en">
       <head>
