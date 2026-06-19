@@ -1,4 +1,4 @@
-"use client";
+"use client";//
 
 import { useState } from 'react';
 import { Sun, Moon, Camera } from 'lucide-react';
