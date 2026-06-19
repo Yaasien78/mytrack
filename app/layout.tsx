@@ -1,4 +1,5 @@
 import './globals.css'
+import Script from 'next/script'
 
 export const metadata = {
   title: 'NFT Social',
@@ -10,13 +11,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-initpi();//  
   return (
     <html lang="en">
-      <head>
-        <script src="https://sdk.minepi.com/pi-sdk.js" async defer></script>
-      </head>
       <body>{children}</body>
+      
+      {/* Pi SDK taruh paling bawah */}
+      <Script 
+        src="https://sdk.minepi.com/pi-sdk.js" 
+        strategy="afterInteractive" 
+      />
     </html>
   )
 }
