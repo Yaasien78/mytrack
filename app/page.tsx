@@ -65,9 +65,9 @@ export default function Home() {
       {/* Lingkaran Besar + Logo Pi Emas Transparan */}
       <div className={`absolute w-[400px] h-[400px] rounded-full backdrop-blur-sm transition
         ${darkMode? "bg-gradient-to-br from-yellow-400/10 to-yellow-600/5" : "bg-gradient-to-br from-yellow-300/20 to-yellow-500/10"}`}>
-        <img src="/pi-logo-gold.png" className={`w-full h-full object-contain transition ${darkMode? "opacity-20" : "opacity-30"}`} alt="Pi Logo" />
-      </div>
-
+        <div className="w-32 h-32 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-2xl">
+  <span className="text-7xl font-bold text-white">π</span>
+</div>
       {/* Konten Utama */}
       <div className="relative z-10 text-center space-y-6">
 
