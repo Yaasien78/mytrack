@@ -18,5 +18,5 @@
      "react-dom": "18.3.1",
      "lucide-react": "^0.294.0",
      "@pinetwork/sdk": "^2.2.2"
-  },
+  }
 }
