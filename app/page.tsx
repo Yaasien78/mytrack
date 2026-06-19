@@ -13,39 +13,47 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const checkPi = setInterval(() => {
-      if (window.Pi) {
-        setIsPiBrowser(true)
-        // "nft-social-testnet"
-        window.Pi.init({ 
-          version: "2.0", 
-          sandbox: true,
-          appId: "nft-social-testnet" //
-        })
-        clearInterval(checkPi)
-      }
-    }, 100)
-    return () => clearInterval(checkPi)
-  }, [])
-
-  const handleLogin = async () => {
-    if (!isPiBrowser) {
-      alert("Buka app ini di Pi Browser ya bang!")
-      return
+    useEffect(() => {
+  let tries = 0
+  const checkPi = setInterval(() => {
+    tries++
+    if (window.Pi) {
+      setIsPiBrowser(true)
+      alert("✅ SDK Pi ketemu! App ID: nft-social-testnet")
+      window.Pi.init({ 
+        version: "2.0", 
+        sandbox: true,
+        appId: "nft-social-testnet"
+      })
+      clearInterval(checkPi)
     }
-
-    setLoading(true)
-    try {
-      const auth = await window.Pi.authenticate(
-        ['username', 'payments'], 
-        (payment) => console.log('Incomplete:', payment)
-      )
-      setUser(auth.user)
-    } catch (err) {
-      console.error("Login error:", err)
-      alert("Login gagal: " + err)
+    if (tries > 30) {
+      alert("❌ SDK Pi GAGAL ke-load. Cek layout.tsx + refresh Pi Browser")
+      clearInterval(checkPi)
     }
-    setLoading(false)
+  }, 100)
+  return () => clearInterval(checkPi)
+}, [])
+const handleLogin = async () => {
+  if (!isPiBrowser) {
+    alert("❌ Buka app ini di Pi Browser, jangan Chrome!")
+    return
+  }
+
+  setLoading(true)
+  try {
+    alert("⏳ Mencoba login...")
+    const auth = await window.Pi.authenticate(
+      ['username', 'payments'], 
+      (payment) => alert('Ada payment pending: ' + payment.identifier)
+    )
+    alert("✅ Login berhasil! Halo " + auth.user.username)
+    setUser(auth.user)
+  } catch (err) {
+    alert("❌ Login error: " + err)
+  }
+  setLoading(false)
+              }
   }
 
   return (
