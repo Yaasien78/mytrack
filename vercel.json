@@ -1,5 +1,20 @@
 {
+  "builds": [
+    {
+      "src": "server.js-backend",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/server.js-backend"
+    }
+  ],
   "rewrites": [
-    { "source": "/validation-key.txt", "destination": "https://nft-social.vercel.app/validation-key.txt" }
+    {
+      "source": "/validation-key.txt",
+      "destination": "https://nft-social.vercel.app/validation-key.txt"
+    }
   ]
 }
