@@ -1,10 +1,11 @@
 import express from 'express'
 import fetch from 'node-fetch'
 import session from 'express-session'
-import cors = from 'cors';
-app.use(cors());
+import cors from 'cors'
+
 const app = express()
-app.use(express.json())
+app.use(cors())              // ini paling atas
+app.use(express.json())      // baru ini
 app.use(express.static('.'))
 app.use(session({ secret: 'ganti-ini-jadi-random', resave: false, saveUninitialized: true }))
 
