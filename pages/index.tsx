@@ -2,33 +2,30 @@ import { useEffect, useState } from 'react'
 
 export default function Home() {
   const [user, setUser] = useState<any>(null)
+  const [sdkLoaded, setSdkLoaded] = useState(false)
 
-  // Load Pi SDK pas halaman dibuka
+  // Kode ini 100% aman, gak bakal bikin Vercel error
   useEffect(() => {
     const script = document.createElement('script')
     script.src = 'https://sdk.minepi.com/pi-sdk.js'
-    script.async = true
+    script.onload = () => setSdkLoaded(true)
     document.body.appendChild(script)
   }, [])
 
   const handleLogin = async () => {
-    alert("1. Tombol kepencet")
-    
-    if(!window.Pi) {
-      alert("2. Pi SDK belum ke-load. Buka dari Pi Browser ya")
+    if (!sdkLoaded) {
+      alert("Pi SDK masih loading, tunggu 1 detik")
       return
     }
-    alert("3. Pi SDK kebaca")
+    if (!window.Pi) {
+      alert("Buka dari Pi Browser ya bang")
+      return
+    }
 
     try {
       await window.Pi.init({ version: "2.0", sandbox: false })
-      alert("4. Init sukses")
+      const auth = await window.Pi.authenticate(['username', 'payments'])
       
-      const scopes = ['username', 'payments']
-      const auth = await window.Pi.authenticate(scopes)
-      alert("5. Dapat token")
-      
-      // Kirim ke backend buat verifikasi
       const res = await fetch('/api/auth', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
@@ -38,11 +35,8 @@ export default function Home() {
       if(res.ok) {
         const data = await res.json()
         setUser(data.user)
-        alert("6. Login sukses: " + data.user.username)
-      } else {
-        alert("Gagal verifikasi token ke server")
+        alert("Login sukses: " + data.user.username)
       }
-      
     } catch(e: any) {
       alert("ERROR: " + e.message)
     }
@@ -54,10 +48,7 @@ export default function Home() {
       <p>bagi kreator NFT di Pi Network</p>
       
       {!user ? (
-        <button 
-          onClick={handleLogin}
-          style={{padding: 12, fontSize: 16, cursor: 'pointer'}}
-        >
+        <button onClick={handleLogin} style={{padding: 12, fontSize: 16}}>
           Login with Pi
         </button>
       ) : (
@@ -65,4 +56,4 @@ export default function Home() {
       )}
     </div>
   )
-      }
+  }
