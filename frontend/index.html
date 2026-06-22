@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>NFT Social App</title></head>
+<body>
+<h1>NFT Social App</h1>
+<p id="status">Ngetes backend...</p>
+<script>
+const BACKEND_URL = 'https://backend-nine-beta-50.vercel.app';
+fetch(BACKEND_URL)
+  .then(res => res.json())
+  .then(data => document.getElementById('status').innerText = 'Backend nyambung: ' + JSON.stringify(data))
+  .catch(err => document.getElementById('status').innerText = 'Gagal konek: ' + err);
+</script>
+</body>
+</html>
