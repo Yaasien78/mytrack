@@ -2,11 +2,12 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Mall Genesis Space</title>
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden;width:100%;max-width:100%} /* kunci biar gak scroll kanan kiri */
 body{
   background:#000;color:#fff;font-family:Arial;min-height:100vh;
   background-image:
@@ -18,25 +19,29 @@ body{
 }
 @keyframes stars{ from{background-position:0 0} to{background-position:-10000px 5000px} }
 
-/* HEADER 58PX BIAR PAS 46PX FOTO + BORDER 3PX ATAS BAWAH */
-.header{position:fixed;top:0;left:0;width:100%;height:58px;background:#6a0dad;border-bottom:3px solid #FFD700;display:flex;align-items:center;justify-content:space-between;padding:0 8px;z-index:100}
-.header-left{display:flex;align-items:center;gap:8px}
-.header-left button{background:#FFD700;border:none;color:#6a0dad;width:36px;height:36px;border-radius:8px;font-size:18px;font-weight:900;cursor:pointer}
+/* HEADER 56PX + FOTO 40PX PAS TENGAH */
+.header{position:fixed;top:0;left:0;width:100%;height:56px;background:#6a0dad;border-bottom:3px solid #FFD700;display:flex;align-items:center;justify-content:space-between;padding:0 6px;z-index:100}
+.header-left{display:flex;align-items:center;gap:6px}
+.header-left button{background:#FFD700;border:none;color:#6a0dad;width:34px;height:34px;border-radius:8px;font-size:18px;font-weight:900;cursor:pointer}
 .back-btn{display:none;background:#ff69b4!important;color:#fff!important;font-size:22px!important}
-.header-center h2{color:#FFD700;font-size:17px;text-shadow:0 0 10px #FFD700}
+.header-center h2{color:#FFD700;font-size:16px;text-shadow:0 0 10px #FFD700}
 
-/* FOTO PROFIL KECIL PAS DI TENGAH HEADER */
-.header-right{height:100%;display:flex;align-items:center}
+/* FOTO PROFIL 40PX = HEADER 56 - BORDER 3*2 - PADDING 5*2 */
+.header-right{height:100%;display:flex;align-items:center;padding:5px 0}
 .header-right.profile{
-  width:42px;height:42px;border-radius:50%;border:2px solid #FFD700;
+  width:40px;height:40px;border-radius:50%;border:2px solid #FFD700;
   overflow:hidden;cursor:pointer;box-shadow:0 0 8px #FFD700;
+  flex-shrink:0;
 }
-.header-right.profile img{width:100%;height:100%;object-fit:cover;display:block}
+.header-right.profile img{width:40px;height:40px;object-fit:cover;display:block}
 
-/* PREVIEW BESAR CUMA 2 DETIK */
+/* PAKSA SEMUA IMG GAK BOLEH LEBIH DARI LAYAR */
+img{max-width:100%!important;height:auto!important;display:block}
+
+/* PREVIEW FOTO */
 .preview-foto{
   display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-  width:80%;max-width:300px;z-index:999;background:#000;
+  width:90%;max-width:320px;z-index:999;background:#000;
   border:3px solid #FFD700;border-radius:15px;padding:10px;
   box-shadow:0 0 40px rgba(255,215,0,0.8)
 }
@@ -47,31 +52,30 @@ body{
 #inputGaleri{display:none}
 
 /* LAYAR */
-.screen{display:none;margin-top:58px;margin-bottom:60px;min-height:calc(100vh - 118px)}
+.screen{display:none;margin-top:56px;margin-bottom:60px;min-height:calc(100vh - 116px);width:100%;overflow-x:hidden}
 .screen.active{display:block}
 
-/* HOME - PASTIIN IMG GAK FULL LAYAR */
-.content{padding:20px 10px;display:flex;flex-direction:column;align-items:center;gap:20px}
-.post{width:100%;max-width:500px;background:rgba(0,0,20,0.85);border:2px solid rgba(106,13,173,0.8);border-radius:15px;padding:15px}
-.post-img{width:100%;max-width:100%;height:auto;border-radius:12px;margin:10px 0;border:1px solid rgba(255,215,0,0.3);display:block}
-.post-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.post-user{display:flex;align-items:center;gap:10px}
-.post-user img{width:40px;height:40px;border-radius:50%;border:2px solid #FFD700}
-.post-user span{color:#FFD700;font-weight:700;font-size:15px}
-.post-price button{background:#FFD700;color:#6a0dad;padding:7px 14px;border-radius:10px;font-weight:900;font-size:13px;border:2px solid #6a0dad;cursor:pointer}
-.post-act{display:flex;justify-content:space-around;padding-top:12px;margin-top:12px;border-top:1px solid rgba(106,13,173,0.5)}
-.post-act button{background:none;border:none;color:#FFD700;cursor:pointer;font-weight:700;font-size:14px;padding:6px}
+/* HOME - KUNCI LEBAR POST */
+.content{padding:15px 8px;display:flex;flex-direction:column;align-items:center;gap:15px;width:100%;max-width:100%;overflow-x:hidden}
+.post{width:100%;max-width:480px;background:rgba(0,0,20,0.85);border:2px solid rgba(106,13,173,0.8);border-radius:15px;padding:12px;overflow:hidden} /* overflow hidden biar img gak keluar */
+.post-img{width:100%!important;max-width:100%!important;border-radius:12px;margin:10px 0;border:1px solid rgba(255,215,0,0.3)}
+.post-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.post-user{display:flex;align-items:center;gap:8px}
+.post-user img{width:36px;height:36px;border-radius:50%;border:2px solid #FFD700;flex-shrink:0}
+.post-user span{color:#FFD700;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.post-price button{background:#FFD700;color:#6a0dad;padding:6px 12px;border-radius:10px;font-weight:900;font-size:12px;border:2px solid #6a0dad;cursor:pointer;flex-shrink:0}
+.post-act{display:flex;justify-content:space-around;padding-top:10px;margin-top:10px;border-top:1px solid rgba(106,13,173,0.5)}
+.post-act button{background:none;border:none;color:#FFD700;cursor:pointer;font-weight:700;font-size:13px;padding:5px}
 
 /* PAGE LAIN */
-.page-box{padding:20px;text-align:center}
-.page-box h3{color:#FFD700;font-size:22px;margin-bottom:15px}
+.page-box{padding:20px;text-align:center;width:100%}
 
 /* FOOTER PINK */
 .footer{position:fixed;bottom:0;left:0;width:100%;height:60px;background:#ff69b4;border-top:3px solid #FFD700;display:flex;z-index:100}
-.footer button{width:50%;border:none;background:transparent;color:#fff;font-weight:900;font-size:15px;cursor:pointer}
+.footer button{width:50%;border:none;background:transparent;color:#fff;font-weight:900;font-size:14px;cursor:pointer}
 
 /* CHAT LAYER */
-.chat-layer{display:none;position:fixed;top:58px;left:0;width:100%;height:calc(100vh - 118px);background:rgba(0,0,20,0.95);z-index:200;flex-direction:column}
+.chat-layer{display:none;position:fixed;top:56px;left:0;width:100%;height:calc(100vh - 116px);background:rgba(0,0,20,0.95);z-index:200;flex-direction:column}
 .chat-header{height:50px;background:#6a0dad;border-bottom:2px solid #FFD700;display:flex;align-items:center;justify-content:space-between;padding:0 15px;color:#FFD700;font-weight:900}
 .chat-header button{background:none;border:none;color:#FFD700;font-size:20px;cursor:pointer}
 .chat-tab{display:flex;background:#001122;border-bottom:1px solid #6a0dad}
@@ -99,12 +103,10 @@ body{
   </div>
 </div>
 
-<!-- PREVIEW FOTO BESAR 2 DETIK -->
 <div class="preview-foto" id="previewFoto">
   <img id="imgPreview">
 </div>
 
-<!-- HOME -->
 <div class="screen active" id="home">
   <div class="content">
     <div class="post">
@@ -117,7 +119,7 @@ body{
           <button onclick="beliNFT(this, 'yaasien', 1.5, 'nft_001')">💰 1.5 Pi</button>
         </div>
       </div>
-      <img class="post-img" src="https://picsum.photos/500/400?random=1">
+      <img class="post-img" src="https://picsum.photos/480/400?random=1">
       <div class="post-act">
         <button onclick="likeNFT(this, 'yaasien', 'nft_001')">❤️ Like 0.01 Pi</button>
         <button onclick="followUser(this, 'yaasien')">➕ Follow</button>
@@ -127,22 +129,12 @@ body{
   </div>
 </div>
 
-<!-- EXPLORE -->
-<div class="screen" id="explore">
-  <div class="page-box"><h3>🔍 Explore NFT</h3><p>Coming Soon</p></div>
-</div>
-
-<!-- NOTIF -->
-<div class="screen" id="notif">
-  <div class="page-box"><h3>🔔 Notifikasi</h3><p>@user123 like post lu</p></div>
-</div>
-
-<!-- PROFIL -->
+<div class="screen" id="explore"><div class="page-box"><h3>🔍 Explore NFT</h3></div></div>
+<div class="screen" id="notif"><div class="page-box"><h3>🔔 Notifikasi</h3></div></div>
 <div class="screen" id="profil">
   <div class="page-box">
     <h3>👤 Profil @user_test</h3>
-    <img id="fotoProfilBesar" src="https://i.pravatar.cc/150" style="width:120px;height:120px;border-radius:50%;border:3px solid #FFD700;margin:15px auto;display:block">
-    <p>Saldo: 5.5 Test-Pi</p>
+    <img id="fotoProfilBesar" src="https://i.pravatar.cc/150" style="width:120px;height:120px;border-radius:50%;border:3px solid #FFD700;margin:15px auto">
     <button onclick="document.getElementById('inputGaleri').click()" style="margin-top:20px;padding:10px 20px;background:#FFD700;color:#6a0dad;border:none;border-radius:8px;font-weight:900;cursor:pointer">Ganti Foto</button>
   </div>
 </div>
@@ -153,20 +145,14 @@ body{
 </div>
 
 <div class="chat-layer" id="chatLayer">
-  <div class="chat-header">
-    <span>💬 Chating Mall Genesis</span>
-    <button onclick="tutupChat()">✕</button>
-  </div>
+  <div class="chat-header"><span>💬 Chating</span><button onclick="tutupChat()">✕</button></div>
   <div class="chat-tab">
     <button class="active" onclick="gantiTab('public')">Public</button>
     <button onclick="gantiTab('private')">Private</button>
     <button onclick="gantiTab('komen')">Komen</button>
   </div>
   <div class="chat-box" id="chatBox"></div>
-  <div class="chat-input">
-    <input type="text" id="chatText" placeholder="Ketik pesan...">
-    <button onclick="kirimChat()">Kirim</button>
-  </div>
+  <div class="chat-input"><input type="text" id="chatText"><button onclick="kirimChat()">Kirim</button></div>
 </div>
 
 <script>
@@ -174,7 +160,6 @@ let currentUser = 'user_test';
 let currentTab = 'public';
 let currentNFTid = null;
 let PiReady = false;
-let layarSekarang = 'home';
 
 window.onload = function(){
   let foto = localStorage.getItem('fotoProfilMG');
@@ -187,26 +172,20 @@ window.onload = function(){
 function cekPi(){
   if(typeof Pi!== 'undefined'){
     try{ Pi.init({version:"2.0", sandbox:true}); PiReady = true; }
-    catch(e){ console.log(e); }
+    catch(e){}
   } else { setTimeout(cekPi, 500); }
 }
 cekPi();
 
-// GANTI FOTO + PREVIEW 2 DETIK
 function gantiFotoProfil(event){
   let file = event.target.files[0];
   if(!file) return;
-
   let reader = new FileReader();
   reader.onload = function(e){
     let base64 = e.target.result;
-
-    // Tunjukin preview besar 2 detik
     document.getElementById('imgPreview').src = base64;
     document.getElementById('previewFoto').classList.add('show');
     setTimeout(() => document.getElementById('previewFoto').classList.remove('show'), 2000);
-
-    // Simpan + update foto kecil
     localStorage.setItem('fotoProfilMG', base64);
     document.getElementById('fotoProfil').src = base64;
     document.getElementById('fotoProfilBesar').src = base64;
@@ -214,35 +193,22 @@ function gantiFotoProfil(event){
   reader.readAsDataURL(file);
 }
 
-// PINDAH LAYAR
 function pindahLayar(nama){
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(nama).classList.add('active');
-  layarSekarang = nama;
-
   let judul = {home:'Mall Genesis', explore:'Explore', notif:'Notifikasi', profil:'Profil'};
   document.getElementById('judulHeader').textContent = judul[nama];
-
-  if(nama!== 'home'){
-    document.getElementById('menuBtn').style.display = 'none';
-    document.getElementById('backBtn').style.display = 'block';
-  } else {
-    document.getElementById('menuBtn').style.display = 'block';
-    document.getElementById('backBtn').style.display = 'none';
-  }
+  document.getElementById('menuBtn').style.display = nama==='home'?'block':'none';
+  document.getElementById('backBtn').style.display = nama==='home'?'none':'block';
 }
-
 function balikHome(){ pindahLayar('home'); }
-
 function bukaMenu(){
-  let pilih = prompt('Pilih Menu:\n1. Home\n2. Explore\n3. Notifikasi\n4. Profil\nKetik 1-4');
+  let pilih = prompt('1.Home 2.Explore 3.Notif 4.Profil\nKetik 1-4');
   if(pilih=='1') pindahLayar('home');
   if(pilih=='2') pindahLayar('explore');
   if(pilih=='3') pindahLayar('notif');
   if(pilih=='4') pindahLayar('profil');
 }
-
-// CHAT + PI PAYMENT SINGKAT
 function bukaChat(){ document.getElementById('chatLayer').style.display = 'flex'; }
 function tutupChat(){ document.getElementById('chatLayer').style.display = 'none'; }
 function gantiTab(tab){
@@ -250,12 +216,7 @@ function gantiTab(tab){
   document.querySelectorAll('.chat-tab button').forEach(b => b.classList.remove('active'));
   event.target.classList.add('active');
 }
-function bukaKomen(owner, nftId){
-  currentNFTid = nftId;
-  document.getElementById('chatLayer').style.display = 'flex';
-  document.querySelectorAll('.chat-tab button').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.chat-tab button')[2].classList.add('active');
-}
+function bukaKomen(owner, nftId){ currentNFTid = nftId; bukaChat(); gantiTab('komen'); }
 async function serverApprove(id, r){ return {status:'ok'}; }
 async function serverComplete(id, t){}
 function likeNFT(btn, owner, nftId){
