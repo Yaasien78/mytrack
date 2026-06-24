@@ -7,88 +7,27 @@
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#000814;color:#fff;font-family:Arial;min-height:100vh}
-.header{position:fixed;top:0;left:0;width:100%;height:60px;background:#000;border-bottom:2px solid #FFD700;display:flex;align-items:center;justify-content:center}
-.header h2{color:#FFD700}
-.profile{position:absolute;right:15px;width:40px;height:40px;border-radius:50%;border:2px solid #FFD700;overflow:hidden}
+body{background:#000814;color:#fff;font-family:Arial;min-height:100vh;overflow-x:hidden}
+.header{position:fixed;top:0;left:0;width:100%;height:60px;background:#000;border-bottom:2px solid #FFD700;display:flex;align-items:center;justify-content:center;z-index:100}
+.header h2{color:#FFD700;font-size:18px}
+.profile{position:absolute;right:15px;width:40px;height:40px;border-radius:50%;border:2px solid #FFD700;overflow:hidden;cursor:pointer}
 .profile img{width:100%;height:100%;object-fit:cover}
-.menu{position:fixed;left:0;top:60px;width:70px;height:calc(100vh - 120px);background:#111;border-right:2px solid #FFD700;display:flex;flex-direction:column;align-items:center;padding-top:20px;gap:25px}
-.menu-btn{width:45px;height:45px;border-radius:12px;background:#FFD700;color:#000;font-size:20px;border:none;font-weight:900}
+.menu{position:fixed;left:0;top:60px;width:70px;height:calc(100vh - 120px);background:#111;border-right:2px solid #FFD700;display:flex;flex-direction:column;align-items:center;padding-top:20px;gap:25px;z-index:100}
+.menu-btn{width:45px;height:45px;border-radius:12px;background:#FFD700;color:#000;font-size:20px;border:none;font-weight:900;cursor:pointer}
 .content{margin:60px 0 60px 70px;padding:20px}
 .post{max-width:500px;margin:0 auto 20px;background:rgba(255,255,255,0.05);border:1px solid #FFD700;border-radius:12px;padding:15px}
-.post-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.post-head img{width:35px;height:35px;border-radius:50%;border:1px solid #FFD700}
-.post-head span{color:#FFD700;font-weight:700}
+.post-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:10px}
+.post-user{display:flex;align-items:center;gap:10px}
+.post-user img{width:35px;height:35px;border-radius:50%;border:2px solid #FFD700;cursor:pointer}
+.post-user span{color:#FFD700;font-weight:700;cursor:pointer}
+.post-price button{background:#FFD700;color:#000;padding:6px 12px;border-radius:8px;font-weight:900;font-size:12px;border:2px solid #000;cursor:pointer}
+.post-price button:disabled{background:#555;color:#999;cursor:not-allowed}
 .post-img{width:100%;border-radius:8px;margin-bottom:10px}
-.post-act{display:flex;gap:15px}
-.post-act button{background:none;border:none;color:#FFD700;cursor:pointer;font-weight:600}
-.footer{position:fixed;bottom:0;left:0;width:100%;height:60px;background:#000;border-top:2px solid #FFD700;display:flex}
+.post-act{display:flex;justify-content:space-around;align-items:center;gap:10px;padding-top:10px;margin-top:10px;border-top:1px solid rgba(255,215,0,0.3)}
+.post-act button{background:none;border:none;color:#FFD700;cursor:pointer;font-weight:600;font-size:13px;padding:5px 8px;border-radius:6px;transition:0.2s}
+.post-act button:hover{background:rgba(255,215,0,0.1)}
+.post-act button:disabled{color:#666;cursor:not-allowed}
+.footer{position:fixed;bottom:0;left:0;width:100%;height:60px;background:#000;border-top:2px solid #FFD700;display:flex;z-index:100}
 .footer-btn{width:50%;border:none;background:#FFD700;color:#000;font-weight:900;font-size:15px;cursor:pointer}
-</style>
-</head>
-<body>
-
-<div class="header">
-  <h2>Galery NFT</h2>
-  <div class="profile"><img id="fotoProfil" src=""></div>
-</div>
-
-<div class="menu">
-  <button class="menu-btn">🏠</button>
-  <button class="menu-btn">🔍</button>
-  <button class="menu-btn">🔔</button>
-</div>
-
-<div class="content">
-  <div class="post">
-    <div class="post-head">
-      <img src="https://i.pravatar.cc/100?u=yaasien">
-      <span>@yaasien</span>
-    </div>
-    <img class="post-img" src="https://picsum.photos/400/300?random=1">
-    <div class="post-act">
-      <button onclick="likeNFT(this)">❤️ Like 0.01 Pi</button>
-      <button onclick="alert('Follow')">+ Follow</button>
-      <button onclick="alert('Share')">↗️ Share</button>
-    </div>
-  </div>
-</div>
-
-<div class="footer">
-  <button class="footer-btn" onclick="alert('Chat')">💬 Chating</button>
-  <button class="footer-btn" onclick="mintNFT()">🎨 Mint NFT 0.01 Pi</button>
-</div>
-
-<script>
-// Load foto profil dulu biar gak error
-try{
-  let foto = localStorage.getItem('fotoMG');
-  if(foto) document.getElementById('fotoProfil').src = foto;
-}catch(e){console.log('Foto error:',e)}
-
-// Pi SDK init paling akhir + try catch
-setTimeout(function(){
-  try{
-    Pi.init({version:"2.0", sandbox:true});
-  }catch(e){
-    alert('Pi SDK error: ' + e.message + '\nPastikan buka dari Pi Browser');
-  }
-}, 500);
-
-function likeNFT(btn){
-  if(!window.Pi){alert('Buka dari Pi Browser bang'); return;}
-  Pi.createPayment({amount: 0.01, memo: "Like NFT", metadata: {type: "like"}}, {
-    onReadyForServerApproval: function(id){console.log('Approved',id)},
-    onReadyForServerCompletion: function(id, txid){btn.textContent = '❤️ Liked'; btn.disabled=true; alert('Berhasil! Tx: '+txid.slice(0,8))},
-    onCancel: function(){alert('Batal')},
-    onError: function(e){alert('Error: ' + e.message)}
-  });
-}
-
-function mintNFT(){
-  if(!window.Pi){alert('Buka dari Pi Browser bang'); return;}
-  alert('Mint NFT 0.01 Pi Testnet');
-}
-</script>
-</body>
-</html>
+.chat-layer{display:none;position:fixed;top:60px;left:70px;width:calc(100% - 70px);height:calc(100vh - 120px);background:rgba(0,8,20,0.98);z-index:200;flex-direction:column}
+.chat-header{height:50px;background:#000;border-bottom:2px solid #FFD700;display:flex;align-items:center;justify-content:space-between;padding:0 15
