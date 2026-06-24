@@ -7,7 +7,7 @@
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{overflow-x:hidden;width:100%;max-width:100%} /* kunci biar gak scroll kanan kiri */
+html,body{overflow-x:hidden;width:100%;max-width:100vw}
 body{
   background:#000;color:#fff;font-family:Arial;min-height:100vh;
   background-image:
@@ -19,72 +19,65 @@ body{
 }
 @keyframes stars{ from{background-position:0 0} to{background-position:-10000px 5000px} }
 
-/* HEADER 56PX + FOTO 40PX PAS TENGAH */
-.header{position:fixed;top:0;left:0;width:100%;height:56px;background:#6a0dad;border-bottom:3px solid #FFD700;display:flex;align-items:center;justify-content:space-between;padding:0 6px;z-index:100}
-.header-left{display:flex;align-items:center;gap:6px}
-.header-left button{background:#FFD700;border:none;color:#6a0dad;width:34px;height:34px;border-radius:8px;font-size:18px;font-weight:900;cursor:pointer}
-.back-btn{display:none;background:#ff69b4!important;color:#fff!important;font-size:22px!important}
-.header-center h2{color:#FFD700;font-size:16px;text-shadow:0 0 10px #FFD700}
-
-/* FOTO PROFIL 40PX = HEADER 56 - BORDER 3*2 - PADDING 5*2 */
-.header-right{height:100%;display:flex;align-items:center;padding:5px 0}
+/* HEADER 54PX + FOTO 38PX PAS */
+.header{position:fixed;top:0;left:0;width:100%;height:54px;background:#6a0dad;border-bottom:3px solid #FFD700;display:flex;align-items:center;justify-content:space-between;padding:0 5px;z-index:99}
+.header-left{display:flex;align-items:center;gap:5px}
+.header-left button{background:#FFD700;border:none;color:#6a0dad;width:32px;height:32px;border-radius:6px;font-size:18px;font-weight:900;cursor:pointer}
+.back-btn{display:none;background:#ff69b4!important;color:#fff!important;font-size:20px!important}
+.header-center h2{color:#FFD700;font-size:15px}
+.header-right{height:100%;display:flex;align-items:center;padding:4px 0}
 .header-right.profile{
-  width:40px;height:40px;border-radius:50%;border:2px solid #FFD700;
-  overflow:hidden;cursor:pointer;box-shadow:0 0 8px #FFD700;
-  flex-shrink:0;
+  width:38px;height:38px;border-radius:50%;border:2px solid #FFD700;
+  overflow:hidden;cursor:pointer;flex-shrink:0;
 }
-.header-right.profile img{width:40px;height:40px;object-fit:cover;display:block}
+.header-right.profile img{width:38px;height:38px;object-fit:cover;display:block}
 
-/* PAKSA SEMUA IMG GAK BOLEH LEBIH DARI LAYAR */
-img{max-width:100%!important;height:auto!important;display:block}
-
-/* PREVIEW FOTO */
+/* PREVIEW - DIPAKSA HILANG TOTAL */
 .preview-foto{
-  display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-  width:90%;max-width:320px;z-index:999;background:#000;
-  border:3px solid #FFD700;border-radius:15px;padding:10px;
-  box-shadow:0 0 40px rgba(255,215,0,0.8)
+  display:none!important;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:85%;max-width:300px;z-index:9999;background:#000;
+  border:3px solid #FFD700;border-radius:15px;padding:8px;
+  pointer-events:none
 }
-.preview-foto img{width:100%;border-radius:10px}
-.preview-foto.show{display:block;animation:fadeOut 2s forwards}
-@keyframes fadeOut{0%{opacity:1}80%{opacity:1}100%{opacity:0}}
+.preview-foto.show{display:block!important;animation:fadeOut 2s forwards}
+@keyframes fadeOut{0%{opacity:1;z-index:9999}80%{opacity:1}100%{opacity:0;z-index:-1;display:none!important}}
 
 #inputGaleri{display:none}
 
+/* KUNCI SEMUA IMG */
+img{max-width:100%!important;height:auto!important;max-height:100vh;object-fit:cover}
+
 /* LAYAR */
-.screen{display:none;margin-top:56px;margin-bottom:60px;min-height:calc(100vh - 116px);width:100%;overflow-x:hidden}
+.screen{display:none;margin-top:54px;margin-bottom:60px;width:100vw;max-width:100vw;overflow-x:hidden}
 .screen.active{display:block}
 
-/* HOME - KUNCI LEBAR POST */
-.content{padding:15px 8px;display:flex;flex-direction:column;align-items:center;gap:15px;width:100%;max-width:100%;overflow-x:hidden}
-.post{width:100%;max-width:480px;background:rgba(0,0,20,0.85);border:2px solid rgba(106,13,173,0.8);border-radius:15px;padding:12px;overflow:hidden} /* overflow hidden biar img gak keluar */
-.post-img{width:100%!important;max-width:100%!important;border-radius:12px;margin:10px 0;border:1px solid rgba(255,215,0,0.3)}
-.post-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.post-user{display:flex;align-items:center;gap:8px}
-.post-user img{width:36px;height:36px;border-radius:50%;border:2px solid #FFD700;flex-shrink:0}
-.post-user span{color:#FFD700;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.post-price button{background:#FFD700;color:#6a0dad;padding:6px 12px;border-radius:10px;font-weight:900;font-size:12px;border:2px solid #6a0dad;cursor:pointer;flex-shrink:0}
-.post-act{display:flex;justify-content:space-around;padding-top:10px;margin-top:10px;border-top:1px solid rgba(106,13,173,0.5)}
-.post-act button{background:none;border:none;color:#FFD700;cursor:pointer;font-weight:700;font-size:13px;padding:5px}
+/* CONTENT + POST */
+.content{padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:100vw}
+.post{width:100%;max-width:460px;background:rgba(0,0,20,0.85);border:2px solid rgba(106,13,173,0.8);border-radius:15px;padding:10px;overflow:hidden;position:relative}
+.post-img{width:100%!important;max-width:100%!important;height:auto!important;border-radius:10px;margin:8px 0;border:1px solid rgba(255,215,0,0.3)}
+.post-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.post-user{display:flex;align-items:center;gap:6px;overflow:hidden}
+.post-user img{width:34px;height:34px;border-radius:50%;border:2px solid #FFD700;flex-shrink:0}
+.post-user span{color:#FFD700;font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.post-price button{background:#FFD700;color:#6a0dad;padding:5px 10px;border-radius:8px;font-weight:900;font-size:11px;border:2px solid #6a0dad;cursor:pointer;flex-shrink:0}
+.post-act{display:flex;justify-content:space-around;padding-top:8px;margin-top:8px;border-top:1px solid rgba(106,13,173,0.5)}
+.post-act button{background:none;border:none;color:#FFD700;cursor:pointer;font-weight:700;font-size:12px;padding:4px}
 
-/* PAGE LAIN */
-.page-box{padding:20px;text-align:center;width:100%}
+/* FOOTER */
+.footer{position:fixed;bottom:0;left:0;width:100%;height:60px;background:#ff69b4;border-top:3px solid #FFD700;display:flex;z-index:99}
+.footer button{width:50%;border:none;background:transparent;color:#fff;font-weight:900;font-size:13px;cursor:pointer}
 
-/* FOOTER PINK */
-.footer{position:fixed;bottom:0;left:0;width:100%;height:60px;background:#ff69b4;border-top:3px solid #FFD700;display:flex;z-index:100}
-.footer button{width:50%;border:none;background:transparent;color:#fff;font-weight:900;font-size:14px;cursor:pointer}
-
-/* CHAT LAYER */
-.chat-layer{display:none;position:fixed;top:56px;left:0;width:100%;height:calc(100vh - 116px);background:rgba(0,0,20,0.95);z-index:200;flex-direction:column}
-.chat-header{height:50px;background:#6a0dad;border-bottom:2px solid #FFD700;display:flex;align-items:center;justify-content:space-between;padding:0 15px;color:#FFD700;font-weight:900}
-.chat-header button{background:none;border:none;color:#FFD700;font-size:20px;cursor:pointer}
+/* CHAT */
+.chat-layer{display:none;position:fixed;top:54px;left:0;width:100vw;height:calc(100vh - 114px);background:rgba(0,0,20,0.95);z-index:200;flex-direction:column}
+.chat-header{height:50px;background:#6a0dad;border-bottom:2px solid #FFD700;display:flex;align-items:center;justify-content:space-between;padding:0 12px;color:#FFD700;font-weight:900}
+.chat-header button{background:none;border:none;color:#FFD700;font-size:18px;cursor:pointer}
 .chat-tab{display:flex;background:#001122;border-bottom:1px solid #6a0dad}
-.chat-tab button{flex:1;padding:10px;border:none;background:none;color:#FFD700;cursor:pointer;font-weight:700}
+.chat-tab button{flex:1;padding:8px;border:none;background:none;color:#FFD700;cursor:pointer;font-weight:700;font-size:13px}
 .chat-tab button.active{background:#FFD700;color:#6a0dad}
-.chat-box{flex:1;padding:15px;overflow-y:auto;font-size:14px}
-.chat-input{display:flex;padding:10px;background:#001122;border-top:1px solid #6a0dad}
-.chat-input input{flex:1;padding:8px;border:1px solid #6a0dad;background:#000;color:#fff;border-radius:6px}
-.chat-input button{margin-left:8px;padding:8px 15px;background:#FFD700;color:#6a0dad;border:none;border-radius:6px;font-weight:900;cursor:pointer}
+.chat-box{flex:1;padding:12px;overflow-y:auto;font-size:13px}
+.chat-input{display:flex;padding:8px;background:#001122;border-top:1px solid #6a0dad}
+.chat-input input{flex:1;padding:6px;border:1px solid #6a0dad;background:#000;color:#fff;border-radius:5px;font-size:13px}
+.chat-input button{margin-left:6px;padding:6px 12px;background:#FFD700;color:#6a0dad;border:none;border-radius:5px;font-weight:900;cursor:pointer;font-size:12px}
 </style>
 </head>
 <body>
@@ -119,7 +112,7 @@ img{max-width:100%!important;height:auto!important;display:block}
           <button onclick="beliNFT(this, 'yaasien', 1.5, 'nft_001')">💰 1.5 Pi</button>
         </div>
       </div>
-      <img class="post-img" src="https://picsum.photos/480/400?random=1">
+      <img class="post-img" src="https://picsum.photos/460/380?random=1">
       <div class="post-act">
         <button onclick="likeNFT(this, 'yaasien', 'nft_001')">❤️ Like 0.01 Pi</button>
         <button onclick="followUser(this, 'yaasien')">➕ Follow</button>
@@ -129,13 +122,13 @@ img{max-width:100%!important;height:auto!important;display:block}
   </div>
 </div>
 
-<div class="screen" id="explore"><div class="page-box"><h3>🔍 Explore NFT</h3></div></div>
-<div class="screen" id="notif"><div class="page-box"><h3>🔔 Notifikasi</h3></div></div>
+<div class="screen" id="explore"><div class="content"><h3 style="color:#FFD700">Explore</h3></div></div>
+<div class="screen" id="notif"><div class="content"><h3 style="color:#FFD700">Notif</h3></div></div>
 <div class="screen" id="profil">
-  <div class="page-box">
-    <h3>👤 Profil @user_test</h3>
-    <img id="fotoProfilBesar" src="https://i.pravatar.cc/150" style="width:120px;height:120px;border-radius:50%;border:3px solid #FFD700;margin:15px auto">
-    <button onclick="document.getElementById('inputGaleri').click()" style="margin-top:20px;padding:10px 20px;background:#FFD700;color:#6a0dad;border:none;border-radius:8px;font-weight:900;cursor:pointer">Ganti Foto</button>
+  <div class="content">
+    <h3 style="color:#FFD700">Profil @user_test</h3>
+    <img id="fotoProfilBesar" src="https://i.pravatar.cc/150" style="width:110px;height:110px;border-radius:50%;border:3px solid #FFD700;margin:12px auto">
+    <button onclick="document.getElementById('inputGaleri').click()" style="margin-top:15px;padding:8px 16px;background:#FFD700;color:#6a0dad;border:none;border-radius:6px;font-weight:900;cursor:pointer;font-size:13px">Ganti Foto</button>
   </div>
 </div>
 
@@ -152,7 +145,7 @@ img{max-width:100%!important;height:auto!important;display:block}
     <button onclick="gantiTab('komen')">Komen</button>
   </div>
   <div class="chat-box" id="chatBox"></div>
-  <div class="chat-input"><input type="text" id="chatText"><button onclick="kirimChat()">Kirim</button></div>
+  <div class="chat-input"><input type="text" id="chatText" placeholder="Ketik..."><button onclick="kirimChat()">Kirim</button></div>
 </div>
 
 <script>
@@ -160,6 +153,7 @@ let currentUser = 'user_test';
 let currentTab = 'public';
 let currentNFTid = null;
 let PiReady = false;
+let previewTimeout = null;
 
 window.onload = function(){
   let foto = localStorage.getItem('fotoProfilMG');
@@ -167,6 +161,9 @@ window.onload = function(){
     document.getElementById('fotoProfil').src = foto;
     document.getElementById('fotoProfilBesar').src = foto;
   }
+  // Paksa sembunyiin preview pas load
+  document.getElementById('previewFoto').style.display = 'none';
+  document.getElementById('previewFoto').classList.remove('show');
 }
 
 function cekPi(){
@@ -180,12 +177,28 @@ cekPi();
 function gantiFotoProfil(event){
   let file = event.target.files[0];
   if(!file) return;
+
+  // Hapus timeout lama biar gak numpuk
+  if(previewTimeout) clearTimeout(previewTimeout);
+
   let reader = new FileReader();
   reader.onload = function(e){
     let base64 = e.target.result;
+
+    // Tunjukin preview 2 detik
     document.getElementById('imgPreview').src = base64;
-    document.getElementById('previewFoto').classList.add('show');
-    setTimeout(() => document.getElementById('previewFoto').classList.remove('show'), 2000);
+    let preview = document.getElementById('previewFoto');
+    preview.classList.remove('show'); // reset dulu
+    void preview.offsetWidth; // force reflow
+    preview.classList.add('show');
+
+    previewTimeout = setTimeout(() => {
+      preview.classList.remove('show');
+      preview.style.display = 'none';
+      document.getElementById('imgPreview').src = ''; // kosongin src biar gak nyangkut
+    }, 2000);
+
+    // Simpan + update
     localStorage.setItem('fotoProfilMG', base64);
     document.getElementById('fotoProfil').src = base64;
     document.getElementById('fotoProfilBesar').src = base64;
