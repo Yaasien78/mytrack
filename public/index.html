@@ -3,123 +3,98 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NFT Social - Pi Network</title>
+  <title>Mall Genesis - Marketplace NFT Pi Network</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       text-align: center;
-      padding: 50px 20px;
+      padding: 40px 20px;
       min-height: 100vh;
-      margin: 0;
     }
     .container {
       max-width: 400px;
-      margin: auto;
-      background: rgba(255,255,255,0.1);
-      padding: 30px;
-      border-radius: 20px;
-      backdrop-filter: blur(10px);
+      margin: 0 auto;
     }
-    h1 { margin-bottom: 10px; }
-    p { margin-bottom: 30px; opacity: 0.9; }
-    button {
-      width: 100%;
-      padding: 15px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: bold;
+    h1 { 
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .subtitle { 
+      font-size: 15px; 
+      opacity: 0.85;
+      margin-bottom: 35px;
+      line-height: 1.5;
+    }
+    .profile {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 4px solid #ffd700;
+      margin: 25px auto;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
+      font-size: 45px;
+      backdrop-filter: blur(10px);
       transition: 0.3s;
     }
+    .profile:hover {
+      transform: scale(1.05);
+    }
+    .user-id {
+      font-size: 13px;
+      opacity: 0.7;
+      margin-bottom: 35px;
+      font-family: monospace;
+    }
+    button {
+      width: 100%;
+      padding: 16px;
+      margin: 12px 0;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
     #loginBtn {
-      background: #ffc700;
-      color: #000;
+      background: linear-gradient(90deg, #ffd700, #ffed4e);
+      color: #1a1a2e;
     }
     #buyBtn {
-      background: #4CAF50;
+      background: linear-gradient(90deg, #4CAF50, #66bb6a);
       color: white;
       display: none;
     }
-    button:hover { opacity: 0.8; }
+    button:hover { 
+      opacity: 0.9; 
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
     #status {
-      margin-top: 20px;
+      margin-top: 25px;
       font-size: 14px;
-      min-height: 20px;
+      min-height: 22px;
+      opacity: 0.9;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <h1>🎨 NFT Social</h1>
-    <p>bagi kreator NFT di jaringan Pi Network dan dapatkan hadiah</p>
-    
-    <button id="loginBtn" onclick="login()">Login with Pi</button>
-    <button id="buyBtn" onclick="buyNFT()">Beli NFT 0.01 Pi</button>
-    
-    <div id="status">Belum login</div>
-  </div>
-
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <script>
-    // GANTI appId sesuai App ID lu di Pi Developer Portal
-    Pi.init({ 
-      version: "2.0", 
-      sandbox: true, // ganti false kalau udah live
-      appId: "nftsosial2846" 
-    })
-
-    let currentUser = null;
-
-    async function login() {
-      document.getElementById('status').innerText = 'Loading...';
-      try {
-        const auth = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
-        currentUser = auth.user;
-        document.getElementById('status').innerText = 'Halo ' + currentUser.username + ' ✅';
-        document.getElementById('loginBtn').style.display = 'none';
-        document.getElementById('buyBtn').style.display = 'block';
-      } catch (err) {
-        console.error(err);
-        document.getElementById('status').innerText = 'Login gagal: ' + err.message;
-      }
-    }
-
-    function buyNFT() {
-      const paymentData = {
-        amount: 0.01,
-        memo: "Beli NFT Social",
-        metadata: { item: "NFT Digital", user: currentUser.username }
-      };
-
-      const paymentCallbacks = {
-        onReadyForServerApproval: function(paymentId) {
-          console.log("Approval:", paymentId);
-          document.getElementById('status').innerText = 'Menunggu approval server...';
-          // Nanti disini lu kirim paymentId ke backend lu
-        },
-        onReadyForServerCompletion: function(paymentId, txid) {
-          console.log("Completion:", paymentId, txid);
-          document.getElementById('status').innerText = 'Pembayaran sukses! TX: ' + txid;
-          alert('NFT berhasil dibeli! 🎉');
-        },
-        onCancel: function(paymentId) {
-          document.getElementById('status').innerText = 'Pembayaran dibatalkan';
-        },
-        onError: function(error, payment) {
-          console.error(error);
-          document.getElementById('status').innerText = 'Error: ' + error;
-        }
-      };
-
-      Pi.createPayment(paymentData, paymentCallbacks);
-    }
-
-    function onIncompletePaymentFound(payment) {
-      console.log("Incomplete payment found:", payment);
-      // Pi otomatis resume payment yg belum selesai
-    }
-  </
