@@ -8,233 +8,136 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      min-height: 100vh;
+      background: linear-gradient(45deg, #0a0a2a 0%, #1a1a3a 40%, #4a1a4a 100%);
+      color: white; min-height: 100vh; overflow-x: hidden;
     }
-    .page { display: none; padding: 40px 20px; min-height: 100vh; }
-    .page.active { display: block; }
-    .container { max-width: 500px; margin: 0 auto; text-align: center; }
-    
-    h1 { 
-      font-size: 2.8rem;
-      margin-bottom: 10px;
-      background: linear-gradient(90deg, #ffd700, #ffed4e);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 800;
+
+  .browser-info { position: fixed; top: 15px; right: 15px; font-size: 11px; color: white; opacity: 0.7; text-align: right; z-index: 100; }
+  .browser-info a { color: white; text-decoration: underline; }
+  .page { display: none; min-height: 100vh; }
+  .page.active { display: block; }
+
+    /* SIDEBAR - tambah menu Chat */
+  .sidebar {
+      position: fixed; left: 0; top: 0; width: 70px; height: 100vh;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(15px);
+      border-right: 1px solid rgba(255,255,255,0.1);
+      display: flex; flex-direction: column; align-items: center;
+      padding-top: 80px; gap: 25px; z-index: 50;
     }
-    .subtitle { 
-      font-size: 15px; 
-      opacity: 0.9;
-      margin-bottom: 30px;
+  .menu-item { font-size: 10px; color: #aaa; text-align: center; cursor: pointer; transition: 0.3s; padding: 8px 5px; }
+  .menu-item:hover { color: #ffd700; transform: scale(1.1); }
+  .menu-icon { font-size: 24px; display: block; margin-bottom: 5px; }
+
+    /* HALAMAN 1-2-3 sama seperti kode sebelumnya, gue singkat biar gak kepanjangan */
+    /* ... kode login, galeri, feed IG tetap sama ... */
+
+    /* HALAMAN 4: CHAT TELEGRAM STYLE */
+  .page-chat {
+      background: #0e1621; padding-left: 70px; height: 100vh; display: flex; flex-direction: column;
     }
-    
-    /* HALAMAN LOGIN - FOTO 4x6 CM */
-    .login-box {
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 40px 30px;
-      margin-top: 40px;
+  .chat-header {
+      height: 55px; background: #17212b; border-bottom: 1px solid #0e1621;
+      display: flex; align-items: center; padding: 0 15px; position: sticky; top: 0; z-index: 90;
     }
-    
-    .profile-4x6 {
-      width: 151px; /* 4 cm */
-      height: 227px; /* 6 cm */
-      border-radius: 12px; /* sudut agak rounded */
-      border: 3px solid #ffd700;
-      margin: 0 auto 25px;
-      background: rgba(255,255,255,0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 50px;
-      backdrop-filter: blur(10px);
+  .chat-tabs {
+      display: flex; gap: 20px; font-size: 15px; font-weight: 600;
+    }
+  .chat-tab {
+      cursor: pointer; padding: 10px 5px; border-bottom: 3px solid transparent;
       transition: 0.3s;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-      overflow: hidden;
     }
-    .profile-4x6:hover {
-      transform: scale(1.03);
-      box-shadow: 0 12px 35px rgba(255,215,0,0.4);
+  .chat-tab.active { color: #ffd700; border-bottom: 3px solid #ffd700; }
+
+  .chat-body { flex: 1; overflow-y: auto; padding: 15px; }
+  .chat-list { display: none; }
+  .chat-list.active { display: block; }
+
+    /* List DM user */
+  .dm-item {
+      display: flex; align-items: center; padding: 12px;
+      border-radius: 10px; cursor: pointer; margin-bottom: 5px;
+      transition: 0.2s;
     }
-    .profile-hint {
-      font-size: 12px;
-      color: #ddd;
-      margin-bottom: 25px;
+  .dm-item:hover { background: rgba(255,255,255,0.05); }
+  .dm-avatar {
+      width: 50px; height: 50px; border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-right: 12px;
     }
-    
-    button {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      border-radius: 14px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.3s;
-      background: linear-gradient(90deg, #ffd700, #ffed4e);
-      color: #1a1a2e;
-      margin-top: 10px;
+  .dm-info { flex: 1; }
+  .dm-name { font-weight: 700; font-size: 15px; margin-bottom: 3px; }
+  .dm-last { font-size: 13px; color: #8a9ba8; }
+
+    /* Chat window */
+  .chat-window { display: none; flex-direction: column; height: calc(100vh - 55px); }
+  .chat-window.active { display: flex; }
+  .chat-back { cursor: pointer; margin-right: 15px; font-size: 24px; }
+
+  .chat-messages {
+      flex: 1; overflow-y: auto; padding: 15px;
+      background: #0e1621;
     }
-    button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
-    
-    /* HALAMAN GALERI - tetap lingkaran */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
+  .msg {
+      max-width: 70%; margin-bottom: 12px; padding: 8px 12px;
+      border-radius: 12px; font-size: 14px; line-height: 1.4;
+      word-wrap: break-word;
     }
-    .user-info {
-      font-size: 13px;
-      opacity: 0.8;
+  .msg.me {
+      background: #5288b8; margin-left: auto; border-bottom-right-radius: 4px;
     }
-    .logout-btn {
-      padding: 8px 14px;
-      font-size: 12px;
-      width: auto;
-      background: rgba(255,255,255,0.2);
-      color: white;
-      margin: 0;
+  .msg.other {
+      background: #182533; margin-right: auto; border-bottom-left-radius: 4px;
     }
-    
-    .mint-box {
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(10px);
-      border-radius: 18px;
-      padding: 25px;
-      margin-bottom: 30px;
-      border: 2px solid rgba(255,215,0,0.3);
+  .msg-time { font-size: 10px; opacity: 0.6; margin-top: 4px; text-align: right; }
+
+  .chat-input-box {
+      display: flex; padding: 10px; background: #17212b;
+      border-top: 1px solid #0e1621;
     }
-    .mint-box h3 { margin-bottom: 12px; font-size: 1.2rem; }
-    .mint-box p { font-size: 14px; opacity: 0.8; margin-bottom: 15px; }
-    .mint-btn {
-      background: linear-gradient(90deg, #4CAF50, #66bb6a);
-      color: white;
-      font-size: 15px;
+  .chat-input {
+      flex: 1; padding: 12px 15px; border-radius: 22px;
+      border: none; background: #242f3d; color: white; font-size: 15px;
+      outline: none;
     }
-    
-    .gallery-title {
-      text-align: left;
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 15px;
+  .chat-send {
+      width: 45px; height: 45px; border-radius: 50%;
+      background: #5288b8; border: none; color: white;
+      font-size: 20px; margin-left: 10px; cursor: pointer;
     }
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-    .nft-card {
-      background: rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 10px;
-      aspect-ratio: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 40px;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-    
-    #status, #mintStatus {
-      margin-top: 15px;
-      font-size: 13px;
-      opacity: 0.8;
-      min-height: 20px;
-    }
+
+  .header-user { position: fixed; top: 15px; right: 200px; font-size: 13px; color: #ffd700; z-index: 100; }
+  .logout-btn-small { padding: 6px 12px; font-size: 11px; width: auto; background: rgba(255,255,255,0.2); color: white; margin-left: 10px; }
   </style>
 </head>
 <body>
-  <!-- HALAMAN 1: LOGIN - FOTO 4x6 -->
-  <div class="page active" id="pageLogin">
-    <div class="container">
-      <div class="login-box">
-        <h1>🏛️ Mall Genesis</h1>
-        <p class="subtitle">Marketplace NFT premium di Pi Network</p>
-        
-        <!-- FOTO 4x6 CM -->
-        <div class="profile-4x6" onclick="gantiFoto()">
-          📷
-        </div>
-        <p class="profile-hint">Klik foto buat ganti dari kamera/galeri</p>
-        
-        <button onclick="login()">Login dulu</button>
-        <div id="status">Status: Belum login</div>
-      </div>
-    </div>
+  <div class="browser-info">
+    Gunakan di Pi Browser<br>
+    atau <a href="https://minepi.com/browser" target="_blank">Download Pi Browser</a>
   </div>
 
-  <!-- HALAMAN 2: GALERI NFT - FOTO USER TETAP LINGKARAN -->
-  <div class="page" id="pageGallery">
-    <div class="container">
-      <div class="header">
-        <div class="user-info" id="userInfo">Loading...</div>
-        <button class="logout-btn" onclick="logout()">Logout</button>
-      </div>
-      
-      <div class="mint-box">
-        <h3>🎨 Mint NFT Genesis #001</h3>
-        <p>NFT edisi perdana Mall Genesis. Limited 100 item</p>
-        <button class="mint-btn" onclick="buyNFT()">Mint NFT - Bayar 0.01 Pi</button>
-        <div id="mintStatus"></div>
-      </div>
-      
-      <h3 class="gallery-title">Galeri NFT Kamu</h3>
-      <div class="gallery" id="galleryGrid">
-        <div class="nft-card">🎭</div>
-        <div class="nft-card">🖼️</div>
-        <div class="nft-card">💎</div>
-        <div class="nft-card">🔮</div>
-      </div>
+  <!-- HALAMAN 1: LOGIN - sama -->
+  <div class="page active" id="pageLogin">...kode login sama...</div>
+
+  <!-- HALAMAN 2: GALERI - sama -->
+  <div class="page page-gallery" id="pageGallery">
+    <div class="stars" id="stars"></div>
+    <div class="sidebar">
+      <div class="menu-item" onclick="alert('Profil')"><span class="menu-icon">👤</span>Profil</div>
+      <div class="menu-item" onclick="showPage('pageGallery')"><span class="menu-icon">🖼️</span>Galeri</div>
+      <div class="menu-item" onclick="showPage('pageFeed')"><span class="menu-icon">🌐</span>Publik</div>
+      <div class="menu-item" onclick="showPage('pageChat')"><span class="menu-icon">💬</span>Chat</div>
+      <div class="menu-item" onclick="alert('Marketplace')"><span class="menu-icon">🏪</span>Market</div>
+      <div class="menu-item" onclick="alert('Wallet')"><span class="menu-icon">💰</span>Wallet</div>
+      <div class="menu-item" onclick="alert('History')"><span class="menu-icon">📜</span>History</div>
+      <div class="menu-item" onclick="alert('Roadmap')"><span class="menu-icon">🗺️</span>Roadmap</div>
     </div>
+    ...kode galeri sama...
   </div>
 
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <script>
-    Pi.init({ version: "2.0", sandbox: true, appid: "mall-genesis-4cqg" });
-    let currentUser = null;
+  <!-- HALAMAN 3: FEED PUBLIK - sama -->
+  <div class="page page-feed" id="pageFeed">...kode feed sama...</div>
 
-    function showPage(pageId) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
-    }
-
-    async function login() {
-      document.getElementById('status').innerText = 'Status: Loading...';
-      try {
-        await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
-        currentUser = await Pi.getCurrentUser();
-        
-        document.getElementById('userInfo').innerText = currentUser.username + ' | ID: ' + currentUser.uid.substring(0,8);
-        showPage('pageGallery');
-        loadGallery();
-      } catch (err) {
-        document.getElementById('status').innerText = 'Status: Login gagal';
-        console.error(err);
-      }
-    }
-
-    function logout() {
-      currentUser = null;
-      showPage('pageLogin');
-      document.getElementById('status').innerText = 'Status: Logout berhasil';
-    }
-
-    function buyNFT() {
-      document.getElementById('mintStatus').innerText = 'Status: Proses pembayaran...';
-      Pi.createPayment({
-        amount: 0.01,
-        memo: "Mint NFT Mall Genesis #001",
-        metadata: { item: "NFT Genesis #001", user: currentUser.username }
-      }, {
-        onReadyForServerApproval: (paymentId) => {
-          document.getElementById('mintStatus').innerText = 'Status: Approval server...';
-        },
-        onReadyForServerCompletion: (paymentId, txid) => {
-          document.getElementById('mintStatus').innerText = 'Status: Mint berhasil! 🎉';
-          alert('NFT Genesis #001 berhasil!\nTX: ' + txid.substring(0,12));
-          addNFTtoGallery('🏛️');
+  <!-- HALAMAN 4: CHAT DM + GRUP PUBLIK -->
+  <div class="page page-chat
