@@ -1,1 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mall Genesis Space</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:#000;color:#fff;font-family:Arial;min-height:100vh;
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+    linear-gradient(to bottom, #000814 0%, #001122 50%, #000 100%);
+  background-size: 200px 200px, 300px 300px, 100% 100%;
+  animation: stars 100s linear infinite;
+}
+@keyframes stars{ from{background-position:0 0} to{background-position:-10000px 5000px} }
 
+/* HEADER UNGU */
+.header{position:fixed;top:0;left:0;width:100%;height:60px;background:#6a0dad;border-bottom:3px solid #FFD700;display:flex;align-items:center;justify-content:space-between;padding:0 15px;z-index:100;box-shadow:0 2px 20px rgba(106,13,173,0.5)}
+.header-left button{background:#FFD700;border:none;color:#6a0dad;width:40px;height:40px;border-radius:8px;font-size:20px;font-weight:900;cursor:pointer}
+.header-center h2{color:#FFD700;font-size:18px;text-shadow:0 0 10px #FFD700}
+.header-right.profile{width:40px;height:40px;border-radius:50%;border:2px solid #FFD700;overflow:hidden;cursor:pointer;box-shadow:0 0 10px #FFD700}
+.header-right.profile img{width:100%;height:100%;object-fit:cover}
+
+/* LAYAR - sembunyiin semua kecuali active */
+.screen{display:none;margin-top:60px;margin-bottom:60px;min-height:calc(100vh - 120px)}
+.screen.active{display:block}
+
+/* HOME */
+.content{padding:20px 10px;display:flex;flex-direction:column;align-items:center;gap:20px}
+.post{width:100%;max-width:500px;background:rgba(0,0,20,0.85);border:2px solid rgba(106,13,173,0.8);border-radius:15px;padding:15px;backdrop-filter:blur(10px);box-shadow:0 0 30px rgba(106,13,173,0.4)}
+.post-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.post-user{display:flex;align-items:center;gap:10px}
+.post-user img{width:40px;height:40px;border-radius:50%;border:2px solid #FFD700;box-shadow:0 0 8px #FFD700;cursor:pointer}
+.post-user span{color:#FFD700;font-weight:700;font-size:15px;cursor:pointer}
+.post-price button{background:#FFD700;color:#6a0dad;padding:7px 14px;border-radius:10px;font-weight:900;font-size:13px;border:2px solid #6a0dad;cursor:pointer;box-shadow:0 0 10px #FFD700}
+.post-price button:disabled{background:#555;color:#999;box-shadow:none;cursor:not-allowed}
+.post-img{width:100%;border-radius:12px;margin:10px 0;border:1px solid rgba(255,215,0,0.3)}
+.post-act{display:flex;justify-content:space-around;padding-top:12px;margin-top:12px;border-top:1px solid rgba(106,13,173,0.5)}
+.post-act button{background:none;border:none;color:#FFD700;cursor:pointer;font-weight:700;font-size:14px;padding:6px;transition:0.2s}
+.post-act button:hover{text-shadow:0 0 8px #FFD700}
+.post-act button:disabled{color:#666;cursor:not-allowed}
+
+/* EXPLORE + NOTIF + PROFIL */
+.page-box{padding:20px;text-align:center}
+.page-box h3{color:#FFD700;font-size:22px;margin-bottom:15px;text-shadow:0 0 10px #FFD700}
+.page-box p{color:#ccc;margin:10px 0}
+
+/* FOOTER PINK */
+.footer{position:fixed;bottom:0;left:0;width:100%;height:60px;background:#ff69b4;border-top:3px solid #FFD700;display:flex;z-index:100;box-shadow:0 -2px 20px rgba(255,105,180,0.5)}
+.footer button{width:50%;border:none;background:transparent;color:#fff;font-weight:900;font-size:15px;cursor:pointer;text-shadow:0 0 5px #000}
+.footer button:active{background:rgba(255,255,255,0.2)}
+
+/* CHAT LAYER */
+.chat-layer{display:none;position:fixed;top:60px;left:0;width:100%;height:calc(100vh - 120px);background:rgba(0,0,20,0.95);z-index:200;flex-direction:column;backdrop-filter:blur(5px)}
+.chat-header{height:50px;background:#6a0dad;border-bottom:2px solid #FFD700;display:flex;align-items:center;justify-content:space-between;padding:0 15px;color:#FFD700;font-weight:900}
+.chat-header button{background:none;border:none;color:#FFD700;font-size:20px;cursor:pointer}
+.chat-tab{display:flex;background:#001122;border-bottom:1px solid #6a0dad}
+.chat-tab button{flex:1;padding:10px;border:none;background:none;color:#FFD700;cursor:pointer;font-weight:700}
+.chat-tab button.active{background:#FFD700;color:#6a0dad}
+.chat-box{flex:1;padding:15px;overflow-y:auto;font-size:14px}
+.chat-input{display:flex;padding:10px;background:#001122;border-top:1px solid #6a0dad}
+.chat-input input{flex:1;padding:8px;border:1px solid #6a0dad;background:#000;color:#fff;border-radius:6px}
+.chat-input button{margin-left:8px;padding:8px 15px;background:#FFD700;color:#6a0dad;border:none;border-radius:6px;font-weight:900;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left"><button onclick="bukaMenu()">☰</button></div>
+  <div class="header-center"><h2 id="judulHeader">Mall Genesis</h2></div>
+  <div class="header-right"><div class="profile" onclick="pindahLayar('profil')"><img id="fotoProfil" src="https://i.pravatar.cc/100"></div></div>
+</div>
+
+<!-- LAYAR 1: HOME -->
+<div class="screen active" id="home">
+  <div class="content">
+    <div class="post">
+      <div class="post-head">
+        <div class="post-user">
+          <img src="https://i.pravatar.cc/100?u=yaasien" onclick="keBerandaUser('yaasien')">
+          <span onclick="keBerandaUser('yaasien')">@yaasien</span>
+        </div>
+        <div class="post-price">
+          <button onclick="beliNFT(this, 'yaasien', 1.5, 'nft_001')">💰 1.5 Pi</button>
+        </div>
+      </div>
+      <img class="post-img" src="https://picsum.photos/500/400?random=1">
+      <div class="post-act">
+        <button onclick="likeNFT(this, 'yaasien', 'nft_001')">❤️ Like 0.01 Pi</button>
+        <button onclick="followUser(this, 'yaasien')">➕ Follow</button>
+        <button onclick="bukaKomen('yaasien', 'nft_001')">💬 Komen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LAYAR 2: EXPLORE -->
+<div class="screen" id="explore">
+  <div class="page-box">
+    <h3>🔍 Explore NFT</h3>
+    <p>NFT Trending Hari Ini</p>
+    <p>Coming soon... rank NFT terlaris</p>
+  </div>
+</div>
+
+<!-- LAYAR 3: NOTIFIKASI -->
+<div class="screen" id="notif">
+  <div class="page-box">
+    <h3>🔔 Notifikasi</h3>
+    <p>@user123 like post lu</p>
+    <p>@yaasien follow lu</p>
+    <p>NFT lu laku 1.5 Pi</p>
+  </div>
+</div>
+
+<!-- LAYAR 4: PROFIL -->
+<div class="screen" id="profil">
+  <div class="page-box">
+    <h3>👤 Profil @user_test</h3>
+    <p>Saldo: 5.5 Test-Pi</p>
+    <p>NFT Dimiliki: 3</p>
+    <p>Following: 12</p>
+    <button onclick="alert('Edit Profil')" style="margin-top:20px;padding:10px 20px;background:#FFD700;color:#6a0dad;border:none;border-radius:8px;font-weight:900;cursor:pointer">Edit Profil</button>
+  </div>
+</div>
+
+<div class="footer">
+  <button onclick="bukaChat()">💬 Chating</button>
+  <button onclick="mintNFT()">🎨 Mint NFT 0.01 Pi</button>
+</div>
+
+<div class="chat-layer" id="chatLayer">
+  <div class="chat-header">
+    <span>💬 Chating Mall Genesis</span>
+    <button onclick="tutupChat()">✕</button>
+  </div>
+  <div class="chat-tab">
+    <button class="active" onclick="gantiTab('public')">Public</button>
+    <button onclick="gantiTab('private')">Private</button>
+    <button onclick="gantiTab('komen')">Komen</button>
+  </div>
+  <div class="chat-box" id="chatBox"><p style="color:#FFD700">Pilih tab...</p></div>
+  <div class="chat-input">
+    <input type="text" id="chatText" placeholder="Ketik pesan...">
+    <button onclick="kirimChat()">Kirim</button>
+  </div>
+</div>
+
+<script>
+let currentUser = 'user_test';
+let currentTab = 'public';
+let currentNFTid = null;
+let PiReady = false;
+
+// Init Pi SDK
+function cekPi(){
+  if(typeof Pi!== 'undefined'){
+    try{ Pi.init({version:"2.0", sandbox:true}); PiReady = true; }
+    catch(e){ console.log(e); }
+  } else { setTimeout(cekPi, 500); }
+}
+cekPi();
+
+// FUNGSI PINDAH LAYAR
+function pindahLayar(nama){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(nama).classList.add('active');
+
+  // Ganti judul header
+  let judul = {home:'Mall Genesis', explore:'Explore', notif:'Notifikasi', profil:'Profil'};
+  document.getElementById('judulHeader').textContent = judul[nama];
+}
+
+function bukaMenu(){
+  let pilih = prompt('Pilih Menu:\n1. Home\n2. Explore\n3. Notifikasi\n4. Profil\nKetik 1-4');
+  if(pilih=='1') pindahLayar('home');
+  if(pilih=='2') pindahLayar('explore');
+  if(pilih=='3') pindahLayar('notif');
+  if(pilih=='4') pindahLayar('profil');
+}
+
+// CHAT + KOMEN
+function bukaChat(){ document.getElementById('chatLayer').style.display = 'flex'; currentTab='public'; }
+function tutupChat(){ document.getElementById('chatLayer').style.display = 'none'; currentNFTid=null; }
+function gantiTab(tab){
+  currentTab = tab;
+  document.querySelectorAll('.chat-tab button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  if(tab === 'komen' && currentNFTid) loadKomen(currentNFTid);
+  else document.getElementById('chatBox').innerHTML = '<p style="color:#FFD700">Chat ' + tab + ' aktif...</p>';
+}
+function bukaKomen(owner, nftId){
+  currentNFTid = nftId;
+  document.getElementById('chatLayer').style.display = 'flex';
+  document.querySelectorAll('.chat-tab button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.chat-tab button')[2].classList.add('active');
+  loadKomen(nftId);
+}
+function loadKomen(nftId){
+  let semuaKomen = JSON.parse(localStorage.getItem('komenNFT') || '{}');
+  let komenNFTini = semuaKomen[nftId] || [];
+  let html = '<p style="color:#FFD700;margin-bottom:10px">Komen NFT ' + nftId + '</p>';
+  if(komenNFTini.length === 0) html += '<p style="color:#666">Belum ada komen</p>';
+  else komenNFTini.forEach(k => html += '<p style="margin:5px 0"><b>@'+k.user+':</b> '+k.text+'</p>');
+  document.getElementById('chatBox').innerHTML = html;
+}
+function kirimChat(){
+  let txt = document.getElementById('chatText').value;
+  if(!txt) return;
+  if(currentTab === 'komen' && currentNFTid){
+    let semuaKomen = JSON.parse(localStorage.getItem('komenNFT') || '{}');
+    if(!semuaKomen[currentNFTid]) semuaKomen[currentNFTid] = [];
+    semuaKomen[currentNFTid].push({user: currentUser, text: txt});
+    localStorage.setItem('komenNFT', JSON.stringify(semuaKomen));
+    loadKomen(currentNFTid);
+  } else {
+    document.getElementById('chatBox').innerHTML += '<p style="margin:5px 0"><b>@'+currentUser+':</b> '+txt+'</p>';
+  }
+  document.getElementById('chatText').value='';
+}
+
+function keBerandaUser(u){ alert('Beranda @' + u); }
+
+// PI PAYMENT
+function likeNFT(btn, owner, nftId){
+  if(btn.disabled ||!PiReady){ alert('Pi belum siap'); return; }
+  Pi.createPayment({amount: 0.01, memo: "Like @" + owner, metadata: {type: "like", to: owner}}, {
+    onReadyForServerApproval: function(id){},
+    onReadyForServerCompletion: function(id, txid){ btn.innerHTML='❤️ Liked'; btn.disabled=true; alert('0.01 Pi ke @' + owner); },
+    onCancel: function(){}, onError: function(e){ alert('Error: '+e.message); }
+  });
+}
+function beliNFT(btn, owner, harga, nftId){
+  if(btn.disabled ||!PiReady){ alert('Pi belum siap'); return; }
+  if(confirm('Beli NFT ' + harga + ' Pi?')){
+    Pi.createPayment({amount: harga, memo: "Beli NFT dari @" + owner, metadata: {type: "buy", to: owner}}, {
+      onReadyForServerApproval: function(id){},
+      onReadyForServerCompletion: function(id, txid){ btn.innerHTML='✓ Sold'; btn.disabled=true; alert('NFT dibeli!'); },
+      onCancel: function(){}, onError: function(e){ alert('Error: '+e.message); }
+    });
+  }
+}
+function mintNFT(){
+  if(!PiReady){ alert('Pi belum siap'); return; }
+  let nftId = 'nft_' + Date.now();
+  Pi.createPayment({amount: 0.01, memo: "Mint NFT " + nftId, metadata: {type: "mint"}}, {
+    onReadyForServerApproval: function(id){},
+    onReadyForServerCompletion: function(id, txid){ alert('Mint berhasil! 0.01 Pi ke wallet Owner'); },
+    onCancel: function(){}, onError: function(e){ alert('Error: '+e.message); }
+  });
+}
+function followUser(btn, username){
+  btn.textContent = '✓ Following';
+  btn.disabled = true;
+  btn.style.color = '#00ff00';
+}
+</script>
+</body>
+  </html>
