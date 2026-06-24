@@ -18,42 +18,49 @@ body{
 }
 @keyframes stars{ from{background-position:0 0} to{background-position:-10000px 5000px} }
 
-/* HEADER UNGU - FOTO PAS DI DALAM GARIS */
-.header{position:fixed;top:0;left:0;width:100%;height:60px;background:#6a0dad;border-bottom:3px solid #FFD700;display:flex;align-items:center;justify-content:space-between;padding:0 10px;z-index:100}
+/* HEADER 58PX BIAR PAS 46PX FOTO + BORDER 3PX ATAS BAWAH */
+.header{position:fixed;top:0;left:0;width:100%;height:58px;background:#6a0dad;border-bottom:3px solid #FFD700;display:flex;align-items:center;justify-content:space-between;padding:0 8px;z-index:100}
 .header-left{display:flex;align-items:center;gap:8px}
-.header-left button{background:#FFD700;border:none;color:#6a0dad;width:38px;height:38px;border-radius:8px;font-size:20px;font-weight:900;cursor:pointer}
+.header-left button{background:#FFD700;border:none;color:#6a0dad;width:36px;height:36px;border-radius:8px;font-size:18px;font-weight:900;cursor:pointer}
 .back-btn{display:none;background:#ff69b4!important;color:#fff!important;font-size:22px!important}
-.header-center h2{color:#FFD700;font-size:18px;text-shadow:0 0 10px #FFD700}
+.header-center h2{color:#FFD700;font-size:17px;text-shadow:0 0 10px #FFD700}
 
-/* FOTO PROFIL PAS DI DALAM HEADER */
-.header-right{position:relative;height:100%;display:flex;align-items:center}
+/* FOTO PROFIL KECIL PAS DI TENGAH HEADER */
+.header-right{height:100%;display:flex;align-items:center}
 .header-right.profile{
-  width:46px;height:46px;border-radius:50%;border:2px solid #FFD700;
+  width:42px;height:42px;border-radius:50%;border:2px solid #FFD700;
   overflow:hidden;cursor:pointer;box-shadow:0 0 8px #FFD700;
-  position:relative;top:0; /* pas di tengah garis */
 }
-.header-right.profile img{width:100%;height:100%;object-fit:cover}
+.header-right.profile img{width:100%;height:100%;object-fit:cover;display:block}
 
-/* input galeri disembunyiin */
+/* PREVIEW BESAR CUMA 2 DETIK */
+.preview-foto{
+  display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:80%;max-width:300px;z-index:999;background:#000;
+  border:3px solid #FFD700;border-radius:15px;padding:10px;
+  box-shadow:0 0 40px rgba(255,215,0,0.8)
+}
+.preview-foto img{width:100%;border-radius:10px}
+.preview-foto.show{display:block;animation:fadeOut 2s forwards}
+@keyframes fadeOut{0%{opacity:1}80%{opacity:1}100%{opacity:0}}
+
 #inputGaleri{display:none}
 
 /* LAYAR */
-.screen{display:none;margin-top:60px;margin-bottom:60px;min-height:calc(100vh - 120px)}
+.screen{display:none;margin-top:58px;margin-bottom:60px;min-height:calc(100vh - 118px)}
 .screen.active{display:block}
 
-/* HOME */
+/* HOME - PASTIIN IMG GAK FULL LAYAR */
 .content{padding:20px 10px;display:flex;flex-direction:column;align-items:center;gap:20px}
-.post{width:100%;max-width:500px;background:rgba(0,0,20,0.85);border:2px solid rgba(106,13,173,0.8);border-radius:15px;padding:15px;backdrop-filter:blur(10px)}
+.post{width:100%;max-width:500px;background:rgba(0,0,20,0.85);border:2px solid rgba(106,13,173,0.8);border-radius:15px;padding:15px}
+.post-img{width:100%;max-width:100%;height:auto;border-radius:12px;margin:10px 0;border:1px solid rgba(255,215,0,0.3);display:block}
 .post-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .post-user{display:flex;align-items:center;gap:10px}
-.post-user img{width:40px;height:40px;border-radius:50%;border:2px solid #FFD700;cursor:pointer}
-.post-user span{color:#FFD700;font-weight:700;font-size:15px;cursor:pointer}
+.post-user img{width:40px;height:40px;border-radius:50%;border:2px solid #FFD700}
+.post-user span{color:#FFD700;font-weight:700;font-size:15px}
 .post-price button{background:#FFD700;color:#6a0dad;padding:7px 14px;border-radius:10px;font-weight:900;font-size:13px;border:2px solid #6a0dad;cursor:pointer}
-.post-price button:disabled{background:#555;color:#999;cursor:not-allowed}
-.post-img{width:100%;border-radius:12px;margin:10px 0;border:1px solid rgba(255,215,0,0.3)}
 .post-act{display:flex;justify-content:space-around;padding-top:12px;margin-top:12px;border-top:1px solid rgba(106,13,173,0.5)}
 .post-act button{background:none;border:none;color:#FFD700;cursor:pointer;font-weight:700;font-size:14px;padding:6px}
-.post-act button:disabled{color:#666;cursor:not-allowed}
 
 /* PAGE LAIN */
 .page-box{padding:20px;text-align:center}
@@ -64,7 +71,7 @@ body{
 .footer button{width:50%;border:none;background:transparent;color:#fff;font-weight:900;font-size:15px;cursor:pointer}
 
 /* CHAT LAYER */
-.chat-layer{display:none;position:fixed;top:60px;left:0;width:100%;height:calc(100vh - 120px);background:rgba(0,0,20,0.95);z-index:200;flex-direction:column}
+.chat-layer{display:none;position:fixed;top:58px;left:0;width:100%;height:calc(100vh - 118px);background:rgba(0,0,20,0.95);z-index:200;flex-direction:column}
 .chat-header{height:50px;background:#6a0dad;border-bottom:2px solid #FFD700;display:flex;align-items:center;justify-content:space-between;padding:0 15px;color:#FFD700;font-weight:900}
 .chat-header button{background:none;border:none;color:#FFD700;font-size:20px;cursor:pointer}
 .chat-tab{display:flex;background:#001122;border-bottom:1px solid #6a0dad}
@@ -85,13 +92,16 @@ body{
   </div>
   <div class="header-center"><h2 id="judulHeader">Mall Genesis</h2></div>
   <div class="header-right">
-    <!-- Klik foto = buka galeri -->
     <div class="profile" onclick="document.getElementById('inputGaleri').click()">
       <img id="fotoProfil" src="https://i.pravatar.cc/100">
     </div>
-    <!-- Input file galeri HP -->
     <input type="file" id="inputGaleri" accept="image/*" onchange="gantiFotoProfil(event)">
   </div>
+</div>
+
+<!-- PREVIEW FOTO BESAR 2 DETIK -->
+<div class="preview-foto" id="previewFoto">
+  <img id="imgPreview">
 </div>
 
 <!-- HOME -->
@@ -133,7 +143,6 @@ body{
     <h3>👤 Profil @user_test</h3>
     <img id="fotoProfilBesar" src="https://i.pravatar.cc/150" style="width:120px;height:120px;border-radius:50%;border:3px solid #FFD700;margin:15px auto;display:block">
     <p>Saldo: 5.5 Test-Pi</p>
-    <p>NFT Dimiliki: 3</p>
     <button onclick="document.getElementById('inputGaleri').click()" style="margin-top:20px;padding:10px 20px;background:#FFD700;color:#6a0dad;border:none;border-radius:8px;font-weight:900;cursor:pointer">Ganti Foto</button>
   </div>
 </div>
@@ -167,7 +176,6 @@ let currentNFTid = null;
 let PiReady = false;
 let layarSekarang = 'home';
 
-// Load foto dari localStorage
 window.onload = function(){
   let foto = localStorage.getItem('fotoProfilMG');
   if(foto){
@@ -176,7 +184,6 @@ window.onload = function(){
   }
 }
 
-// Init Pi
 function cekPi(){
   if(typeof Pi!== 'undefined'){
     try{ Pi.init({version:"2.0", sandbox:true}); PiReady = true; }
@@ -185,7 +192,7 @@ function cekPi(){
 }
 cekPi();
 
-// GANTI FOTO PROFIL DARI GALERI
+// GANTI FOTO + PREVIEW 2 DETIK
 function gantiFotoProfil(event){
   let file = event.target.files[0];
   if(!file) return;
@@ -193,17 +200,21 @@ function gantiFotoProfil(event){
   let reader = new FileReader();
   reader.onload = function(e){
     let base64 = e.target.result;
-    // Simpan ke localStorage
+
+    // Tunjukin preview besar 2 detik
+    document.getElementById('imgPreview').src = base64;
+    document.getElementById('previewFoto').classList.add('show');
+    setTimeout(() => document.getElementById('previewFoto').classList.remove('show'), 2000);
+
+    // Simpan + update foto kecil
     localStorage.setItem('fotoProfilMG', base64);
-    // Update foto kecil di header + foto besar di profil
     document.getElementById('fotoProfil').src = base64;
     document.getElementById('fotoProfilBesar').src = base64;
-    alert('Foto profil diganti!');
   }
   reader.readAsDataURL(file);
 }
 
-// PINDAH LAYAR + TOMBOL BACK
+// PINDAH LAYAR
 function pindahLayar(nama){
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(nama).classList.add('active');
@@ -231,80 +242,46 @@ function bukaMenu(){
   if(pilih=='4') pindahLayar('profil');
 }
 
-// CHAT + KOMEN
-function bukaChat(){ document.getElementById('chatLayer').style.display = 'flex'; currentTab='public'; }
-function tutupChat(){ document.getElementById('chatLayer').style.display = 'none'; currentNFTid=null; }
+// CHAT + PI PAYMENT SINGKAT
+function bukaChat(){ document.getElementById('chatLayer').style.display = 'flex'; }
+function tutupChat(){ document.getElementById('chatLayer').style.display = 'none'; }
 function gantiTab(tab){
   currentTab = tab;
   document.querySelectorAll('.chat-tab button').forEach(b => b.classList.remove('active'));
   event.target.classList.add('active');
-  if(tab === 'komen' && currentNFTid) loadKomen(currentNFTid);
-  else document.getElementById('chatBox').innerHTML = '<p style="color:#FFD700">Chat ' + tab + ' aktif...</p>';
 }
 function bukaKomen(owner, nftId){
   currentNFTid = nftId;
   document.getElementById('chatLayer').style.display = 'flex';
   document.querySelectorAll('.chat-tab button').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.chat-tab button')[2].classList.add('active');
-  loadKomen(nftId);
 }
-function loadKomen(nftId){
-  let semuaKomen = JSON.parse(localStorage.getItem('komenNFT') || '{}');
-  let komenNFTini = semuaKomen[nftId] || [];
-  let html = '<p style="color:#FFD700;margin-bottom:10px">Komen NFT ' + nftId + '</p>';
-  if(komenNFTini.length === 0) html += '<p style="color:#666">Belum ada komen</p>';
-  else komenNFTini.forEach(k => html += '<p style="margin:5px 0"><b>@'+k.user+':</b> '+k.text+'</p>');
-  document.getElementById('chatBox').innerHTML = html;
-}
-function kirimChat(){
-  let txt = document.getElementById('chatText').value;
-  if(!txt) return;
-  if(currentTab === 'komen' && currentNFTid){
-    let semuaKomen = JSON.parse(localStorage.getItem('komenNFT') || '{}');
-    if(!semuaKomen[currentNFTid]) semuaKomen[currentNFTid] = [];
-    semuaKomen[currentNFTid].push({user: currentUser, text: txt});
-    localStorage.setItem('komenNFT', JSON.stringify(semuaKomen));
-    loadKomen(currentNFTid);
-  } else {
-    document.getElementById('chatBox').innerHTML += '<p style="margin:5px 0"><b>@'+currentUser+':</b> '+txt+'</p>';
-  }
-  document.getElementById('chatText').value='';
-}
-
-// PI PAYMENT
-async function serverApprove(paymentId, recipient){ return {status:'ok'}; }
-async function serverComplete(paymentId, txid){}
-
+async function serverApprove(id, r){ return {status:'ok'}; }
+async function serverComplete(id, t){}
 function likeNFT(btn, owner, nftId){
-  if(btn.disabled ||!PiReady){ alert('Pi belum siap'); return; }
-  Pi.createPayment({amount: 0.01, memo: "Like @" + owner, metadata: {type: "like", to: owner}}, {
+  if(btn.disabled ||!PiReady) return;
+  Pi.createPayment({amount: 0.01, memo: "Like @" + owner}, {
     onReadyForServerApproval: async function(id){ await serverApprove(id, owner); },
-    onReadyForServerCompletion: async function(id, txid){ await serverComplete(id, txid); btn.innerHTML='❤️ Liked'; btn.disabled=true; alert('0.01 Pi ke @' + owner); },
-    onCancel: function(){}, onError: function(e){ alert('Error: '+e.message); }
+    onReadyForServerCompletion: async function(id, txid){ btn.innerHTML='❤️ Liked'; btn.disabled=true; },
+    onCancel: function(){}, onError: function(e){}
   });
 }
-
 function beliNFT(btn, owner, harga, nftId){
-  if(btn.disabled ||!PiReady){ alert('Pi belum siap'); return; }
-  if(confirm('Beli NFT ' + harga + ' Pi dari @' + owner + '?')){
-    Pi.createPayment({amount: harga, memo: "Beli NFT dari @" + owner, metadata: {type: "buy", to: owner}}, {
-      onReadyForServerApproval: async function(id){ await serverApprove(id, owner); },
-      onReadyForServerCompletion: async function(id, txid){ await serverComplete(id, txid); btn.innerHTML='✓ Sold'; btn.disabled=true; alert('NFT dibeli!'); },
-      onCancel: function(){}, onError: function(e){ alert('Error: '+e.message); }
-    });
-  }
-}
-
-function mintNFT(){
-  if(!PiReady){ alert('Pi belum siap'); return; }
-  let nftId = 'nft_' + Date.now();
-  Pi.createPayment({amount: 0.01, memo: "Mint NFT " + nftId, metadata: {type: "mint"}}, {
-    onReadyForServerApproval: async function(id){ await serverApprove(id, 'OWNER_APP'); },
-    onReadyForServerCompletion: async function(id, txid){ await serverComplete(id, txid); alert('Mint berhasil! 0.01 Pi ke wallet Owner'); },
-    onCancel: function(){}, onError: function(e){ alert('Error: '+e.message); }
+  if(btn.disabled ||!PiReady) return;
+  Pi.createPayment({amount: harga, memo: "Beli NFT"}, {
+    onReadyForServerApproval: async function(id){ await serverApprove(id, owner); },
+    onReadyForServerCompletion: async function(id, txid){ btn.innerHTML='✓ Sold'; btn.disabled=true; },
+    onCancel: function(){}, onError: function(e){}
   });
 }
-
+function mintNFT(){
+  if(!PiReady) return;
+  Pi.createPayment({amount: 0.01, memo: "Mint NFT"}, {
+    onReadyForServerApproval: async function(id){ await serverApprove(id, 'OWNER'); },
+    onReadyForServerCompletion: async function(id, txid){ alert('Mint berhasil!'); },
+    onCancel: function(){}, onError: function(e){}
+  });
+}
 function followUser(btn, username){
   btn.textContent = '✓ Following';
   btn.disabled = true;
