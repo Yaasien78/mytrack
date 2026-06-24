@@ -30,19 +30,18 @@ h1{font-size:48px;margin:0;line-height:1.1;font-weight:900;background:linear-gra
 <span>📷 Klik untuk<br>Kamera/Galeri</span>
 <input type="file" id="file" accept="image/*">
 </label>
-<button class="btn" onclick="masuk()">Masuk</button>
+<button class="btn" id="btnMasuk">Masuk</button>
 </div>
-<script>
-// Load foto dari localStorage
-function loadFoto(){
-  let f = localStorage.getItem('fotoMG');
-  let i = document.getElementById('img');
-  let s = document.querySelector('.foto span');
-  if(f && i){
-    i.src = f;
-    i.style.display = 'block';
-    if(s) s.style.display = 'none';
-  }
-}
 
-//
+<script>
+// Tunggu semua element kebaca dulu
+window.onload = function(){
+
+  // 1. Load foto kalau udah pernah pilih
+  let simpan = localStorage.getItem('fotoMG');
+  let imgEl = document.getElementById('img');
+  let spanEl = document.querySelector('.foto span');
+  if(simpan && imgEl){
+    imgEl.src = simpan;
+    imgEl.style.display = 'block';
+    if(spanEl) span
