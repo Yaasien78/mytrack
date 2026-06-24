@@ -22,4 +22,29 @@
       radial-gradient(1px 1px at 40px 340px, #fff, transparent),
       radial-gradient(1px 1px at 200px 380px, #fff, transparent),
       radial-gradient(2px 2px at 110px 450px, #fff, transparent);
-    background-repeat:repeat;background-size:220px 500px;opacity:
+    background-repeat:repeat;background-size:220px 500px;opacity:1
+  }
+
+  /* KONTEN DARI ATAS */
+  .container{position:relative;z-index:1;width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:60px 20px 40px;text-align:center;gap:20px}
+
+  /* TEKS GRADIENT EMAS KE SILVER + OUTLINE HITAM */
+  h1{
+    font-size:48px;margin:0;line-height:1.1;font-weight:900;
+    background:linear-gradient(180deg,#FFD700 0%,#FFF 40%,#C0C0C0 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 2px #000) drop-shadow(0 0 4px rgba(0,0,0,0.8))
+  }
+  .sub{
+    color:#FFD700;font-size:14px;margin:0;font-weight:600;
+    text-shadow:0 1px 3px rgba(0,0,0,0.9), 0 0 1px #000
+  }
+
+  /* KOTAK FOTO 4x6cm GARIS PUTUS */
+  .foto{
+    width:4cm;height:6cm;border:3px dashed #FFD700;border-radius:12px;
+    background:rgba(0,0,0,0.3);position:relative;cursor:pointer;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0
+  }
+  .foto img{width:100%;height:100%;object-fit:cover;display:none}
+  .foto span{color:#FFD700;font-size:12px
