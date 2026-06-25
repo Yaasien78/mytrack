@@ -91,16 +91,43 @@
 <div class="screen" id="home">
   <div class="content">
     <h3 style="color:#FFD700;margin-bottom:10px">🖼️ Galery NFT</h3>
+    
     <div class="post">
       <img class="post-img" src="https://picsum.photos/460/250?random=1">
       <p style="color:#FFD700;font-weight:700;margin-top:8px">NFT #001 - Art Palembang</p>
-      <button onclick="beliNFT(5,'nft_001')" style="margin-top:6px;padding:6px 12px;background:#FFD700;color:#6a0dad;border:none;border-radius:6px;font-weight:900;cursor:pointer">Beli 5 Pi</button>
+      <p style="color:#ccc;font-size:12px;margin:5px 0">Koleksi langka Jembatan Ampera versi digital</p>
+      
+      <!-- FOOTER BARU: CHAT + MINT -->
+      <div style="display:flex;gap:8px;margin-top:10px;border-top:1px solid #6a0dad;padding-top:10px">
+        <button onclick="chatSeller('user001', 'NFT #001')" 
+          style="flex:1;padding:8px;background:rgba(255,215,0,0.1);color:#FFD700;border:1px solid #FFD700;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer">
+          💬 Chat Seller
+        </button>
+        <button onclick="mintNFT(0.01,'nft_001_palembang')" 
+          style="flex:1;padding:8px;background:#FFD700;color:#6a0dad;border:none;border-radius:8px;font-weight:900;font-size:12px;cursor:pointer">
+          ⚡ Mint 0.01 Pi
+        </button>
+      </div>
     </div>
+
     <div class="post">
       <img class="post-img" src="https://picsum.photos/460/250?random=2">
-      <p style="color:#FFD700;font-weight:700;margin-top:8px">NFT #002 - Jembatan Ampera</p>
-      <button onclick="beliNFT(8,'nft_002')" style="margin-top:6px;padding:6px 12px;background:#FFD700;color:#6a0dad;border:none;border-radius:6px;font-weight:900;cursor:pointer">Beli 8 Pi</button>
+      <p style="color:#FFD700;font-weight:700;margin-top:8px">NFT #002 - Pempek Legend</p>
+      <p style="color:#ccc;font-size:12px;margin:5px 0">Icon kuliner Palembang NFT Edition</p>
+      
+      <!-- FOOTER BARU: CHAT + MINT -->
+      <div style="display:flex;gap:8px;margin-top:10px;border-top:1px solid #6a0dad;padding-top:10px">
+        <button onclick="chatSeller('user002', 'NFT #002')" 
+          style="flex:1;padding:8px;background:rgba(255,215,0,0.1);color:#FFD700;border:1px solid #FFD700;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer">
+          💬 Chat Seller
+        </button>
+        <button onclick="mintNFT(0.01,'nft_002_pempek')" 
+          style="flex:1;padding:8px;background:#FFD700;color:#6a0dad;border:none;border-radius:8px;font-weight:900;font-size:12px;cursor:pointer">
+          ⚡ Mint 0.01 Pi
+        </button>
+      </div>
     </div>
+
   </div>
 </div>
 
