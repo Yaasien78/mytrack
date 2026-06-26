@@ -64,7 +64,7 @@ document.getElementById('btnMasuk').onclick = async function(){
   b.disabled = true;
 
   try{
-    Pi.init({version:"2.0", sandbox:false});
+    Pi.init({version:"2.0", sandbox:true});
 
     // Pake async/await biar dapet username
     const scopes = ['username', 'payments'];
