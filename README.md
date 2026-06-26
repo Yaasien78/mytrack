@@ -4,9 +4,14 @@ App Track di Pi Network
 
 ## Fitur
 - Login pake Pi Browser
-- Toko & Galeri Digital
+- profil pioneer
+- Chart Price Pi/Usdt/Idr
+- Map global pioneer
+- chating and message
+- Toko & Galeri NFT
 - Marketplace P2P pake Pi Coin
-- Upload & Jual Karya Digital
+- Tour and Travel
+- Link apps
 - dan sebagainya
 
 ## Tech Stack
