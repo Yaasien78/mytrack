@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>Profil</title>
+<style>
+:root{--biru:#0A1F44;--ungu:#4B0082;--emas:#DAA520;--hitam:#000;}
+body{margin:0;background:#1A0033;color:#fff;font-family:'Segoe UI';}
+.header{padding:12px 15px;display:flex;align-items:center;background:var(--biru);border-bottom:3px solid var(--emas);}
+.back{font-size:2em;color:var(--emas);text-decoration:none;margin-right:10px;}
+.logo{font-size:1.5em;font-weight:900;color:var(--emas);text-align:center;flex-grow:1;}
+.main{padding:20px;max-width:600px;margin:0 auto;}
+.card{background:var(--ungu);border:2px solid var(--emas);border-radius:15px;padding:25px;text-align:center;}
+.avatar{width:120px;height:120px;border-radius:50%;border:4px solid var(--emas);object-fit:cover;margin-bottom:15px;background:#333;}
+.nama{font-size:1.8em;font-weight:900;color:var(--emas);margin-bottom:5px;}
+.uid{font-size:0.9em;color:#aaa;margin-bottom:20px;word-break:break-all;}
+.info-box{background:rgba(0,0,0,0.3);border-radius:10px;padding:15px;text-align:left;margin-top:15px;}
+.info-row{display:flex;justify-content:space-between;margin-bottom:10px;font-size:1em;}
+.info-row b{color:var(--emas);}
+.footer{position:fixed;bottom:0;width:100%;padding:15px;background:var(--biru);border-top:3px solid var(--emas);text-align:center;font-size:0.9em;color:#aaa;}
+.loading{text-align:center;padding:50px;font-size:1.2em;color:var(--emas);}
+</style>
+</head>
+<body>
+<header class="header">
+  <a href="menu.html" class="back">←</a>
+  <div class="logo">1. Profil</div>
+  <div style="width:2em"></div>
+</header>
+
+<main class="main">
+  <div id="loading" class="loading">Loading Data Pi...</div>
+  
+  <div id="profilCard" class="card" style="display:none;">
+    <img id="avatar" class="avatar" src="https://via.placeholder.com/120/DAA520/000?text=PI" alt="Avatar">
+    <div id="nama" class="nama">@username</div>
+    <div id="uid" class="uid">UID: -</div>
+    
+    <div class="info-box">
+      <div class="info-row"><span>Status</span><b>Pioneer Terverifikasi</b></div>
+      <div class="info-row"><span>App</span><b>Mall Genesis V=43</b></div>
+      <div class="info-row"><span>Login</span><b id="loginTime">-</b></div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  Mall Genesis V=43 © 2026 | Swipe Kiri/Kanan
+</footer>
+
+<script src="menu.js"></script>
+<script>
+// AMBIL DATA DARI LOCALSTORAGE INDEX.HTML
+document.addEventListener('DOMContentLoaded', function() {
+  let userData = localStorage.getItem('pi_user');
+  
+  if(!userData){
+    document.getElementById('loading').innerHTML = 'Belum Login Bang<br><a href="index.html" style="color:var(--emas)">Klik Login Dulu</a>';
+    return;
+  }
+
+  let user = JSON.parse(userData);
+  
+  // ISI DATA KE HTML
+  document.getElementById('nama').textContent = '@' + user.username;
+  document.getElementById('uid').textContent = 'UID: ' + user.uid;
+  document.getElementById('loginTime').textContent = new Date().toLocaleDateString('id-ID');
+  
+  // FOTO PROFIL PI - Pi SDK v2.0 ngasih accessToken, tapi foto harus dari API Pi
+  // Sementara pake placeholder emas dulu. Nanti V=44 kita sambung API Pi
+  document.getElementById('avatar').src = 'https://pbs.twimg.com/profile_images/placeholder.jpg'; // Ganti nanti
+  
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('profilCard').style.display = 'block';
+});
+</script>
+</body>
+  </html>
