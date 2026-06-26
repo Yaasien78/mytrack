@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <title>Mall Genesis</title>
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -18,14 +18,14 @@ html,body{margin:0;padding:0;height:100%;background:var(--ungu);color:#fff;font-
 .header{position:fixed;top:0;left:0;width:100%;z-index:10;padding:15px 20px;display:flex;align-items:center;gap:15px;background:var(--ungu);border-bottom:3px solid var(--kuning)}
 .menu{font-size:2em;cursor:pointer;color:var(--kuning);font-weight:700}
 .logo{font-size:1.8em;font-weight:900;color:var(--kuning)}
-.main{padding:80px 15px 120px 15px;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.main{padding:80px 15px 140px 15px; /* TAMBAH 140px BUAT FOOTER */ height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto}
 .card{background:var(--ungu-card);border-radius:15px;padding:15px;width:100%;max-width:500px;border:2px solid var(--kuning);box-shadow:0 0 15px rgba(255,215,0,0.3);text-align:center}
 .title{font-size:1.3em;font-weight:900;color:var(--kuning);margin-bottom:5px}
 .harga{font-size:2.8em;font-weight:900;color:var(--kuning);margin:5px 0}
 .persen{font-size:1.1em;margin-bottom:10px}
 .update{font-size:0.9em;opacity:0.7}
-.footer{position:fixed;bottom:0;left:0;width:100%;z-index:10;padding:20px;background:var(--ungu);border-top:3px solid var(--kuning)}
-.btn-login{width:100%;background:var(--kuning);color:var(--ungu);border:none;padding:18px 30px;border-radius:15px;font-size:1.3em;font-weight:900;cursor:pointer;box-shadow:0 0 20px var(--kuning)}
+.footer{position:fixed;bottom:0;left:0;width:100%;z-index:999; /* WAJIB 999 */ padding:20px 20px calc(20px + env(safe-area-inset-bottom)); /* AMANIN NAVBAR HP */ background:var(--ungu);border-top:3px solid var(--kuning)}
+.btn-login{width:100%;background:var(--kuning);color:var(--ungu);border:none;padding:18px 30px;border-radius:15px;font-size:1.3em;font-weight:900;cursor:pointer;box-shadow:0 0 20px var(--kuning);display:block} /* WAJIB DISPLAY:BLOCK */
 .btn-login:active{transform:scale(0.98)}
 .loading{opacity:0.7;font-size:0.9em}
 </style>
@@ -59,4 +59,101 @@ html,body{margin:0;padding:0;height:100%;background:var(--ungu);color:#fff;font-
       <div style="color:var(--kuning);font-weight:900;font-size:1.2em" id="vol">-</div>
     </div>
   </div>
-</main
+</main>
+
+<footer class="footer">
+  <button id="btnLoginFooter" class="btn-login">Login Pi</button>
+</footer>
+
+<script>
+let userLogin = null;
+let btnLogin = document.getElementById('btnLoginFooter');
+let chart;
+let startIndex = 0;
+
+window.onload = function(){
+  let u = localStorage.getItem('pi_user');
+  if(u){
+    window.location.href = 'dashboard.html';
+    return;
+  }
+  btnLogin.textContent = 'Login Pi';
+  fetchData();
+  setInterval(fetchData, 60000);
+  setInterval(autoScrollChart, 3000);
+};
+
+btnLogin.onclick = async function(){
+  this.textContent = 'Login...'; this.disabled = true;
+  try{
+    const auth = await Pi.authenticate(['username', 'payments']);
+    userLogin = {username: auth.user.username};
+    localStorage.setItem('pi_user', JSON.stringify(userLogin));
+    window.location.href = 'dashboard.html';
+  }catch(e){
+    alert('Gagal login: ' + e.message);
+    btnLogin.textContent = 'Login Pi';
+  }
+  this.disabled = false;
+};
+
+async function fetchData(){
+  try{
+    const res = await fetch('https://api.coingecko.com/api/v3/coins/pi-network?localization=false&tickers=false&market_data=true&sparkline=true');
+    const data = await res.json();
+    const m = data.market_data;
+    document.getElementById('hargaPi').textContent = '$' + m.current_price.usd.toFixed(4);
+    document.getElementById('mcap').textContent = '$' + (m.market_cap.usd/1000000).toFixed(2) + 'M';
+    document.getElementById('vol').textContent = '$' + (m.total_volume.usd/1000000).toFixed(2) + 'M';
+    let change = m.price_change_percentage_24h.toFixed(2);
+    let el = document.getElementById('persenPi');
+    el.textContent = change + '%';
+    el.style.color = change >= 0? '#00ff88' : '#ff5555';
+    document.getElementById('lastUpdate').textContent = 'Update: ' + new Date().toLocaleTimeString('id-ID');
+    let prices = m.sparkline_7d.price;
+    let labels = prices.map((_,i)=>i);
+    if(!chart){
+      initChart(labels, prices);
+    }else{
+      chart.data.labels = labels;
+      chart.data.datasets[0].data = prices;
+      updateChartWindow();
+    }
+  }catch(e){
+    console.error(e);
+    document.getElementById('hargaPi').textContent = 'Gagal load API';
+  }
+}
+
+function initChart(labels, data){
+  const ctx = document.getElementById('chartPi').getContext('2d');
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {labels: labels, datasets: [{label: 'Pi/USD', data: data, borderColor: '#FFD700', backgroundColor: 'rgba(255,215,0,0.2)', tension: 0.4, fill: true, pointRadius: 0}]},
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: {duration: 0},
+      plugins:{legend:{display:false}},
+      scales:{x:{display:false, min:0, max:49}, y:{ticks:{color:'#ddd'}}}
+    }
+  });
+}
+
+function autoScrollChart(){
+  if(!chart) return;
+  let total = chart.data.labels.length;
+  let windowSize = 50;
+  startIndex += 2;
+  if(startIndex + windowSize > total){
+    startIndex = 0;
+  }
+  updateChartWindow();
+}
+
+function updateChartWindow(){
+  chart.options.scales.x.min = startIndex;
+  chart.options.scales.x.max = startIndex + 49;
+  chart.update();
+}
+</script>
+</body>
+  </html>
