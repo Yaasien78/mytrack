@@ -16,117 +16,47 @@ html,body{margin:0;padding:0;height:100%;background:var(--ungu);color:#fff;font-
 .stars{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;background-image: radial-gradient(2px 2px at 20% 30%, var(--kuning), transparent);background-size: 300px 300px;animation: starfield 4s linear infinite;opacity:0.6}
 @keyframes starfield{0%{background-position: 0 0} 100%{background-position: 0 600px}}
 .header{position:fixed;top:0;left:0;width:100%;z-index:10;padding:15px 20px;display:flex;align-items:center;gap:15px;background:var(--ungu);border-bottom:3px solid var(--kuning)}
-.header.menu{font-size:2em;cursor:pointer;color:var(--kuning);font-weight:700}
+.menu{font-size:2em;cursor:pointer;color:var(--kuning);font-weight:700}
 .logo{font-size:1.8em;font-weight:900;color:var(--kuning)}
 .main{padding:80px 15px 120px 15px;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .card{background:var(--ungu-card);border-radius:15px;padding:15px;width:100%;max-width:500px;border:2px solid var(--kuning);box-shadow:0 0 15px rgba(255,215,0,0.3);text-align:center}
-.card.title{font-size:1.3em;font-weight:900;color:var(--kuning);margin-bottom:5px}
-.card.harga{font-size:2.8em;font-weight:900;color:var(--kuning);margin:5px 0}
-.card.persen{font-size:1.1em;margin-bottom:10px}
-.card.update{font-size:0.9em;opacity:0.7}
+.title{font-size:1.3em;font-weight:900;color:var(--kuning);margin-bottom:5px}
+.harga{font-size:2.8em;font-weight:900;color:var(--kuning);margin:5px 0}
+.persen{font-size:1.1em;margin-bottom:10px}
+.update{font-size:0.9em;opacity:0.7}
 .footer{position:fixed;bottom:0;left:0;width:100%;z-index:10;padding:20px;background:var(--ungu);border-top:3px solid var(--kuning)}
 .btn-login{width:100%;background:var(--kuning);color:var(--ungu);border:none;padding:18px 30px;border-radius:15px;font-size:1.3em;font-weight:900;cursor:pointer;box-shadow:0 0 20px var(--kuning)}
 .btn-login:active{transform:scale(0.98)}
+.loading{opacity:0.7;font-size:0.9em}
 </style>
 </head>
 <body>
 
-<div class="warp"></div> 
-<div class="stars"></div> 
+<div class="warp"></div>
+<div class="stars"></div>
 
-<!-- HEADER -->
 <header class="header">
   <div class="menu" onclick="alert('Menu coming soon')">☰</div>
   <div class="logo">Mall Genesis</div>
 </header>
 
-<!-- MAIN = CHART LANGSUNG TENGAH -->
 <main class="main">
   <div class="card">
     <div class="title">📈 Chart Harga Pi Network</div>
-    <div class="harga" id="hargaPi">$0.1258</div>
-    <div class="persen" id="persenPi" style="color:#ff5555">-2.22%</div>
-    <canvas id="chartPi" height="150"></canvas>
-    <div class="update">Update tiap 10 detik</div>
+    <div class="harga" id="hargaPi"><span class="loading">Loading...</span></div>
+    <div class="persen" id="persenPi">-</div>
+    <canvas id="chartPi" height="160"></canvas>
+    <div class="update" id="lastUpdate">Update tiap 1 menit</div>
   </div>
-  
+
   <div style="display:flex;gap:10px;width:100%;max-width:500px;margin-top:15px">
     <div class="card" style="flex:1;padding:10px">
       <div style="opacity:0.7;font-size:0.9em">Market Cap</div>
-      <div style="color:var(--kuning);font-weight:900;font-size:1.2em">$1358.01M</div>
+      <div style="color:var(--kuning);font-weight:900;font-size:1.2em" id="mcap">-</div>
     </div>
     <div class="card" style="flex:1;padding:10px">
       <div style="opacity:0.7;font-size:0.9em">Volume 24h</div>
-      <div style="color:var(--kuning);font-weight:900;font-size:1.2em">$10.59M</div>
+      <div style="color:var(--kuning);font-weight:900;font-size:1.2em" id="vol">-</div>
     </div>
   </div>
-</main>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <button id="btnLoginFooter" class="btn-login">Login Pi</button>
-</footer>
-
-<script>
-let userLogin = null;
-let btnLogin = document.getElementById('btnLoginFooter');
-
-// 1. CEK LOGIN
-window.onload = function(){
-  let u = localStorage.getItem('pi_user');
-  if(u){
-    userLogin = JSON.parse(u);
-    btnLogin.textContent = 'Masuk Dashboard'; // Kalo udah login, tombolnya ganti
-  }
-  initChart(); // Langsung jalanin chart
-};
-
-// 2. LOGIN -> LEMPAR KE DASHBOARD.HTML
-btnLogin.onclick = async function(){
-  if(userLogin){ 
-    window.location.href = 'dashboard.html'; // LANGSUNG GAS
-    return; 
-  }
-  
-  this.textContent = 'Login...'; this.disabled = true;
-  try{
-    const auth = await Pi.authenticate(['username', 'payments']);
-    userLogin = {username: auth.user.username};
-    localStorage.setItem('pi_user', JSON.stringify(userLogin));
-    window.location.href = 'dashboard.html'; // LOGIN SUKSES LANGSUNG PINDAH
-  }catch(e){
-    alert('Gagal login: ' + e.message);
-    btnLogin.textContent = 'Login Pi'; 
-  }
-  this.disabled = false;
-};
-
-// 3. CHART LIVE SIMULASI
-let chart;
-function initChart(){
-  const ctx = document.getElementById('chartPi').getContext('2d');
-  let data = [0.130, 0.128, 0.132, 0.138, 0.136, 0.134, 0.130, 0.124, 0.1258];
-  chart = new Chart(ctx, {
-    type: 'line',
-    data: {labels: data.map((_,i)=>i), datasets: [{label: 'Pi/USD', data: data, borderColor: '#FFD700', backgroundColor: 'rgba(255,215,0,0.2)', tension: 0.4, fill: true, pointRadius: 0}]},
-    options: {responsive: true, maintainAspectRatio: false, plugins:{legend:{display:false}}, scales:{x:{display:false}, y:{ticks:{color:'#ddd'}}}}
-  });
-  
-  // UPDATE TIAP 10 DETIK
-  setInterval(()=>{
-    let last = data[data.length-1];
-    let next = last + (Math.random()-0.5)*0.002; // Naik turun random dikit
-    data.shift(); data.push(next);
-    chart.data.datasets[0].data = data;
-    chart.update();
-    
-    document.getElementById('hargaPi').textContent = '$' + next.toFixed(4);
-    let change = ((next - data[0])/data[0]*100).toFixed(2);
-    let el = document.getElementById('persenPi');
-    el.textContent = change + '%';
-    el.style.color = change >= 0? '#00ff88' : '#ff5555';
-  }, 10000);
-}
-</script>
-</body>
-  </html>
+</main
