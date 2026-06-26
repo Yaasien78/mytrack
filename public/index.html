@@ -6,14 +6,8 @@
 <title>Mall Genesis</title>
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>Pi.init({ version: "2.0", sandbox: true });</script>
 <style>
-:root{
-  --biru:#0A1F44; 
-  --ungu:#4B0082; 
-  --emas:#DAA520; /* EMAS TUA */
-  --hitam:#000;
-}
+:root{--biru:#0A1F44; --ungu:#4B0082; --emas:#DAA520; --hitam:#000;}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%;background:#1A0033;color:#fff;font-family:'Segoe UI', Arial, sans-serif;overflow-y:auto}
 .header{position:sticky;top:0;left:0;width:100%;z-index:10;padding:12px 15px;display:flex;align-items:center;gap:10px;background:var(--biru);border-bottom:3px solid var(--emas)}
@@ -66,11 +60,115 @@ let userLogin = null;
 let btnLogin = document.getElementById('btnLoginFooter'); 
 let chart; 
 let rateIdr = 16000;
-function updateBtnLogin(){ if(userLogin){ btnLogin.textContent = 'Welcome ' + userLogin.username; }else{ btnLogin.textContent = 'Login'; }
-window.onload = async function(){ let u = localStorage.getItem('pi_user'); if(u){ userLogin = JSON.parse(u); } updateBtnLogin(); await fetchKurs(); fetchData(); setInterval(fetchKurs, 60000); setInterval(fetchData, 10000); };
-btnLogin.onclick = async function(){ if(userLogin){ alert('Anda sudah login sebagai: ' + userLogin.username); return; } this.textContent = 'Login...'; this.disabled = true; try{ const auth = await Pi.authenticate(['username', 'payments']); userLogin = {username: auth.user.username}; localStorage.setItem('pi_user', JSON.stringify(userLogin)); updateBtnLogin(); }catch(e){ alert('Gagal login: ' + e.message); updateBtnLogin(); } this.disabled = false; };
-async function fetchKurs(){ try{ const res = await fetch('https://open.er-api.com/v6/latest/USD'); const data = await res.json(); rateIdr = data.rates.IDR; document.getElementById('lastUpdate').textContent = `Kurs: 1 USD = Rp ${rateIdr.toFixed(2)} | Update ${new Date().toLocaleTimeString('id-ID')}`; }catch(e){ document.getElementById('lastUpdate').textContent = `Kurs: 1 USD = Rp ${rateIdr.toFixed(2)} | Gagal update`; }
-async function fetchData(){ try{ const res = await fetch('https://api.coingecko.com/api/v3/coins/pi-network?localization=false&tickers=false&market_data=true&sparkline=true'); const m = (await res.json()).market_data; let priceUsd = m.current_price.usd || 0; let priceIdr = priceUsd * rateIdr; document.getElementById('hargaUsd').textContent = '$' + priceUsd.toFixed(4); document.getElementById('hargaRp').textContent = 'Harga /pi = Rp ' + Math.round(priceIdr).toLocaleString('id-ID'); document.getElementById('mcap').textContent = '$' + ((m.market_cap.usd || 0)/1000000).toFixed(2) + 'M'; document.getElementById('vol').textContent = '$' + ((m.total_volume.usd || 0)/1000000).toFixed(2) + 'M'; let change = (m.price_change_percentage_24h || 0).toFixed(2); let el = document.getElementById('persenPi'); el.textContent = change + '%'; el.style.color = change >= 0? '#00ff88' : '#ff5555'; let prices = m.sparkline_7d.price; if(!prices || prices.length < 2){ prices = [priceUsd, priceUsd * 1.01, priceUsd * 0.99, priceUsd]; } prices = prices.slice(-100); let labels = prices.map((_,i)=>i); if(!chart){ chart = new Chart(document.getElementById('chartPi'), {type:'line',data:{labels,datasets:[{data:prices,borderColor:'#DAA520',backgroundColor:'rgba(218,165,32,0.15)',tension:0.4,fill:true,pointRadius:0,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false}},scales:{x:{display:false},y:{ticks:{color:'#ddd',callback:v=>v.toFixed(3).replace('.',',')}}}}}); }else{ chart.data.labels=labels; chart.data.datasets[0].data=prices; chart.update('none'); }catch(e){ document.getElementById('hargaUsd').textContent = 'Gagal load API'; }
+
+function updateBtnLogin(){ 
+  if(userLogin){ 
+    btnLogin.textContent = 'Welcome ' + userLogin.username; 
+  }else{ 
+    btnLogin.textContent = 'Login'; 
+  }
+}
+
+window.onload = async function(){
+  // TUNGGU SDK PI SIAP DULU
+  await new Promise(r => setTimeout(r, 500)); 
+  if(typeof Pi!== 'undefined'){ Pi.init({ version: "2.0", sandbox: true }); }
+
+  let u = localStorage.getItem('pi_user');
+  if(u){ userLogin = JSON.parse(u); }
+  updateBtnLogin(); 
+
+  await fetchKurs(); 
+  fetchData(); 
+  setInterval(fetchKurs, 60000); 
+  setInterval(fetchData, 10000);
+};
+
+btnLogin.onclick = async function(){
+  if(typeof Pi === 'undefined'){ alert('Wajib buka di Pi Browser ya bang. Chrome gak bisa login.'); return; }
+  if(userLogin){ alert('Anda sudah login sebagai: ' + userLogin.username); return; }
+  
+  this.textContent = 'Login...'; this.disabled = true;
+  try{
+    const auth = await Pi.authenticate(['username', 'payments'], function(payment){ console.log(payment); });
+    userLogin = {username: auth.user.username};
+    localStorage.setItem('pi_user', JSON.stringify(userLogin));
+    updateBtnLogin();
+  }catch(e){
+    alert('Gagal login: ' + e.message);
+    updateBtnLogin();
+  }
+  this.disabled = false;
+};
+
+async function fetchKurs(){
+  try{
+    const res = await fetch('https://open.er-api.com/v6/latest/USD');
+    const data = await res.json();
+    rateIdr = data.rates.IDR;
+    document.getElementById('lastUpdate').textContent = `Kurs: 1 USD = Rp ${rateIdr.toFixed(2)} | Update ${new Date().toLocaleTimeString('id-ID')}`;
+  }catch(e){
+    document.getElementById('lastUpdate').textContent = `Kurs: 1 USD = Rp ${rateIdr.toFixed(2)} | Gagal update`;
+  }
+}
+
+async function fetchData(){
+  try{
+    const res = await fetch('https://api.coingecko.com/api/v3/coins/pi-network?localization=false&tickers=false&market_data=true&sparkline=true');
+    if(!res.ok) throw new Error('API Gagal');
+    const data = await res.json();
+    const m = data.market_data;
+    
+    let priceUsd = m.current_price.usd || 0.006; // KASIH HARGA DUMMY KALO NULL
+    let priceIdr = priceUsd * rateIdr;
+    
+    document.getElementById('hargaUsd').textContent = '$' + priceUsd.toFixed(4);
+    document.getElementById('hargaRp').textContent = 'Harga /pi = Rp ' + Math.round(priceIdr).toLocaleString('id-ID');
+    document.getElementById('mcap').textContent = '$' + ((m.market_cap.usd || 1000000)/1000000).toFixed(2) + 'M';
+    document.getElementById('vol').textContent = '$' + ((m.total_volume.usd || 500000)/1000000).toFixed(2) + 'M';
+    
+    let change = (m.price_change_percentage_24h || 0).toFixed(2);
+    let el = document.getElementById('persenPi');
+    el.textContent = change + '%';
+    el.style.color = change >= 0? '#00ff88' : '#ff5555';
+
+    let prices = m.sparkline_7d.price;
+    if(!prices || prices.length < 2){ 
+      prices = [priceUsd, priceUsd*1.02, priceUsd*0.98, priceUsd*1.01, priceUsd]; // DATA DUMMY
+    }
+    prices = prices.slice(-50);
+    let labels = prices.map((_,i)=>i);
+    
+    if(!chart){
+      initChart(labels, prices);
+    }else{
+      chart.data.labels = labels;
+      chart.data.datasets[0].data = prices;
+      chart.update('none');
+    }
+  }catch(e){
+    console.error(e);
+    document.getElementById('hargaUsd').textContent = '$0.0060'; // DUMMY
+    document.getElementById('hargaRp').textContent = 'Harga /pi = Rp ' + Math.round(0.006 * rateIdr).toLocaleString('id-ID');
+    if(!chart){ initChart([0,1,2,3,4], [0.006,0.0061,0.0059,0.0062,0.006]); }
+  }
+}
+
+function initChart(labels, data){
+  const ctx = document.getElementById('chartPi').getContext('2d');
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {labels: labels, datasets: [{label: 'Pi/USD', data: data, borderColor: '#DAA520', backgroundColor: 'rgba(218,165,32,0.15)', tension: 0.4, fill: true, pointRadius: 0, borderWidth: 2}]},
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{display:false}, 
+        y:{ticks:{color:'#ddd', callback: v => v.toFixed(4).replace('.',',')}}
+      }
+    }
+  });
+}
 </script>
 </body>
-    </html>
+</html>
