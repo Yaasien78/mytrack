@@ -7,49 +7,37 @@
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script>Pi.init({ version: "2.0", sandbox: true });</script>
 <style>
+:root{
+  --ungu:#4B0082; /* Ungu Gelap */
+  --kuning:#FFD700; /* Kuning Neon */
+  --ungu-card:#6A0DAD; /* Ungu Card */
+}
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;color:#fff;font-family:Arial, sans-serif;text-align:center}
-@keyframes fadeIn{from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)}}
+html,body{margin:0;padding:0;height:100%;background:var(--ungu);color:#fff;font-family:Arial, sans-serif;overflow-x:hidden}
+@keyframes float{0%{transform:translateY(0)} 50%{transform:translateY(-15px)} 100%{transform:translateY(0)}}
 
-/* 1. TEROWONGAN GALAKSI SPIRAL UNGU HALUS */
-.warp{
-  position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;
-  background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%, rgba(255,180,255,0.6) 10%, rgba(138,43,226,0.5) 30%, rgba(75,0,130,0.8) 60%, #000 100%);
-  animation: zoomIn 20s infinite linear;
-}
-@keyframes zoomIn{0%{transform:scale(0.5) rotate(0deg)} 100%{transform:scale(3) rotate(360deg)}}
-
-/* 2. BINTANG NGEBUT HALUS */
-.stars{
-  position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;
-  background-image: radial-gradient(2px 2px at 20% 30%, #fff, transparent), radial-gradient(1px 1px at 60% 80%, #fff, transparent), radial-gradient(3px 3px at 90% 20%, #fff, transparent), radial-gradient(1px 1px at 40% 10%, #fff, transparent);
-  background-repeat: repeat; background-size: 400px 400px;
-  animation: starfield 3s linear infinite;
-}
+/* BACKGROUND NEBULA UNGU */
+.warp{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;background: radial-gradient(ellipse at center, rgba(255,215,0,0.2) 0%, var(--ungu) 40%, #000 100%);animation: zoomIn 20s infinite linear;}
+@keyframes zoomIn{0%{transform:scale(0.5)} 100%{transform:scale(3)}}
+.stars{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;background-image: radial-gradient(2px 2px at 20% 30%, var(--kuning), transparent);background-size: 400px 400px;animation: starfield 3s linear infinite;}
 @keyframes starfield{0%{background-position: 0 0} 100%{background-position: 0 1000px}}
 
-/* 3. CONTAINER TRANSPARAN TANPA KACA */
-.container{
-  position:relative;z-index:1;
-  background:transparent;
-  padding:40px 20px;
-  margin-top:15vh;
-  animation:fadeIn 1s ease;
-}
-h1{font-size:2.8em;margin:0 0 10px;font-weight:900;text-shadow:0 0 20px rgba(168,85,247,1)}
-h1 span.mall{color:#fff}
-h1 span.gen{background:linear-gradient(45deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.sub{opacity:0.9;margin-bottom:30px;font-size:1.1em;text-shadow:0 0 10px #000}
+/* LAYOUT */
+.header{position:fixed;top:0;left:0;width:100%;z-index:10;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;background:var(--ungu);border-bottom:3px solid var(--kuning)}
+.header .menu{font-size:1.8em;cursor:pointer;color:var(--kuning)}
+.logo{font-size:1.5em;font-weight:900;color:var(--kuning)}
 
-.foto{border:2px dashed rgba(255,255,255,0.4);border-radius:15px;padding:25px;cursor:pointer;margin:0 auto 20px;transition:0.3s;width:250px;background:rgba(0,0,0,0.3);user-select:none;-webkit-tap-highlight-color:transparent}
-.foto:hover{background:rgba(138,43,226,0.3)}
-.foto:active{transform:scale(0.97)}
-.foto input{display:none}
-.foto img{width:200px;height:280px;object-fit:cover;border-radius:12px;margin:10px auto;display:none;border:3px solid #a855f7;box-shadow:0 0 20px rgba(168,85,247,0.7);cursor:pointer} /* BISA DIKLIK */
+.main{padding:80px 20px 120px 20px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.char-pi{font-size:12em;animation:float 3s ease-in-out infinite;text-shadow:0 0 30px var(--kuning);margin-bottom:20px}
+.main h2{margin:0;font-size:2em;color:var(--kuning)}
+.main p{opacity:0.8}
 
-.btn{background:linear-gradient(45deg,#7c3aed,#db2777);color:#fff;border:none;padding:16px 30px;border-radius:12px;font-size:1.1em;font-weight:700;cursor:pointer;width:250px;opacity:0;pointer-events:none;transition:0.3s;box-shadow:0 0 20px rgba(219,39,119,0.5)}
-.btn.show{opacity:1;pointer-events:auto}
-.btn:active{transform:scale(0.97)}
+.card{background:var(--ungu-card);border-radius:15px;padding:20px;margin:20px auto;width:90%;max-width:400px;border:2px solid var(--kuning);box-shadow:0 0 15px rgba(255,215,0,0.3)}
+.card .harga{font-size:3em;font-weight:900;color:var(--kuning);margin:10px 0}
+
+.footer{position:fixed;bottom:0;left:0;width:100%;z-index:10;padding:15px 20px;background:var(--ungu);border-top:3px solid var(--kuning);text-align:center}
+.btn-login{width:90%;max-width:400px;background:var(--kuning);color:var(--ungu);border:none;padding:16px 30px;border-radius:12px;font-size:1.1em;font-weight:900;cursor:pointer;transition:0.3s;box-shadow:0 0 20px var(--kuning)}
+.btn-login:active{transform:scale(0.97)}
 </style>
 </head>
 <body>
@@ -57,80 +45,65 @@ h1 span.gen{background:linear-gradient(45deg,#a855f7,#ec4899);-webkit-background
 <div class="warp"></div> 
 <div class="stars"></div> 
 
-<div class="container">
-  <h1><span class="mall">Mall</span> <span class="gen">Genesis</span></h1>
-  <div class="sub">Marketplace dan NFT</div>
+<!-- HEADER -->
+<header class="header">
+  <div class="menu" onclick="alert('Menu coming soon')">☰</div>
+  <div class="logo">Mall Genesis</div>
+  <div style="width:30px"></div>
+</header>
 
-  <label class="foto" id="btnUpload">
-    <img id="imgKlik" alt="Preview Foto">
-    <span id="txtFoto">📸 Upload Foto 4x6cm</span>
-    <input type="file" id="file" accept="image/*" onchange="uploadFoto(this)">
-  </label>
+<!-- DASHBOARD -->
+<main class="main">
+  <div class="char-pi">🪙</div>
+  <h2>Mall Genesis</h2>
+  <p>Lihat gratis. Login untuk jualan & post.</p>
+  
+  <!-- CONTOH CARD CHART PI -->
+  <div class="card">
+    <div>📈 Chart Harga Pi Network</div>
+    <div class="harga">$0.1258</div>
+    <div style="color:#ff5555">-2.22%</div>
+  </div>
 
-  <button id="btnMasuk" class="btn">Masuk ke Mall</button>
-</div>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <button id="btnLoginFooter" class="btn-login">Login Pi</button>
+</footer>
 
 <script>
-let galeriDibuka = false; 
-let fileInput = document.getElementById('file');
-let imgKlik = document.getElementById('imgKlik');
-let txtFoto = document.getElementById('txtFoto');
-let btnUpload = document.getElementById('btnUpload');
-let btnMasuk = document.getElementById('btnMasuk');
+let userLogin = null;
+let btnLogin = document.getElementById('btnLoginFooter');
 
-// FUNGSI BUKA GALERI ANTI DOUBLE
-function bukaGaleri(){
-  if(!galeriDibuka){
-    galeriDibuka = true;
-    fileInput.click();
-    setTimeout(() => { galeriDibuka = false; }, 800);
-  }
-}
-
-// 1. KLIK KOTAK = BUKA GALERI
-btnUpload.onclick = bukaGaleri;
-
-// 2. KLIK FOTO = BUKA GALERI JUGA BUAT GANTI
-imgKlik.onclick = bukaGaleri; 
-
-// 3. INGAT FOTO SELAMANYA PAS BUKA APP
 window.onload = function(){
-  let f = localStorage.getItem('fotoMG');
-  if(f){
-    imgKlik.src = f;
-    imgKlik.style.display = 'block';
-    txtFoto.style.display = 'none';
-    btnMasuk.classList.add('show');
+  let u = localStorage.getItem('pi_user');
+  if(u){
+    userLogin = JSON.parse(u);
+    btnLogin.textContent = 'Logout @' + userLogin.username;
   }
 };
 
-// 4. UPLOAD FOTO 4X6
-function uploadFoto(input){
-  galeriDibuka = false; 
-  if(input.files && input.files[0]){
-    let reader = new FileReader();
-    reader.onload = function(e){
-      localStorage.setItem('fotoMG', e.target.result);
-      imgKlik.src = e.target.result;
-      imgKlik.style.display = 'block';
-      txtFoto.style.display = 'none';
-      btnMasuk.classList.add('show');
-    };
-    reader.readAsDataURL(input.files[0]);
+btnLogin.onclick = async function(){
+  if(userLogin){ 
+    localStorage.removeItem('pi_user'); 
+    userLogin = null; 
+    btnLogin.textContent = 'Login Pi';
+    alert('Logout berhasil');
+    return; 
   }
-}
-
-// 5. LOGIN PI
-btnMasuk.onclick = async function(){
-  let b = this; b.textContent = 'Login...'; b.disabled = true;
+  
+  this.textContent = 'Login...'; this.disabled = true;
   try{
     const auth = await Pi.authenticate(['username', 'payments']);
-    localStorage.setItem('pi_user', JSON.stringify({username: auth.user.username}));
-    window.location.href = '/dashboard.html?user=' + auth.user.username;
+    userLogin = {username: auth.user.username};
+    localStorage.setItem('pi_user', JSON.stringify(userLogin));
+    btnLogin.textContent = 'Logout @' + userLogin.username;
   }catch(e){
     alert('Gagal login: ' + e.message);
-    b.textContent = 'Masuk ke Mall'; b.disabled = false;
+    btnLogin.textContent = 'Login Pi'; 
   }
+  this.disabled = false;
 };
 </script>
 </body>
