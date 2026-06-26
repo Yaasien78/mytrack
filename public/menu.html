@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>Menu Mall Genesis</title>
+<style>
+:root{--biru:#0A1F44; --ungu:#4B0082; --emas:#DAA520; --hitam:#000;}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;background:#1A0033;color:#fff;font-family:'Segoe UI', Arial, sans-serif}
+.header{position:sticky;top:0;left:0;width:100%;z-index:10;padding:12px 15px;display:flex;align-items:center;gap:10px;background:var(--biru);border-bottom:3px solid var(--emas)}
+.back{font-size:2em;cursor:pointer;color:var(--emas);font-weight:700;line-height:1;text-decoration:none}
+.logo{font-size:1.5em;font-weight:900;color:var(--emas);text-shadow:2px 2px 4px var(--hitam);flex-grow:1; text-align:center}
+.main{padding:20px;max-width:600px;margin:0 auto}
+.menu-list{display:flex;flex-direction:column;gap:15px}
+.menu-item{display:flex;align-items:center;gap:15px;background:var(--ungu);border:2px solid var(--emas);border-radius:12px;padding:18px 20px;text-decoration:none;color:#fff;font-size:1.2em;font-weight:700;transition:all 0.2s}
+.menu-item:hover{background:var(--emas);color:var(--hitam);transform:scale(1.02)}
+.menu-item.icon{font-size:1.5em}
+.footer{position:sticky;bottom:0;left:0;width:100%;padding:15px 20px calc(15px + env(safe-area-inset-bottom)); background:var(--biru);border-top:3px solid var(--emas);text-align:center;font-size:0.9em;color:#aaa}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="back">←</a>
+  <div class="logo">Menu</div>
+  <div style="width:2em"></div>
+</header>
+
+<main class="main">
+  <div class="menu-list">
+    <a href="profil.html" class="menu-item"><span class="icon">👤</span> 1. Profil</a>
+    <a href="map.html" class="menu-item"><span class="icon">🗺️</span> 2. Map Google</a>
+    <a href="chat.html" class="menu-item"><span class="icon">💬</span> 3. Chat Public dan Privacy</a>
+    <a href="nft.html" class="menu-item"><span class="icon">🖼️</span> 4. Galery NFT</a>
+    <a href="market.html" class="menu-item"><span class="icon">🛒</span> 5. Marketplace</a>
+    <a href="tour.html" class="menu-item"><span class="icon">✈️</span> 6. Tour n Travel</a>
+    <a href="link.html" class="menu-item"><span class="icon">🔗</span> 7. All Link App</a>
+  </div>
+</main>
+
+<footer class="footer">
+  Mall Genesis V=43 © 2026 | Swipe Kiri/Kanan
+</footer>
+
+<script src="menu.js"></script>
+</body>
+  </html>
