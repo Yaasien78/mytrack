@@ -8,7 +8,7 @@
 <script>Pi.init({ version: "2.0", sandbox: true });</script>
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;color:#fff;font-family:Arial, sans-serif}
+html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;color:#fff;font-family:Arial, sans-serif;text-align:center}
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)}}
 
 /* 1. TEROWONGAN GALAKSI SPIRAL UNGU */
@@ -17,56 +17,44 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;color:#
   background: radial-gradient(ellipse at center, rgba(255,255,255,1) 0%, rgba(255,180,255,0.6) 10%, rgba(138,43,226,0.5) 30%, rgba(75,0,130,0.8) 60%, #000 100%);
   animation: zoomIn 15s infinite linear;
 }
-@keyframes zoomIn{
- 0%{transform:scale(0.5) rotate(0deg)}
- 100%{transform:scale(4) rotate(720deg)}
-}
+@keyframes zoomIn{0%{transform:scale(0.5) rotate(0deg)} 100%{transform:scale(4) rotate(720deg)}}
 
 /* 2. BINTANG NGEBUT HYPERSPACE */
 .stars{
   position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;
   background-image: radial-gradient(2px 2px at 20% 30%, #fff, transparent), radial-gradient(1px 1px at 60% 80%, #fff, transparent), radial-gradient(3px 3px at 90% 20%, #fff, transparent), radial-gradient(1px 1px at 40% 10%, #fff, transparent);
-  background-repeat: repeat;
-  background-size: 300px 300px;
+  background-repeat: repeat; background-size: 300px 300px;
   animation: starfield 1.5s linear infinite;
 }
-@keyframes starfield{
- 0%{background-position: 0 0}
- 100%{background-position: 0 2000px}
-}
+@keyframes starfield{0%{background-position: 0 0} 100%{background-position: 0 2000px}}
 
-/* 3. KOTAK KACA NEBULA */
+/* 3. CONTAINER TANPA KACA - CUMA TRANSPARAN */
 .container{
   position:relative;z-index:1;
-  background:rgba(0,0,0,0.25); /* Kaca item 25% tembus */
-  backdrop-filter:blur(12px); /* Blur nebula */
-  border:1px solid rgba(255,180,255,0.3); /* Border glow ungu */
-  border-radius:20px;
+  background:transparent; /* HAPUS KACA, BIR TEMBUS LANGSUNG */
   padding:40px 20px;
-  margin:20px;
-  text-align:center;
+  margin-top:15vh; /* TURUNIN DIKIT KE TENGAH */
   animation:fadeIn 1s ease;
-  max-width:400px;
 }
-h1{font-size:2.5em;margin:0 0 10px;font-weight:900}
+h1{font-size:2.8em;margin:0 0 10px;font-weight:900;text-shadow:0 0 15px rgba(168,85,247,0.8)} /* KASIH GLOW BIAR NONGOL */
 h1 span.mall{color:#fff}
 h1 span.gen{background:linear-gradient(45deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.sub{opacity:0.8;margin-bottom:25px}
+.sub{opacity:0.9;margin-bottom:30px;font-size:1.1em;text-shadow:0 0 10px #000}
 
-.foto{border:2px dashed rgba(255,255,255,0.3);border-radius:15px;padding:20px;cursor:pointer;margin-bottom:15px;transition:0.3s}
-.foto:hover{background:rgba(138,43,226,0.2)}
+.foto{border:2px dashed rgba(255,255,255,0.4);border-radius:15px;padding:25px;cursor:pointer;margin:0 auto 20px;transition:0.3s;width:250px;background:rgba(0,0,0,0.3)} /* AGAK TRANSPARAN AJA */
+.foto:hover{background:rgba(138,43,226,0.3)}
 .foto input{display:none}
-.foto img{max-width:150px;max-height:150px;border-radius:12px;margin:10px auto;display:none;border:2px solid #a855f7}
+.foto img{max-width:200px;max-height:280px;border-radius:12px;margin:10px auto;display:none;border:3px solid #a855f7;box-shadow:0 0 20px rgba(168,85,247,0.7)} /* RASIO 4x6 */
 
-.btn{background:linear-gradient(45deg,#7c3aed,#db2777);color:#fff;border:none;padding:15px 30px;border-radius:12px;font-size:1.1em;font-weight:700;cursor:pointer;width:100%;opacity:0;pointer-events:none;transition:0.3s}
+.btn{background:linear-gradient(45deg,#7c3aed,#db2777);color:#fff;border:none;padding:16px 30px;border-radius:12px;font-size:1.1em;font-weight:700;cursor:pointer;width:250px;opacity:0;pointer-events:none;transition:0.3s;box-shadow:0 0 20px rgba(219,39,119,0.5)}
 .btn.show{opacity:1;pointer-events:auto}
 .btn:disabled{opacity:0.5}
 </style>
 </head>
 <body>
 
-<div class="warp"></div> <!-- LAPISAN UNGU Muter -->
-<div class="stars"></div> <!-- LAPISAN BINTANG Ngebut -->
+<div class="warp"></div> 
+<div class="stars"></div> 
 
 <div class="container">
   <h1><span class="mall">Mall</span> <span class="gen">Genesis</span></h1>
@@ -74,7 +62,7 @@ h1 span.gen{background:linear-gradient(45deg,#a855f7,#ec4899);-webkit-background
 
   <label class="foto" onclick="document.getElementById('file').click()">
     <img id="img" alt="Preview Foto">
-    <span id="txtFoto">📸 Upload Foto 3x6cm</span>
+    <span id="txtFoto">📸 Upload Foto 4x6cm</span> <!-- UDAH GANTI 4x6 -->
     <input type="file" id="file" accept="image/*" onchange="uploadFoto(this)">
   </label>
 
@@ -109,17 +97,14 @@ window.onload = function(){
 };
 
 document.getElementById('btnMasuk').onclick = async function(){
-  let b = this;
-  b.textContent = 'Login...';
-  b.disabled = true;
+  let b = this; b.textContent = 'Login...'; b.disabled = true;
   try{
     const auth = await Pi.authenticate(['username', 'payments']);
     localStorage.setItem('pi_user', JSON.stringify({username: auth.user.username}));
     window.location.href = '/dashboard.html?user=' + auth.user.username;
   }catch(e){
     alert('Gagal login: ' + e.message);
-    b.textContent = 'Masuk ke Mall';
-    b.disabled = false;
+    b.textContent = 'Masuk ke Mall'; b.disabled = false;
   }
 };
 </script>
