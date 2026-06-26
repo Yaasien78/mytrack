@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>Marketplace</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<style>
+:root{--biru:#0A1F44;--ungu:#4B0082;--emas:#DAA520;--hitam:#000;}
+body,html{margin:0;height:100%;background:#1A0033;color:#fff;font-family:'Segoe UI';}
+.header{padding:12px 15px;display:flex;align-items:center;background:var(--biru);border-bottom:3px solid var(--emas);position:sticky;top:0;z-index:10;}
+.back{font-size:2em;color:var(--emas);text-decoration:none;margin-right:10px;}
+.logo{font-size:1.5em;font-weight:900;color:var(--emas);text-align:center;flex-grow:1;}
+.tabs{display:flex;background:var(--ungu);border-bottom:2px solid var(--emas);position:sticky;top:56px;z-index:9;}
+.tab{flex:1;padding:12px;text-align:center;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;font-size:0.95em;}
+.tab.active{background:var(--biru);color:var(--emas);border-bottom:3px solid var(--emas);}
+.main{padding:15px;max-width:600px;margin:0 auto;padding-bottom:80px;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;}
+.card{background:var(--ungu);border:2px solid var(--emas);border-radius:12px;overflow:hidden;text-align:center;display:flex;flex-direction:column;}
+.card img{width:100%;height:140px;object-fit:cover;background:#333;}
+.card .info{padding:10px;flex-grow:1;display:flex;flex-direction:column;}
+.card .nama{font-weight:700;font-size:0.95em;margin-bottom:5px;}
+.card .harga{color:var(--emas);font-weight:900;font-size:1.1em;margin-bottom:10px;}
+.card .tipe{font-size:0.75em;background:rgba(0,0,0,0.3);padding:3px 8px;border-radius:5px;margin-bottom:8px;display:inline-block;}
+.btn-beli, .btn-post{margin-top:auto;background:var(--emas);color:var(--hitam);border:none;border-radius:8px;padding:10px;font-weight:900;font-size:0.9em;cursor:pointer;width:100%;}
+.btn-beli:disabled, .btn-post:disabled{background:#555;color:#aaa;}
+.form-box{background:var(--ungu);border:2px solid var(--emas);border-radius:12px;padding:20px;margin-bottom:20px;}
+.form-box h3{margin:0 0 15px 0;color:var(--emas);text-align:center;}
+.form-box input, .form-box textarea{width:100%;background:#1A0033;border:1px solid var(--emas);color:#fff;border-radius:8px;padding:12px;margin-bottom:10px;font-size:1em;box-sizing:border-box;}
+.grid-poster{display:grid;grid-template-columns:1fr;gap:15px;}
+.card-poster{background:var(--ungu);border:2px solid var(--emas);border-radius:12px;overflow:hidden;}
+.card-poster img{width:100%;height:200px;object-fit:cover;background:#333;}
+.card-poster .info{padding:12px;}
+.card-poster .judul{font-weight:900;font-size:1.1em;color:var(--emas);}
+.card-poster .user{font-size:0.8em;color:#aaa;margin-bottom:5px;}
+.footer{position:fixed;bottom:0;width:100%;padding:15px;background:var(--biru);border-top:3px solid var(--emas);text-align:center;font-size:0.9em;color:#aaa;box-sizing:border-box;}
+</style>
+</head>
+<body>
+<header class="header">
+  <a href="menu.html" class="back">←</a>
+  <div class="logo">5. Marketplace</div>
+  <div style="width:2em"></div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="openTab('barang')">🛒 Tab 1: Barang/Jasa</div>
+  <div class="tab" onclick="openTab('poster')">📢 Tab 2: Media Iklan</div>
+</div>
+
+<main class="main">
+  <!-- TAB 1: BARANG/JASA -->
+  <div id="barang" class="tab-content active">
+    <div class="grid">
+      <div class="card" data-nama="Kaos Genesis" data-harga="5.00" data-tipe="Barang">
+        <img src="https://placehold.co/300x300/DAA520/000?text=Kaos">
+        <div class="info">
+          <span class="tipe">Barang</span>
+          <div class="nama">Kaos Genesis</div>
+          <div class="harga">5.00 Pi</div>
+          <button class="btn-beli">Beli Sekarang</button>
+        </div>
+      </div>
+      <div class="card" data-nama="Jasa Desain Logo" data-harga="10.00" data-tipe="Jasa">
+        <img src="https://placehold.co/300x300/DAA520/000?text=Jasa">
+        <div class="info">
+          <span class="tipe">Jasa</span>
+          <div class="nama">Jasa Desain Logo</div>
+          <div class="harga">10.00 Pi</div>
+          <button class="btn-beli">Beli Sekarang</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: MEDIA IKLAN -->
+  <div id="poster" class="tab-content">
+    <div class="form-box">
+      <h3>Posting di Media Iklan 7 Hari = 1 Pi</h3>
+      <input type="text" id="judul" placeholder="Judul Iklan/Produk" maxlength="50">
+      <textarea id="desc" placeholder="Deskripsi Singkat" rows="3" maxlength="150"></textarea>
+      <input type="url" id="gambar" placeholder="Link Gambar Iklan https://...">
+      <button class="btn-post" id="postBtn">Bayar 1 Pi & Posting</button>
+    </div>
+    <div class="grid-poster">
+      <div class="card-poster">
+        <img src="https://placehold.co/600x400/DAA520/000?text=MEDIA+IKLAN">
+        <div class="info">
+          <div class="judul">Jual Pi Coin Murah</div>
+          <div class="user">@Admin | Sisa 5 Hari</div>
+          <div>Contoh iklan di Media Iklan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  Mall Genesis V=43 © 2026 | Swipe Kiri/Kanan
+</footer>
+
+<script src="menu.js"></script>
+<script>
+Pi.init({ version: "2.0", sandbox: false }); // GANTI TRUE BUAT TEST
+
+let username = 'Tamu';
+let userData = localStorage.getItem('pi_user');
+if(userData){ username = JSON.parse(userData).username; } 
+else { document.querySelectorAll('.btn-beli, .btn-post').forEach(b=>b.disabled=true); }
+
+function openTab(tabName){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(tabName).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// LOGIC BELI BARANG/JASA
+document.querySelectorAll('.btn-beli').forEach(btn => {
+  btn.onclick = async (e) => {
+    let card = e.target.closest('.card');
+    let nama = card.dataset.nama; let harga = parseFloat(card.dataset.harga); let tipe = card.dataset.tipe;
+    btn.disabled = true; btn.textContent = 'Bayar...';
+    Pi.createPayment({amount:harga,memo:`Beli ${tipe}: ${nama}`,metadata:{type:'market_buy',item:nama,tipe,user:username}},
+    {onReadyForServerCompletion:(p,t)=>{alert(`PEMBELIAN ${tipe} SUKSES 🔥\n${nama}`);btn.textContent='Beli Sekarang';btn.disabled=false;},
+     onCancel:()=>{btn.textContent='Beli Sekarang';btn.disabled=false;},
+     onError:(e)=>{alert(e);btn.textContent='Beli Sekarang';btn.disabled=false;}});
+  };
+});
+
+// LOGIC POSTING MEDIA IKLAN 1 PI
+document.getElementById('postBtn').onclick = async () => {
+  let judul = document.getElementById('judul').value.trim();
+  let desc = document.getElementById('desc').value.trim();
+  let gambar = document.getElementById('gambar').value.trim();
+  if(!judul || !desc || !gambar){ alert('Isi semua form dulu bang'); return; }
+  let btn = document.getElementById('postBtn');
+  btn.disabled = true; btn.textContent = 'Bayar 1 Pi...';
+  Pi.createPayment({amount:1,memo:`Media Iklan: ${judul}`,metadata:{type:'poster_post',judul,desc,gambar,user:username}},
+  {onReadyForServerCompletion:(p,t)=>{alert(`IKLAN SUKSES 🔥\nTayang di Media Iklan 7 Hari`);location.reload();},
+   onCancel:()=>{btn.textContent='Bayar 1 Pi & Posting';btn.disabled=false;},
+   onError:(e)=>{alert(e);btn.textContent='Bayar 1 Pi & Posting';btn.disabled=false;}});
+};
+</script>
+</body>
+  </html>
