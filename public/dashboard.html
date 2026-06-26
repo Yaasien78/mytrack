@@ -310,5 +310,13 @@ function simpanNote(){ let note = document.getElementById('noteProfil').value; l
 function loadNote(){ let note = localStorage.getItem('noteProfil_'+currentUser); if(note) document.getElementById('noteProfil').value = note; }
 </script>
 <script src="menu.js"></script>
+ // Load foto dari index.html pas buka dashboard
+window.addEventListener('DOMContentLoaded', () => {
+  let f = localStorage.getItem('fotoMG');
+  if(f && document.getElementById('img')){
+    document.getElementById('img').src = f;
+    document.getElementById('img').style.display = 'block';
+  }
+});
 </body>
 </html>
