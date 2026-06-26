@@ -32,10 +32,40 @@
  .foto span{position:absolute;width:100%;height:100%;top:0;left:0;display:flex!important;align-items:center;justify-content:center;text-align:center;font-size:13px;font-weight:800;color:#FFD700;text-shadow:0 2px 8px rgba(0,0,0,1);line-height:1.4}
   input[type="file"]{display:none}
 
-  /* Kotak Masuk */
- .btn{width:100%;max-width:320px;padding:16px;border:none;border-radius:14px;background:linear-gradient(180deg,#FFD700 0%,#FFA500 100%);color:#000;font-weight:900;font-size:18px;cursor:pointer;transition:0.2s;display:none;box-shadow:0 4px 20px rgba(255,215,0,0.4)}
- .btn:active{transform:scale(0.96)}
- .btn.show{display:block;animation:fadeIn 0.5s}
+    /* Tombol Emas Batangan 3D Realistis */
+  .btn{
+    width:260px; /* Singkron, gak kepanjangan */
+    height:62px; /* Tebal dikit biar berasa batangan */
+    padding:0;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(160deg, #FFF4B3 0%, #FFD700 30%, #DAA520 70%, #8B6914 100%); /* Emas dari atas-miring */
+    color:#2a1a00;
+    font-weight:900;
+    font-size:20px;
+    cursor:pointer;
+    transition:0.1s;
+    display:none;
+    /* Efek 3D Lapisan: Bevel atas + Tonjolan bawah + Glow */
+    box-shadow: 
+      inset 0 3px 4px rgba(255,255,255,0.7),  /* Highlight atas = sisi kena lampu */
+      inset 0 -3px 4px rgba(0,0,0,0.25),      /* Shadow bawah = sisi gelap */
+      0 10px 0 #7A5A08,                       /* Tonjolan 3D tebal bawah */
+      0 14px 20px rgba(255,215,0,0.4);        /* Glow emas */
+    text-shadow:0 1px 1px rgba(255,255,255,0.6);
+    letter-spacing:1.5px;
+    border: 1px solid #F0E68C; /* Pinggiran emas terang */
+  }
+  .btn:active{
+    transform:translateY(10px); /* Turun pas sama tonjolan 10px */
+    box-shadow: 
+      inset 0 2px 3px rgba(0,0,0,0.3), 
+      inset 0 -1px 2px rgba(255,255,255,0.2),
+      0 0px 0 #7A5A08, /* Tonjolan hilang = nempel ke bawah */
+      0 4px 10px rgba(255,215,0,0.2);
+  }
+  .btn.show{display:block;animation:fadeIn 0.5s}
+
   @keyframes fadeIn{from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
