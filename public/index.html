@@ -8,152 +8,69 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>Pi.init({ version: "2.0", sandbox: true });</script>
 <style>
-:root{--ungu:#4B0082; --kuning:#FFD700; --ungu-card:#6A0DAD;}
+:root{--biru:#0A1F44; --ungu:#4B0082; --kuning:#FFD700; --hitam:#000;}
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;height:100%;background:var(--ungu);color:#fff;font-family:'Segoe UI', Arial, sans-serif;overflow:hidden}
-.warp{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;background: radial-gradient(ellipse at center, rgba(255,215,0,0.1) 0%, var(--ungu) 50%, #000 100%);animation: zoomIn 25s infinite linear;}
-@keyframes zoomIn{0%{transform:scale(0.5)} 100%{transform:scale(2.5)}}
-.stars{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;background-image: radial-gradient(2px 2px at 20% 30%, var(--kuning), transparent);background-size: 300px 300px;animation: starfield 4s linear infinite;opacity:0.6}
-@keyframes starfield{0%{background-position: 0 0} 100%{background-position: 0 600px}}
-.header{position:fixed;top:0;left:0;width:100%;z-index:10;padding:15px 20px;display:flex;align-items:center;gap:15px;background:var(--ungu);border-bottom:3px solid var(--kuning)}
-.menu{font-size:2em;cursor:pointer;color:var(--kuning);font-weight:700}
-.logo{font-size:1.8em;font-weight:900;color:var(--kuning)}
-.main{padding:80px 15px 140px 15px; /* TAMBAH 140px BUAT FOOTER */ height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto}
-.card{background:var(--ungu-card);border-radius:15px;padding:15px;width:100%;max-width:500px;border:2px solid var(--kuning);box-shadow:0 0 15px rgba(255,215,0,0.3);text-align:center}
-.title{font-size:1.3em;font-weight:900;color:var(--kuning);margin-bottom:5px}
-.harga{font-size:2.8em;font-weight:900;color:var(--kuning);margin:5px 0}
-.persen{font-size:1.1em;margin-bottom:10px}
-.update{font-size:0.9em;opacity:0.7}
-.footer{position:fixed;bottom:0;left:0;width:100%;z-index:999; /* WAJIB 999 */ padding:20px 20px calc(20px + env(safe-area-inset-bottom)); /* AMANIN NAVBAR HP */ background:var(--ungu);border-top:3px solid var(--kuning)}
-.btn-login{width:100%;background:var(--kuning);color:var(--ungu);border:none;padding:18px 30px;border-radius:15px;font-size:1.3em;font-weight:900;cursor:pointer;box-shadow:0 0 20px var(--kuning);display:block} /* WAJIB DISPLAY:BLOCK */
-.btn-login:active{transform:scale(0.98)}
+html,body{margin:0;padding:0;height:100%;background:#1A0033;color:#fff;font-family:'Segoe UI', Arial, sans-serif;overflow-y:auto}
+.header{position:sticky;top:0;left:0;width:100%;z-index:10;padding:12px 15px;display:flex;align-items:center;justify-content:space-between;background:var(--biru);border-bottom:3px solid var(--kuning)}
+.menu{font-size:2em;cursor:pointer;color:var(--kuning);font-weight:700;line-height:1;text-decoration:none}
+.logo{font-size:1.8em;font-weight:900;color:var(--kuning);text-shadow:2px 2px 4px var(--hitam)}
+.main{padding:15px;max-width:600px;margin:0 auto}
+.card{background:var(--ungu);border-radius:15px;padding:15px;width:100%;border:2px solid var(--kuning);box-shadow:0 0 10px rgba(0,0,0,0.3);text-align:center;margin-bottom:15px}
+.title{font-size:1.1em;font-weight:500;color:#ddd;margin-bottom:5px}
+.harga-usd{font-size:3em;font-weight:900;color:var(--kuning);margin:5px 0;line-height:1}
+.harga-rp{font-size:1.2em;font-weight:700;color:var(--kuning);margin-bottom:5px}
+.persen{font-size:1.2em;font-weight:700;margin-bottom:5px}
+.update{font-size:0.8em;opacity:0.7}
+.chart-box{position:relative;height:280px;width:100%}
+.grid{display:flex;gap:15px}
+.grid.card{flex:1}
+.footer{position:sticky;bottom:0;left:0;width:100%;z-index:10;padding:15px 20px calc(15px + env(safe-area-inset-bottom)); background:var(--biru);border-top:3px solid var(--kuning)}
+.btn-login{width:100%;background:var(--kuning);color:var(--hitam);border:none;padding:16px 30px;border-radius:12px;font-size:1.2em;font-weight:900;cursor:pointer;display:block}
 .loading{opacity:0.7;font-size:0.9em}
 </style>
 </head>
 <body>
 
-<div class="warp"></div>
-<div class="stars"></div>
-
 <header class="header">
-  <div class="menu" onclick="alert('Menu coming soon')">☰</div>
+  <a href="menu.html" class="menu">☰</a> <!-- UDAH NYAMBUNG KE MENU.HTML -->
   <div class="logo">Mall Genesis</div>
+  <div style="width:2em"></div>
 </header>
 
 <main class="main">
   <div class="card">
-    <div class="title">📈 Chart Harga Pi Network</div>
-    <div class="harga" id="hargaPi"><span class="loading">Loading...</span></div>
+    <div class="title">Harga Pi/USD Live</div>
+    <div class="harga-usd" id="hargaUsd"><span class="loading">Loading...</span></div>
+    <div class="harga-rp" id="hargaRp">Harga /pi = Rp -</div>
     <div class="persen" id="persenPi">-</div>
-    <canvas id="chartPi" height="160"></canvas>
-    <div class="update" id="lastUpdate">Update tiap 1 menit</div>
+    <div class="update" id="lastUpdate">Loading Kurs...</div>
   </div>
-
-  <div style="display:flex;gap:10px;width:100%;max-width:500px;margin-top:15px">
-    <div class="card" style="flex:1;padding:10px">
-      <div style="opacity:0.7;font-size:0.9em">Market Cap</div>
-      <div style="color:var(--kuning);font-weight:900;font-size:1.2em" id="mcap">-</div>
-    </div>
-    <div class="card" style="flex:1;padding:10px">
-      <div style="opacity:0.7;font-size:0.9em">Volume 24h</div>
-      <div style="color:var(--kuning);font-weight:900;font-size:1.2em" id="vol">-</div>
-    </div>
+  <div class="card"><div class="chart-box"><canvas id="chartPi"></canvas></div></div>
+  <div class="grid">
+    <div class="card"><div class="title">Market Cap</div><div style="color:var(--kuning);font-weight:900;font-size:1.4em" id="mcap">-</div></div>
+    <div class="card"><div class="title">Volume 24h</div><div style="color:var(--kuning);font-weight:900;font-size:1.4em" id="vol">-</div></div>
   </div>
 </main>
 
 <footer class="footer">
-  <button id="btnLoginFooter" class="btn-login">Login Pi</button>
+  <button id="btnLoginFooter" class="btn-login">Login</button>
 </footer>
 
 <script>
-let userLogin = null;
-let btnLogin = document.getElementById('btnLoginFooter');
-let chart;
-let startIndex = 0;
-
-window.onload = function(){
+let userLogin = null; let btnLogin = document.getElementById('btnLoginFooter'); let chart; let rateIdr = 16000;
+window.onload = async function(){
   let u = localStorage.getItem('pi_user');
-  if(u){
-    window.location.href = 'dashboard.html';
-    return;
-  }
-  btnLogin.textContent = 'Login Pi';
-  fetchData();
-  setInterval(fetchData, 60000);
-  setInterval(autoScrollChart, 3000);
+  if(u){ userLogin = JSON.parse(u); btnLogin.textContent = 'Welcome ' + userLogin.username; }else{ btnLogin.textContent = 'Login'; }
+  await fetchKurs(); fetchData(); setInterval(fetchKurs, 60000); setInterval(fetchData, 10000);
 };
-
 btnLogin.onclick = async function(){
+  if(userLogin){ alert('Anda sudah login sebagai: ' + userLogin.username); return; }
   this.textContent = 'Login...'; this.disabled = true;
-  try{
-    const auth = await Pi.authenticate(['username', 'payments']);
-    userLogin = {username: auth.user.username};
-    localStorage.setItem('pi_user', JSON.stringify(userLogin));
-    window.location.href = 'dashboard.html';
-  }catch(e){
-    alert('Gagal login: ' + e.message);
-    btnLogin.textContent = 'Login Pi';
-  }
+  try{ const auth = await Pi.authenticate(['username', 'payments']); userLogin = {username: auth.user.username}; localStorage.setItem('pi_user', JSON.stringify(userLogin)); btnLogin.textContent = 'Welcome ' + userLogin.username; }catch(e){ alert('Gagal login: ' + e.message); btnLogin.textContent = 'Login'; }
   this.disabled = false;
 };
-
-async function fetchData(){
-  try{
-    const res = await fetch('https://api.coingecko.com/api/v3/coins/pi-network?localization=false&tickers=false&market_data=true&sparkline=true');
-    const data = await res.json();
-    const m = data.market_data;
-    document.getElementById('hargaPi').textContent = '$' + m.current_price.usd.toFixed(4);
-    document.getElementById('mcap').textContent = '$' + (m.market_cap.usd/1000000).toFixed(2) + 'M';
-    document.getElementById('vol').textContent = '$' + (m.total_volume.usd/1000000).toFixed(2) + 'M';
-    let change = m.price_change_percentage_24h.toFixed(2);
-    let el = document.getElementById('persenPi');
-    el.textContent = change + '%';
-    el.style.color = change >= 0? '#00ff88' : '#ff5555';
-    document.getElementById('lastUpdate').textContent = 'Update: ' + new Date().toLocaleTimeString('id-ID');
-    let prices = m.sparkline_7d.price;
-    let labels = prices.map((_,i)=>i);
-    if(!chart){
-      initChart(labels, prices);
-    }else{
-      chart.data.labels = labels;
-      chart.data.datasets[0].data = prices;
-      updateChartWindow();
-    }
-  }catch(e){
-    console.error(e);
-    document.getElementById('hargaPi').textContent = 'Gagal load API';
-  }
-}
-
-function initChart(labels, data){
-  const ctx = document.getElementById('chartPi').getContext('2d');
-  chart = new Chart(ctx, {
-    type: 'line',
-    data: {labels: labels, datasets: [{label: 'Pi/USD', data: data, borderColor: '#FFD700', backgroundColor: 'rgba(255,215,0,0.2)', tension: 0.4, fill: true, pointRadius: 0}]},
-    options: {
-      responsive: true, maintainAspectRatio: false, animation: {duration: 0},
-      plugins:{legend:{display:false}},
-      scales:{x:{display:false, min:0, max:49}, y:{ticks:{color:'#ddd'}}}
-    }
-  });
-}
-
-function autoScrollChart(){
-  if(!chart) return;
-  let total = chart.data.labels.length;
-  let windowSize = 50;
-  startIndex += 2;
-  if(startIndex + windowSize > total){
-    startIndex = 0;
-  }
-  updateChartWindow();
-}
-
-function updateChartWindow(){
-  chart.options.scales.x.min = startIndex;
-  chart.options.scales.x.max = startIndex + 49;
-  chart.update();
-}
+async function fetchKurs(){ try{ const res = await fetch('https://open.er-api.com/v6/latest/USD'); const data = await res.json(); rateIdr = data.rates.IDR; document.getElementById('lastUpdate').textContent = `Kurs: 1 USD = Rp ${rateIdr.toFixed(2)} | Update ${new Date().toLocaleTimeString('id-ID')}`; }catch(e){ document.getElementById('lastUpdate').textContent = `Kurs: 1 USD = Rp ${rateIdr.toFixed(2)} | Gagal update`; }
+async function fetchData(){ try{ const res = await fetch('https://api.coingecko.com/api/v3/coins/pi-network?localization=false&tickers=false&market_data=true&sparkline=true'); const m = (await res.json()).market_data; let priceUsd = m.current_price.usd; document.getElementById('hargaUsd').textContent = '$' + priceUsd.toFixed(4); document.getElementById('hargaRp').textContent = 'Harga /pi = Rp ' + Math.round(priceUsd * rateIdr).toLocaleString('id-ID'); document.getElementById('mcap').textContent = '$' + (m.market_cap.usd/1000000).toFixed(2) + 'M'; document.getElementById('vol').textContent = '$' + (m.total_volume.usd/1000000).toFixed(2) + 'M'; let change = m.price_change_percentage_24h.toFixed(2); let el = document.getElementById('persenPi'); el.textContent = change + '%'; el.style.color = change >= 0? '#00ff88' : '#ff5555'; let prices = m.sparkline_7d.price.slice(-100); let labels = prices.map((_,i)=>i); if(!chart){ chart = new Chart(document.getElementById('chartPi'), {type:'line',data:{labels,datasets:[{data:prices,borderColor:'#FFD700',backgroundColor:'rgba(255,215,0,0.15)',tension:0.4,fill:true,pointRadius:0,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false}},scales:{x:{display:false},y:{ticks:{color:'#ddd',callback:v=>v.toFixed(3).replace('.',',')}}}}}); }else{ chart.data.labels=labels; chart.data.datasets[0].data=prices; chart.update('none'); }catch(e){ document.getElementById('hargaUsd').textContent = 'Gagal load API'; }
 </script>
 </body>
-  </html>
+                        </html>
