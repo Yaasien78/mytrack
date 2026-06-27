@@ -2,34 +2,71 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<title>Pi Map</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pi Map Global - My Track</title>
 <style>
-:root{--biru:#0A1F44; --ungu:#4B0082; --emas:#DAA520;}
-body,html{margin:0;height:100%;background:#1A0033;color:#fff;font-family:'Segoe UI';overflow:hidden;}
-.header{position:absolute;top:0;left:0;width:100%;z-index:10;padding:12px 15px;display:flex;align-items:center;background:var(--biru);border-bottom:3px solid var(--emas);box-sizing:border-box;}
-.back{font-size:2em;color:var(--emas);text-decoration:none;margin-right:10px;}
-.logo{font-size:1.5em;font-weight:900;color:var(--emas);text-align:center;flex-grow:1;}
-#map{width:100%;height:100%;border:0;}
-.footer{position:absolute;bottom:0;width:100%;z-index:10;padding:15px;background:var(--biru);border-top:3px solid var(--emas);text-align:center;font-size:0.9em;color:#aaa;box-sizing:border-box;}
+  body { background:#1a0f2e; color:#FFD700; font-family:sans-serif; margin:0; text-align:center; }
+  h2 { color:#FFD700; padding:16px; margin:0; }
+  .map-box { 
+    background: radial-gradient(circle at center, #2c1a4d 0%, #1a0f2e 100%); 
+    height: 60vh; 
+    margin: 12px; 
+    border-radius: 16px; 
+    border: 1px solid #FFD70033;
+    position:relative; overflow:hidden;
+  }
+  .dot-me { 
+    width: 16px; height: 16px; background:#FF0000; border-radius:50%; 
+    position:absolute; box-shadow: 0 0 15px #FF0000; 
+    border: 2px solid white; transform: translate(-50%, -50%);
+    animation: pulse 1.5s infinite;
+  }
+  .dot-other { 
+    width: 10px; height: 10px; background:#FFD700; border-radius:50%; 
+    position:absolute; box-shadow: 0 0 8px #FFD700; transform: translate(-50%, -50%);
+  }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,0,0,0.7)} 50%{box-shadow:0 0 0 10px rgba(255,0,0,0)} }
+  #status { font-size:12px; opacity:.8; padding:8px; }
 </style>
 </head>
 <body>
-<header class="header">
-  <a href="menu.html" class="back">←</a>
-  <div class="logo">2. Pi Map Global</div>
-  <div style="width:2em"></div>
-</header>
+  <h2>2. Pi Map Global</h2>
+  <div id="status">Mencari lokasi kamu...</div>
+  
+  <div class="map-box" id="map">
+    <!-- Titik dummy kota lain -->
+    <div class="dot-other" style="top:35%; left:55%;" title="Jakarta"></div>
+    <div class="dot-other" style="top:50%; left:70%;" title="Malaysia"></div>
+  </div>
 
-<iframe id="map" 
-  src="https://map.pi" 
-  allowfullscreen="" loading="lazy">
-</iframe>
+<script>
+const mapBox = document.getElementById('map');
+const statusTxt = document.getElementById('status');
 
-<footer class="footer">
-  My Trick V=43 © 2026 | Titik = Pioneer Pi | Swipe Kiri/Kanan
-</footer>
+// 1. Minta lokasi HP
+navigator.geolocation.getCurrentPosition(pos => {
+  const lat = pos.coords.latitude;
+  const lon = pos.coords.longitude;
+  statusTxt.innerText = `Lokasi aktif: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
 
-<script src="menu.js"></script>
+  // 2. Ubah Lat/Lon jadi posisi % di dalam box. Ini versi gampangnya.
+  // Indonesia kira2 Lat: -11 sampai +6, Lon: 95 sampai 141
+  const topPercent = 50 - ((lat + 11) / 17 * 100); // -11 = bawah, +6 = atas
+  const leftPercent = ((lon - 95) / 46 * 100); // 95 = kiri, 141 = kanan
+
+  // 3. Bikin titik merah "Kamu di sini"
+  const myDot = document.createElement('div');
+  myDot.className = 'dot-me';
+  myDot.style.top = `${topPercent}%`;
+  myDot.style.left = `${leftPercent}%`;
+  myDot.title = "Kamu di sini";
+  mapBox.appendChild(myDot);
+
+}, err => {
+  statusTxt.innerText = "Gagal ambil lokasi. Aktifkan GPS & izinkan di Pi Browser ya.";
+  console.log(err);
+}, {enableHighAccuracy: true});
+
+</script>
 </body>
-  </html>
+</html>
