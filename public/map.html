@@ -3,78 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pi Map Global - My Track</title>
+<title>2. Pi Map Global - My Track</title>
 <style>
-  body { background:#1a0f2e; color:#FFD700; font-family:sans-serif; margin:0; padding-bottom:60px; }
-  .header { background:#0f1a2e; padding:12px; text-align:center; border-bottom:2px solid #FFD700; }
-  .header a { color:#FFD700; text-decoration:none; font-weight:bold; }
-  h2 { color:#FFD700; padding:16px 0 8px 0; margin:0; text-align:center; }
-  .map-box { 
-    background: #2c1a4d; 
-    height: 55vh; 
-    margin: 12px; 
-    border-radius: 16px; 
-    border: 1px solid #FFD70033;
-    position:relative; overflow:hidden;
+  :root{--navy:#0f1a2e;--gold:#FFD700;--bg:#1a0f2e}
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--gold);font-family:sans-serif;overflow:hidden}
+
+  /* HEADER SAMA KAYAK INDEX.HTML */
+ .header {
+    height:60px; background:var(--navy); border-bottom:2px solid var(--gold);
+    display:flex; align-items:center; padding:0 16px; gap:12px;
   }
-  .dot-me { 
-    width: 18px; height: 18px; background:#FF0000; border-radius:50%; 
-    position:absolute; box-shadow: 0 0 15px #FF0000; 
-    border: 3px solid white; transform: translate(-50%, -50%);
-    animation: pulse 1.5s infinite; z-index:10;
+ .header a { color:var(--gold); text-decoration:none; font-size:22px; }
+ .header h2 { margin:0; font-size:18px; flex:1; text-align:center; }
+
+  /* KONTEN FULLSCREEN */
+ .content{height:calc(100% - 60px - 40px); position:relative}
+  #gmap{width:100%;height:100%;border:0}
+  #status{
+    position:absolute; top:8px; left:50%; transform:translateX(-50%);
+    background:#00088; padding:4px 10px; border-radius:12px; font-size:12px; z-index:5;
   }
-  .dot-other { 
-    width: 10px; height: 10px; background:#FFD700; border-radius:50%; 
-    position:absolute; box-shadow: 0 0 8px #FFD700; transform: translate(-50%, -50%);
+
+  /* FOOTER SAMA KAYAK INDEX.HTML */
+ .footer{
+    height:40px; background:var(--navy); border-top:2px solid var(--gold);
+    display:flex; align-items:center; justify-content:center; font-size:12px; text-align:center; padding:0 8px;
   }
-  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,0,0,0.7)} 50%{box-shadow:0 0 0 12px rgba(255,0,0,0)} }
-  #status { font-size:14px; text-align:center; padding:8px; }
-  .footer { 
-    position:fixed; bottom:0; left:0; right:0; 
-    background:#0f1a2e; text-align:center; padding:10px; 
-    font-size:12px; border-top:2px solid #FFD700;
-  }
+
+  /* SWIPE */
+  body { touch-action: pan-y; }
 </style>
 </head>
 <body>
+  <!-- HEADER SAMA PERSIS KYK HALAMAN LAIN -->
   <div class="header">
-    <a href="index.html">← My Track</a>
+    <a href="index.html">←</a>
+    <h2>2. Pi Map Global</h2>
+    <div style="width:22px"></div> <!-- Spacer biar tengah -->
   </div>
 
-  <h2>2. Pi Map Global</h2>
-  <div id="status">Mencari lokasi kamu...</div>
-  
-  <div class="map-box" id="map">
-    <div class="dot-other" style="top:48%; left:52%;" title="Jakarta"></div>
-    <div class="dot-other" style="top:55%; left:68%;" title="Malaysia"></div>
+  <div class="content">
+    <div id="status">Mencari lokasi...</div>
+    <iframe id="gmap" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
   </div>
 
-  <div class="footer">
-    My Track V=43 © 2026 | Titik = Pioneer Pi | Swipe Kiri/Kanan
+  <!-- FOOTER = LOKASI ANDA SEKARANG -->
+  <div class="footer" id="footerTxt">
+    Lokasi anda sekarang:...
   </div>
 
 <script>
-const mapBox = document.getElementById('map');
 const statusTxt = document.getElementById('status');
+const gmap = document.getElementById('gmap');
+const footerTxt = document.getElementById('footerTxt');
 
+// 1. AMBIL LOKASI HP
 navigator.geolocation.getCurrentPosition(pos => {
-  const lat = pos.coords.latitude; // -3.6459
-  const lon = pos.coords.longitude; // 103.7923
-  statusTxt.innerText = `Lokasi aktif: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+  const lat = pos.coords.latitude;
+  const lon = pos.coords.longitude;
+  const txt = `Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)}`;
 
-  // RUMUS BARU: Biar titik merah di tengah Indonesia, gak mentok pojok
-  const topPercent = 60 - (lat * 3); // Palembang -3.6 = sekitar 70%
-  const leftPercent = 10 + (lon - 95) * 1.3; // 103.7 = sekitar 21%
+  statusTxt.innerText = txt;
+  footerTxt.innerText = `Lokasi anda sekarang: ${txt}`; // FOOTER SESUAI MINTA
 
-  const myDot = document.createElement('div');
-  myDot.className = 'dot-me';
-  myDot.style.top = `${Math.max(5, Math.min(95, topPercent))}%`;
-  myDot.style.left = `${Math.max(5, Math.min(95, leftPercent))}%`;
-  myDot.title = "Kamu di sini";
-  mapBox.appendChild(myDot);
+  // 2. MASUKIN KE GOOGLE MAPS EMBED. RINGAN, GAK PAKE KEY
+  gmap.src = `https://www.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
 
 }, err => {
-  statusTxt.innerText = "Gagal ambil lokasi. Aktifkan GPS & izinkan ya.";
+  statusTxt.innerText = "Gagal ambil lokasi. Aktifkan GPS.";
+  footerTxt.innerText = "Lokasi anda sekarang: Tidak diketahui";
+  gmap.src = `https://www.google.com/maps?q=Indonesia&z=5&output=embed`; // Default
+});
+
+// 3. SCRIPT SWIPE KIRI/KAN
+let touchstartX = 0;
+document.addEventListener('touchstart', e => touchstartX = e.changedTouches[0].screenX);
+document.addEventListener('touchend', e => {
+  const touchendX = e.changedTouches[0].screenX;
+  if (touchendX < touchstartX - 50) window.location.href = 'nft.html'; // Swipe kiri -> ke NFT
+  if (touchendX > touchstartX + 50) window.location.href = 'chart.html'; // Swipe kanan -> ke Chart
 });
 </script>
 </body>
