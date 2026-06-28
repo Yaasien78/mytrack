@@ -5,7 +5,7 @@
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <style>
     :root { --gold: #FFD700; --bg: #1a0033; --box: #2a0044; }
-    body{background:var(--bg);color:#fff;font-family:sans-serif;margin:0;padding:0}
+    body{background:var(--bg);color:#fff;font-family:sans-serif;margin:0;padding:0;height:100vh;display:flex;flex-direction:column}
     
     /* 1. HEAD = GARIS EMAS + 3 TOMBOL DI DALAM */
     header{
@@ -13,15 +13,17 @@
       padding:10px;
       background:#0f001f;
       text-align:center;
+      flex-shrink:0;
     }
-    header h3{margin:0 0 8px 0;color:var(--gold)}
-   .tab-btns{display:flex;gap:6px;justify-content:center}
-   .tab-btns button{flex:1; background:#6a0dad;color:#fff;border:1px solid var(--gold);border-radius:10px;padding:10px;font-weight:bold;transition:.2s}
-   .tab-btns button.active{box-shadow:0 0 15px var(--gold); background:var(--gold); color:#000}
+    header h3{margin:0 0 8px 0;color:var(--gold);font-size:18px}
+  .tab-btns{display:flex;gap:6px;justify-content:center}
+  .tab-btns button{flex:1; background:#6a0dad;color:#fff;border:1px solid var(--gold);border-radius:10px;padding:10px 5px;font-weight:bold;font-size:14px;transition:.2s}
+  .tab-btns button.active{box-shadow:0 0 15px var(--gold); background:var(--gold); color:#000}
 
     /* BODY */
-    #chat-box{height:55vh;overflow-y:auto;background:var(--box);border-radius:12px;padding:10px;margin:10px;text-align:left}
-    #user-list{height:15vh;overflow-y:auto;background:var(--box);border-radius:12px;padding:10px;margin:0 10px;display:none;text-align:left}
+    main{flex:1; display:flex; flex-direction:column; overflow:hidden;}
+    #chat-box{flex:1;overflow-y:auto;background:var(--box);border-radius:12px;padding:10px;margin:10px;text-align:left}
+    #user-list{height:15vh;overflow-y:auto;background:var(--box);border-radius:12px;padding:10px;margin:0 10px 10px 10px;display:none;text-align:left}
 
     /* 3. FOOTER = INPUT + KIRIM SEJAJAR + GARIS EMAS ATAS */
     footer{
@@ -31,11 +33,12 @@
       display:flex;
       gap:8px;
       align-items:center;
+      flex-shrink:0;
     }
-    input{flex:1;padding:12px;border-radius:10px;border:1px solid var(--gold);background:#3a0055;color:#fff}
+    input{flex:1;padding:12px;border-radius:10px;border:1px solid var(--gold);background:#3a0055;color:#fff;font-size:16px}
     #kirim{padding:12px 15px;background:var(--gold);color:#000;border:none;border-radius:10px;font-weight:bold}
     
-    #loginBtn{background:orange;color:#000;width:calc(100% - 20px);margin:10px;padding:12px;border:none;border-radius:10px;font-weight:bold}
+    #loginBtn{background:orange;color:#000;width:calc(100% - 20px);margin:10px;padding:12px;border:none;border-radius:10px;font-weight:bold;font-size:16px}
   </style>
 </head>
 <body>
@@ -52,10 +55,11 @@
 
   <button id="loginBtn" onclick="loginPi()">1. Login Pi Dulu</button>
 
-  <div id="app" style="display:none">
+  <!-- BODY -->
+  <main id="app" style="display:none">
     <div id="user-list"></div>
     <div id="chat-box">Silakan pilih tab...</div>
-  </div>
+  </main>
   
   <!-- FOOT -->
   <footer id="appFoot" style="display:none">
@@ -66,8 +70,8 @@
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
   
-  const SUPABASE_URL = 'https://dwcgozbbqkcimzndfqaf.supabase.co' // GANTI
-  const SUPABASE_KEY = 'eyJhbGciOi...' // GANTI
+  const SUPABASE_URL = 'https://dwcgozbbqkcimzndfqaf.supabase.co' // GANTI PUNYA LU
+  const SUPABASE_KEY = 'eyJhbGciOi...' // GANTI PUNYA LU
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
   let currentUser = null;
@@ -85,15 +89,17 @@
 
   window.loginPi = async () => {
     try {
+      Pi.init({ version: "2.0", sandbox: false }); // WAJIB INIT DULU
       const scopes = ['username'];
-      const auth = await window.Pi.authenticate(scopes);
+      const auth = await Pi.authenticate(scopes); 
       currentUser = { uid: auth.user.uid, username: auth.user.username };
+      
       document.getElementById('loginBtn').style.display = 'none';
-      app.style.display = 'block';
+      app.style.display = 'flex';
       appTabs.style.display = 'flex';
       appFoot.style.display = 'flex';
       setMode('public');
-    } catch(e) { alert('Login gagal: ' + e) }
+    } catch(e) { alert('Login gagal: ' + e.message) }
   }
 
   const TABLE_MAP = { public: 'message_public', team: 'message_team', privasi: 'message_dm' };
@@ -153,14 +159,14 @@
   function subscribeRealtime() {
     const table = TABLE_MAP[currentMode];
     channel = supabase.channel('chat_' + currentMode)
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: table }, payload => {
+  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: table }, payload => {
         const msg = payload.new;
         if(currentMode === 'privasi' && currentReceiver) {
            if(!(msg.sender_uid === currentUser.uid && msg.receiver_uid === currentReceiver.uid) &&!(msg.sender_uid === currentReceiver.uid && msg.receiver_uid === currentUser.uid)) return;
         }
         renderMsg(msg);
       })
-    .subscribe();
+  .subscribe();
   }
 
   function renderMsg(msg) {
