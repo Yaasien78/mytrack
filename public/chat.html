@@ -7,26 +7,25 @@
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-body{background:#1a0033;color:#fff;font-family:sans-serif;margin:0;padding:10px}
-.kotak-login{background:#2a0052;border:1px solid #f9c74f;border-radius:10px;padding:10px;margin-bottom:10px;text-align:center}
-.kotak-login button{background:#f9c74f;color:#000;border:0;border-radius:8px;padding:8px 15px;font-weight:700;cursor:pointer}
-.tabs{display:flex;gap:8px;margin-bottom:10px}
+body{background:#1a0033;color:#fff;font-family:sans-serif;margin:0;padding:8px}
+.kotak-login{background:#2a0052;border:1px solid #f9c74f;border-radius:10px;padding:6px;margin-bottom:8px;text-align:center} /* DIPENDEKIN */
+.kotak-login button{background:#f9c74f;color:#000;border:0;border-radius:8px;padding:8px 15px;font-weight:700;cursor:pointer;width:100%}
+.tabs{display:flex;gap:6px;margin-bottom:8px}
 .tabs button{flex:1;padding:10px;border:2px solid #f9c74f;background:#2a0052;color:#fff;border-radius:10px;font-weight:700}
 .tabs button.active{background:#f9c74f;color:#000}
 .chatbox{height:300px;overflow-y:auto;border:2px solid #f9c74f;border-radius:10px;padding:8px;background:#2a0052}
 .msg{margin:6px 0;padding:6px 8px;border-radius:8px;background:#3a006a}
 .msg b{color:#f9c74f}
-.input{display:flex;gap:8px;margin-top:10px}
+.input{display:flex;gap:6px;margin-top:8px}
 .input input{flex:1;padding:10px;border:2px solid #f9c74f;border-radius:10px;background:#2a0052;color:#fff}
-.input button{padding:10px 15px;border:0;border-radius:10px;background:#f9c74f;color:#000;font-weight:700}
+.input button{width:50px;height:50px;border:0;border-radius:10px;background:#f9c74f;color:#000;font-weight:700;font-size:20px} /* JADI KOTAK > */
 .hint{text-align:center;font-size:12px;margin-top:5px;opacity:.7}
 </style>
 </head>
 <body>
 
 <div class="kotak-login" id="loginBox">
-  <div id="loginStatus">Belum Login</div>
-  <button id="btnLogin">Login dengan Pi</button>
+  <button id="btnLogin">Login dengan Pi</button> <!-- TEKS "BELUM LOGIN" DIHAPUS -->
 </div>
 
 <div class="tabs">
@@ -39,9 +38,9 @@ body{background:#1a0033;color:#fff;font-family:sans-serif;margin:0;padding:10px}
 
 <div class="input">
   <input id="txt" placeholder="Ketik pesan...">
-  <button id="kirim">Kirim</button>
+  <button id="kirim">></button> <!-- JADI SIMBOL > KOTAK -->
 </div>
-<div class="hint">Swipe Kiri/Kanan untuk ganti tab</div>
+<div class="hint">Swipe Kiri ke NFT | Kanan ke MAP</div>
 
 <script>
 const SUPABASE_URL = 'https://xxxx.supabase.co'; // GANTI PUNYA LU
@@ -61,11 +60,10 @@ document.getElementById('btnLogin').onclick = async () => {
   try {
     const auth = await Pi.authenticate(['username'], (p)=>{});
     user = {uid: auth.user.uid, username: auth.user.username};
-    document.getElementById('loginStatus').innerText = 'Login: @' + user.username;
-    document.getElementById('loginBox').style.display = 'none';
+    document.getElementById('loginBox').style.display = 'none'; // LANGSUNG ILANG KOTAKNYA
     loadChat();
   } catch(e) {
-    document.getElementById('loginStatus').innerText = 'Login Pi gagal: ' + e;
+    alert('Login Pi gagal: ' + e); // ERROR MUNCUL POPUP AJA
   }
 }
 
@@ -78,15 +76,13 @@ document.querySelectorAll('.tab').forEach(b=>{
   }
 });
 
-// SWIPE KIRI KAN
+// SWIPE KIRI KAN -> PINDAH HALAMAN
 document.body.addEventListener('touchstart', e=>{ startX = e.touches[0].clientX; });
 document.body.addEventListener('touchend', e=>{
   let dx = e.changedTouches[0].clientX - startX;
-  if(Math.abs(dx) > 50){
-    let i = tabs.indexOf(currentTab);
-    if(dx < 0 && i < tabs.length-1) i++; // swipe kiri
-    if(dx > 0 && i > 0) i--; // swipe kanan
-    document.querySelector(`.tab[data-tab="${tabs[i]}"]`).click();
+  if(Math.abs(dx) > 60){ // threshold swipe
+    if(dx > 60){ window.location.href = 'map.html'; } // SWIPE KAN -> MAP
+    if(dx < -60){ window.location.href = 'nft.html'; } // SWIPE KIRI -> NFT
   }
 });
 
@@ -109,7 +105,7 @@ document.getElementById('kirim').onclick = async ()=>{
   if(!text) return;
   const table = tabTables[currentTab];
   let row = currentTab==='dm' 
-   ? {text, sender_uid:user.uid, sender_username:user.username, receiver_uid:'all'} 
+  ? {text, sender_uid:user.uid, sender_username:user.username, receiver_uid:'all'} 
     : {text, pi_uid:user.uid, pi_username:user.username};
   await supabase.from(table).insert(row);
   document.getElementById('txt').value = '';
