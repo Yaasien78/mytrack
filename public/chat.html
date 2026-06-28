@@ -4,28 +4,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <style>
-    body{background:#1a0033;color:#fff;font-family:sans-serif;margin:0;padding:10px}
-    #chat-box{height:60vh;overflow-y:auto;background:#2a0044;border-radius:12px;padding:10px;margin:10px 0}
-    #user-list{height:15vh;overflow-y:auto;background:#2a0044;border-radius:12px;padding:10px;margin:10px 0;display:none}
-    #user-list div{padding:8px;background:#3a0055;margin:4px 0;border-radius:8px;cursor:pointer}
-    button{background:#6a0dad;color:#fff;border:none;border-radius:10px;padding:10px 12px;font-weight:bold;margin:3px;transition:.2s}
-    button.active{box-shadow:0 0 15px gold}
-    input{width:70%;padding:10px;border-radius:10px;border:none;background:#3a0055;color:#fff}
-    #kirim{width:25%}
+    :root { --gold: #FFD700; --bg: #1a0033; --box: #2a0044; }
+    body{background:var(--bg);color:#fff;font-family:sans-serif;margin:0;padding:0}
+    
+    /* 1. HEAD = GARIS EMAS + 3 TOMBOL DI DALAM */
+    header{
+      border-bottom: 3px solid var(--gold);
+      padding:10px;
+      background:#0f001f;
+      text-align:center;
+    }
+    header h3{margin:0 0 8px 0;color:var(--gold)}
+   .tab-btns{display:flex;gap:6px;justify-content:center}
+   .tab-btns button{flex:1; background:#6a0dad;color:#fff;border:1px solid var(--gold);border-radius:10px;padding:10px;font-weight:bold;transition:.2s}
+   .tab-btns button.active{box-shadow:0 0 15px var(--gold); background:var(--gold); color:#000}
+
+    /* BODY */
+    #chat-box{height:55vh;overflow-y:auto;background:var(--box);border-radius:12px;padding:10px;margin:10px;text-align:left}
+    #user-list{height:15vh;overflow-y:auto;background:var(--box);border-radius:12px;padding:10px;margin:0 10px;display:none;text-align:left}
+
+    /* 3. FOOTER = INPUT + KIRIM SEJAJAR + GARIS EMAS ATAS */
+    footer{
+      border-top: 3px solid var(--gold);
+      padding:10px;
+      background:#0f001f;
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    input{flex:1;padding:12px;border-radius:10px;border:1px solid var(--gold);background:#3a0055;color:#fff}
+    #kirim{padding:12px 15px;background:var(--gold);color:#000;border:none;border-radius:10px;font-weight:bold}
+    
+    #loginBtn{background:orange;color:#000;width:calc(100% - 20px);margin:10px;padding:12px;border:none;border-radius:10px;font-weight:bold}
   </style>
 </head>
 <body>
-  <h3>My Track V=43 © 2026</h3>
   
-  <button id="public" onclick="setMode('public')">Public</button>
-  <button id="team" onclick="setMode('team')">Team</button>
-  <button id="privasi" onclick="setMode('privasi')">Privasi</button>
+  <!-- HEAD -->
+  <header>
+    <h3>My Track V=43 © 2026</h3>
+    <div class="tab-btns" id="appTabs" style="display:none">
+      <button id="public" onclick="setMode('public')">Public</button>
+      <button id="team" onclick="setMode('team')">Team</button>
+      <button id="privasi" onclick="setMode('privasi')">Privasi</button>
+    </div>
+  </header>
+
+  <button id="loginBtn" onclick="loginPi()">1. Login Pi Dulu</button>
+
+  <div id="app" style="display:none">
+    <div id="user-list"></div>
+    <div id="chat-box">Silakan pilih tab...</div>
+  </div>
   
-  <div id="user-list"></div>
-  <div id="chat-box"></div>
-  
-  <input id="input" placeholder="Ketik pesan...">
-  <button id="kirim">Kirim</button>
+  <!-- FOOT -->
+  <footer id="appFoot" style="display:none">
+    <input id="input" placeholder="Ketik pesan...">
+    <button id="kirim">Kirim</button>
+  </footer>
 
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
@@ -39,29 +75,40 @@
   let currentReceiver = null; 
   let channel = null; 
 
+  const app = document.getElementById('app');
+  const appTabs = document.getElementById('appTabs');
+  const appFoot = document.getElementById('appFoot');
   const box = document.getElementById('chat-box');
   const userList = document.getElementById('user-list');
   const input = document.getElementById('input');
   const btn = document.getElementById('kirim');
 
-  async function loginPi() {
-    const scopes = ['username'];
-    const auth = await window.Pi.authenticate(scopes);
-    currentUser = { uid: auth.user.uid, username: auth.user.username };
-    setMode('public');
+  window.loginPi = async () => {
+    try {
+      const scopes = ['username'];
+      const auth = await window.Pi.authenticate(scopes);
+      currentUser = { uid: auth.user.uid, username: auth.user.username };
+      document.getElementById('loginBtn').style.display = 'none';
+      app.style.display = 'block';
+      appTabs.style.display = 'flex';
+      appFoot.style.display = 'flex';
+      setMode('public');
+    } catch(e) { alert('Login gagal: ' + e) }
   }
+
+  const TABLE_MAP = { public: 'message_public', team: 'message_team', privasi: 'message_dm' };
 
   window.setMode = async (mode) => {
     currentMode = mode;
     currentReceiver = null;
-    document.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-btns button').forEach(b => b.classList.remove('active'));
     document.getElementById(mode).classList.add('active');
-    box.innerHTML = ''; 
+    box.innerHTML = 'Loading...'; 
     if(channel) supabase.removeChannel(channel); 
 
     if(mode === 'privasi') {
       userList.style.display = 'block';
-      await loadUsers(); // Tampilin list orang buat DM
+      await loadUsers(); 
     } else {
       userList.style.display = 'none';
       loadMessages(); 
@@ -70,12 +117,12 @@
   }
 
   async function loadUsers() {
-    userList.innerHTML = 'Pilih orang buat DM...';
-    const { data } = await supabase.from('message_public').select('pi_uid, pi_username').limit(50);
-    const unique = [...new Map(data.map(i => [i.pi_uid, i])).values()]; // Hapus duplikat
+    userList.innerHTML = 'Ambil data user...';
+    const { data, error } = await supabase.from('message_public').select('pi_uid, pi_username').limit(50);
+    if(error) { userList.innerHTML = 'Error: ' + error.message; return; }
+    const unique = [...new Map(data.map(i => [i.pi_uid, i])).values()].filter(u => u.pi_uid!== currentUser.uid);
     userList.innerHTML = '';
     unique.forEach(u => {
-      if(u.pi_uid === currentUser.uid) return;
       const div = document.createElement('div');
       div.textContent = u.pi_username;
       div.onclick = () => {
@@ -90,56 +137,55 @@
   }
 
   async function loadMessages() {
-    let query;
-    if (currentMode === 'public') query = supabase.from('message_public').select('*');
-    if (currentMode === 'team') query = supabase.from('message_team').select('*');
-    if (currentMode === 'privasi') {
-      if(!currentReceiver) return;
-      query = supabase.from('message_dm').or(`and(sender_uid.eq.${currentUser.uid},receiver_uid.eq.${currentReceiver.uid}),and(sender_uid.eq.${currentReceiver.uid},receiver_uid.eq.${currentUser.uid})`);
-    }
+    const table = TABLE_MAP[currentMode];
+    let query = supabase.from(table).select('*').order('created_at', {ascending: true}).limit(100);
+    if (currentMode === 'privasi' && currentReceiver) {
+      query = query.or(`and(sender_uid.eq.${currentUser.uid},receiver_uid.eq.${currentReceiver.uid}),and(sender_uid.eq.${currentReceiver.uid},receiver_uid.eq.${currentUser.uid})`);
+    } else if(currentMode === 'privasi') { box.innerHTML = 'Pilih orang dulu'; return; }
     
-    const { data } = await query.order('created_at', {ascending: true}).limit(100);
+    const { data, error } = await query;
+    if(error) { box.innerHTML = 'Error load: ' + error.message; return; }
+    box.innerHTML = '';
     data.forEach(renderMsg);
     box.scrollTop = box.scrollHeight;
   }
 
   function subscribeRealtime() {
-    let table = currentMode === 'privasi' ? 'message_dm' : 'message_' + currentMode;
+    const table = TABLE_MAP[currentMode];
     channel = supabase.channel('chat_' + currentMode)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: table }, payload => {
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: table }, payload => {
         const msg = payload.new;
-        if(currentMode === 'privasi') {
-           if(!(msg.sender_uid === currentUser.uid && msg.receiver_uid === currentReceiver.uid) && !(msg.sender_uid === currentReceiver.uid && msg.receiver_uid === currentUser.uid)) return;
+        if(currentMode === 'privasi' && currentReceiver) {
+           if(!(msg.sender_uid === currentUser.uid && msg.receiver_uid === currentReceiver.uid) &&!(msg.sender_uid === currentReceiver.uid && msg.receiver_uid === currentUser.uid)) return;
         }
         renderMsg(msg);
       })
-      .subscribe();
+    .subscribe();
   }
 
   function renderMsg(msg) {
     const name = msg.pi_username || msg.sender_username || 'Anon';
     const div = document.createElement('div');
     div.style.margin = '6px 0';
-    div.innerHTML = `<b style="color:#ffd700">${name}:</b> ${msg.text}`;
+    div.innerHTML = `<b style="color:var(--gold)">${name}:</b> ${msg.text}`;
     box.appendChild(div);
     box.scrollTop = box.scrollHeight;
   }
 
   btn.onclick = async () => {
     const text = input.value.trim();
-    if(!text || !currentUser) return;
+    if(!text ||!currentUser) return;
     input.value = '';
+    const table = TABLE_MAP[currentMode];
 
     if(currentMode === 'public' || currentMode === 'team') {
-      await supabase.from('message_' + currentMode).insert({text, pi_uid: currentUser.uid, pi_username: currentUser.username});
+      await supabase.from(table).insert({text, pi_uid: currentUser.uid, pi_username: currentUser.username});
     }
     if(currentMode === 'privasi') {
       if(!currentReceiver) return alert('Pilih orang dulu');
-      await supabase.from('message_dm').insert({text, sender_uid: currentUser.uid, receiver_uid: currentReceiver.uid, sender_username: currentUser.username});
+      await supabase.from(table).insert({text, sender_uid: currentUser.uid, receiver_uid: currentReceiver.uid, sender_username: currentUser.username});
     }
   }
-
-  loginPi();
 </script>
 </body>
-</html>
+  </html>
