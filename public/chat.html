@@ -3,138 +3,132 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>My Track Chat</title>
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>3. Chat My Track</title>
 <style>
-html,body{height:100%;margin:0;padding:0;background:#1a0033;color:#fff;font-family:sans-serif;overflow:hidden}
-body{display:flex;flex-direction:column;padding:8px;box-sizing:border-box}
-.kotak-login{background:#2a0052;border:1px solid #f9c74f;border-radius:10px;padding:6px;margin-bottom:8px}
-.kotak-login button{background:#f9c74f;color:#000;border:0;border-radius:8px;padding:10px;font-weight:700;cursor:pointer;width:100%;font-size:16px}
-.tabs{display:flex;gap:6px;margin-bottom:8px;flex-shrink:0}
-.tabs button{flex:1;padding:10px;border:2px solid #f9c74f;background:#2a0052;color:#fff;border-radius:10px;font-weight:700}
-.tabs button.active{background:#f9c74f;color:#000}
-.chatbox{flex:1;overflow-y:auto;border:2px solid #f9c74f;border-radius:10px;padding:8px;background:#2a0052}
-.msg{margin:6px 0;padding:6px 8px;border-radius:8px;background:#3a006a;word-wrap:break-word}
-.msg b{color:#f9c74f}
-.input{display:flex;gap:6px;margin-top:8px;flex-shrink:0} /* KOTAK KIRIM GAK GUE SEMBUNYIIN LAGI */
-.input input{flex:1;padding:10px;border:2px solid #f9c74f;border-radius:10px;background:#2a0052;color:#fff;font-size:16px}
-.input button{width:50px;height:50px;border:0;border-radius:10px;background:#f9c74f;color:#000;font-weight:700;font-size:24px}
-.hide{display:none!important} /* BUAT SEMBUNYIIN LOGIN DOANG */
+:root{--biru:#0A1F44; --ungu:#4B0082; --emas:#DAA520; --hitam:#000;}
+*{box-sizing:border-box}
+body{margin:0;height:100dvh;display:flex;flex-direction:column;background:var(--biru);color:#fff;font-family:'Segoe UI',Arial,sans-serif}
+.header{padding:12px 15px;background:var(--ungu);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.header a{font-size:1.8em;color:var(--emas);text-decoration:none;font-weight:700}
+.header h1{font-size:1.2em;margin:0;flex-grow:1;text-align:center;color:var(--emas)}
+#loginBox{padding:10px;background:var(--hitam);text-align:center;flex-shrink:0}
+#loginBtn{background:var(--emas);color:var(--hitam);border:0;padding:10px 20px;border-radius:8px;font-weight:700;cursor:pointer}
+#userInfo{display:none;gap:10px;align-items:center;justify-content:center}
+#userInfo img{width:32px;height:32px;border-radius:50%}
+#chatBox{flex-grow:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:10px}
+.msg{background:var(--ungu);padding:8px 12px;border-radius:12px;max-width:80%}
+.msg.me{background:var(--emas);color:var(--hitam);align-self:flex-end}
+.msg .user{font-size:0.8em;font-weight:700;color:var(--emas);margin-bottom:3px}
+.msg.me .user{color:var(--hitam)}
+.inputBox{display:flex;padding:10px;gap:10px;background:var(--hitam);flex-shrink:0}
+.inputBox input{flex-grow:1;padding:12px;border:0;border-radius:8px;background:#222;color:#fff;font-size:1em}
+.inputBox button{padding:0 20px;border:0;border-radius:8px;background:var(--emas);color:var(--hitam);font-weight:700;cursor:pointer}
+.inputBox button:disabled{opacity:0.5;cursor:not-allowed}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
 </head>
 <body>
 
-<div class="kotak-login" id="loginBox">
-  <button id="btnLogin">Login dengan Pi Testnet</button> 
+<header class="header">
+  <a href="menu.html"><</a>
+  <h1>Chat Public</h1>
+</header>
+
+<div id="loginBox">
+  <button id="loginBtn">Login dengan Pi</button>
+  <div id="userInfo">
+    <img id="avatar" src="">
+    <span id="username"></span>
+  </div>
 </div>
 
-<div class="tabs">
-  <button class="tab active" data-tab="public">Public</button>
-  <button class="tab" data-tab="team">Team</button>
-  <button class="tab" data-tab="dm">Privasi</button>
-</div>
+<div id="chatBox"></div>
 
-<div class="chatbox" id="chatbox"></div>
-
-<div class="input">
-  <input id="txt" placeholder="Ketik pesan...">
-  <button id="kirim">></button> 
+<div class="inputBox">
+  <input id="chatInput" type="text" placeholder="Login dulu buat chat..." disabled>
+  <button id="sendBtn" disabled>Kirim</button>
 </div>
 
 <script>
-const SUPABASE_URL = 'https://aecidmcsdtkshjdnrrrd.supabase.co'; 
-const SUPABASE_KEY = 'sb_publishable_Ha3M2Q6FzUGaTVV4rtnong_lkHZrQWD'; 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// 1. KONEKSI SUPABASE LU - UDAH GUE ISI
+const SUPA_URL = 'https://aecidmcsdtkshjdnrrrd.supabase.co'; 
+const SUPA_KEY = 'sb_publishable_Ha3M2Q6FzUGaTVV4rtnong_lkHZrQWD';
+const supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
-let user = null;
-let currentTab = 'public';
-let startX = 0;
-const tabTables = {public:'message_public', team:'message_team', dm:'message_dm'};
-let piReady = false;
+// 2. STATE
+let currentUser = null;
+const chatBox = document.getElementById('chatBox');
+const chatInput = document.getElementById('chatInput');
+const sendBtn = document.getElementById('sendBtn');
 
-// KUNCI: JALANIN LANGSUNG PAS DOM SIAP, BUKAN WINDOW.LOAD
-document.addEventListener('DOMContentLoaded', initPi);
-
-function initPi(){
-  if(!window.Pi){
-    document.getElementById('chatbox').innerHTML = '<div class="msg"><b>ERROR</b>: Pi SDK gak kebaca. WAJIB BUKA DI PI BROWSER, BUKAN DARI IFRAME.</div>';
-    return;
+// 3. LOGIN PI
+document.getElementById('loginBtn').onclick = async () => {
+  try {
+    Pi.init({ version: "2.0", sandbox: false }); // sandbox:true kalo masih testnet
+    const scopes = ['username', 'payments'];
+    const auth = await Pi.authenticate(scopes, function onIncompletePayment(payment){});
+    
+    currentUser = { uid: auth.user.uid, username: auth.user.username, avatar: auth.user.profilePicture };
+    
+    document.getElementById('loginBtn').style.display = 'none';
+    document.getElementById('userInfo').style.display = 'flex';
+    document.getElementById('username').textContent = '@' + currentUser.username;
+    document.getElementById('avatar').src = currentUser.avatar;
+    
+    chatInput.disabled = false;
+    chatInput.placeholder = "Ketik pesan...";
+    sendBtn.disabled = false;
+    loadChat(); // Muat chat setelah login
+  } catch(e) {
+    alert('Login Pi Gagal: ' + e.message);
+    console.error(e);
   }
-  
-  Pi.init({ version: "2.0", sandbox: true }); // TESTNET
-  piReady = true;
-  console.log('Pi SDK Init OK');
-
-  document.getElementById('btnLogin').onclick = async () => {
-    if(!piReady) return alert('SDK belum siap');
-    try {
-      const auth = await Pi.authenticate(['username']); 
-      user = {uid: auth.user.uid, username: auth.user.username};
-      document.getElementById('loginBox').classList.add('hide'); // SEMBUNYIIN LOGIN
-      loadChat();
-    } catch(e) {
-      document.getElementById('chatbox').innerHTML = `<div class="msg"><b>Login Gagal:</b> ${e.message}</div>`;
-    }
-  }
-
-  document.querySelectorAll('.tab').forEach(b=>{
-    b.onclick = ()=>{
-      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-      currentTab = b.dataset.tab;
-      loadChat();
-    }
-  });
-
-  document.getElementById('kirim').onclick = sendMsg;
-  document.getElementById('txt').onkeypress = e=>{ if(e.key==='Enter') sendMsg(); }
-  
-  // SWIPE: MAP <- CHAT -> NFT. INDEX CHAT = 1
-  let currentIndex = 1; 
-  const pages = ['map.html', 'chat.html', 'nft.html'];
-  document.body.addEventListener('touchstart', e=>{ startX = e.changedTouches[0].screenX; }, {passive:true});
-  document.body.addEventListener('touchend', e=>{
-    let dx = e.changedTouches[0].screenX - startX;
-    if(Math.abs(dx) > 70){
-      if(dx > 70 && currentIndex > 0){ window.location.href = pages[currentIndex-1]; }
-      if(dx < -70 && currentIndex < pages.length - 1){ window.location.href = pages[currentIndex+1]; }
-    }
-  });
 }
 
+// 4. KIRIM PESAN
+sendBtn.onclick = sendMessage;
+chatInput.addEventListener('keydown', e => { if(e.key === 'Enter') sendMessage(); });
+
+async function sendMessage(){
+  const text = chatInput.value.trim();
+  if(!text || !currentUser) return;
+  chatInput.value = '';
+  
+  const { error } = await supabase.from('chat_messages').insert([{
+    uid: currentUser.uid,
+    username: currentUser.username,
+    avatar_url: currentUser.avatar,
+    text: text
+  }]);
+  if(error) alert('Gagal kirim: ' + error.message);
+}
+
+// 5. MUAT & REAL-TIME CHAT
 async function loadChat(){
-  if(!user) return;
-  const table = tabTables[currentTab];
-  let q = supabase.from(table).select('*').order('id',{ascending:false}).limit(50);
-  if(currentTab==='dm'){ q = q.or(`sender_uid.eq.${user.uid},receiver_uid.eq.${user.uid}`); }
-  const {data} = await q;
-  const box = document.getElementById('chatbox');
-  box.innerHTML = '';
-  data.reverse().forEach(m=>{
-    let name = m.pi_username || m.sender_username || 'Anon';
-    box.innerHTML += `<div class="msg"><b>@${name}</b>: ${m.text}</div>`;
-  });
-  box.scrollTop = box.scrollHeight;
+  const { data, error } = await supabase.from('chat_messages').select('*').order('id', {ascending:true}).limit(50);
+  if(error){ console.error(error); return; }
+  chatBox.innerHTML = '';
+  data.forEach(renderMsg);
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  // Dengerin pesan baru masuk
+  supabase.channel('chat-room')
+    .on('postgres_changes', {event: 'INSERT', schema: 'public', table: 'chat_messages'}, payload => {
+      renderMsg(payload.new);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    })
+    .subscribe();
 }
 
-async function sendMsg(){
-  if(!user) return alert('Login dulu bro');
-  const text = document.getElementById('txt').value.trim();
-  if(!text) return;
-  const table = tabTables[currentTab];
-  let row = currentTab==='dm' 
- ? {text, sender_uid:user.uid, sender_username:user.username, receiver_uid:'all'} 
-    : {text, pi_uid:user.uid, pi_username:user.username};
-  await supabase.from(table).insert(row);
-  document.getElementById('txt').value = '';
+function renderMsg(msg){
+  const div = document.createElement('div');
+  div.className = 'msg ' + (msg.uid === currentUser?.uid ? 'me' : '');
+  div.innerHTML = `<div class="user">@${msg.username}</div><div>${msg.text}</div>`;
+  chatBox.appendChild(div);
 }
-
-supabase.channel('room1')
-.on('postgres_changes',{event:'INSERT',schema:'public',table:'message_public'},payload=>{ if(currentTab==='public') loadChat(); })
-.on('postgres_changes',{event:'INSERT',schema:'public',table:'message_team'},payload=>{ if(currentTab==='team') loadChat(); })
-.on('postgres_changes',{event:'INSERT',schema:'public',table:'message_dm'},payload=>{ if(currentTab==='dm') loadChat(); })
-.subscribe();
 </script>
+
+<script src="menu.js"></script> <!-- INI BUAT SWIPE 7 HALAMAN -->
 </body>
-</html>
+  </html>
