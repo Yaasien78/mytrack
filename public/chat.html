@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<title>3. Chat</title>
+<title>Menu Chat 2-3-4</title>
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <style>
 :root{--biru:#0A1F44;--ungu:#4B0082;--emas:#DAA520;--hitam:#000;--bg:#1A0033;}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:#fff;font-family:'Segoe UI';}
 
-/* ====== SLIDER 3 HALAMAN DI DALAM CHAT.HTML ====== */
-.slider-container{display:flex;width:300vw;height:100vh;overflow-x:scroll;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
-.slider-container::-webkit-scrollbar{display:none;}
-.page{width:100vw;height:100vh;flex-shrink:0;scroll-snap-align:center;display:flex;flex-direction:column;overflow-y:auto;background:var(--bg);}
+/* ===== KUNCI SWIPE 3 HALAMAN ===== */
+.slider-wrap{width:100vw;height:100vh;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;display:flex;}
+.slider-wrap::-webkit-scrollbar{display:none;}
+.page{width:100vw;height:100vh;flex-shrink:0;scroll-snap-align:start;display:flex;flex-direction:column;overflow-y:auto;background:var(--bg);}
 
 .header{padding:12px 15px;display:flex;align-items:center;background:var(--biru);border-bottom:3px solid var(--emas);position:sticky;top:0;z-index:10;flex-shrink:0;}
 .back{font-size:2em;color:var(--emas);text-decoration:none;margin-right:10px;cursor:pointer;}
@@ -24,36 +24,33 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:#fff;f
 .tab-btns{display:flex;gap:8px;margin-bottom:10px;}
 .tab-btns button{flex:1;background:var(--ungu);color:#fff;border:2px solid var(--emas);border-radius:12px;padding:12px 5px;font-weight:700;font-size:1em;cursor:pointer;}
 .tab-btns button.active{background:var(--emas);color:var(--hitam);}
-#chat-box{flex:1;overflow-y:auto;background:#2a0044;border:2px solid var(--emas);border-radius:12px;padding:15px;text-align:left;margin-bottom:10px;height: calc(100vh - 230px);}
-#user-list{background:#2a0044;border:2px solid var(--emas);border-radius:12px;padding:15px;margin-bottom:10px;display:none;text-align:left;font-size:1em;max-height:25vh;overflow-y:auto;}
+#chat-box{flex:1;overflow-y:auto;background:#2a0044;border:2px solid var(--emas);border-radius:12px;padding:15px;text-align:left;margin-bottom:10px;height: calc(100vh - 260px);}
+#user-list{background:#2a0044;border:2px solid var(--emas);border-radius:12px;padding:15px;margin-bottom:10px;display:none;text-align:left;font-size:1em;max-height:20vh;overflow-y:auto;}
 #loginBtn{width:100%;background:var(--emas);color:var(--hitam);padding:15px;border:none;border-radius:12px;font-weight:700;font-size:1em;margin-bottom:10px;cursor:pointer;}
 .chat-input-wrap{display:flex;gap:8px;margin-top:auto;}
 #input{flex:1;background:#2a0044;color:#fff;border:2px solid var(--emas);border-radius:12px;padding:12px;font-weight:700;font-size:1em;}
 #kirim{background:var(--emas);color:var(--hitam);border:2px solid var(--emas);border-radius:12px;padding:12px 20px;font-weight:700;font-size:1em;cursor:pointer;}
-
-/* ISI MAP & NFT DUMMY */
 .main-dummy{text-align:center;padding-top:40px;font-size:1.2em;color:#aaa;}
 </style>
 </head>
 <body>
 
-  <!-- SLIDER 3 HALAMAN: 2 MAP | 3 CHAT | 4 NFT -->
-  <div class="slider-container" id="slider">
+  <div class="slider-wrap" id="slider">
 
     <!-- HAL 2. MAP GOOGLE -->
-    <div class="page">
+    <div class="page" id="p2">
       <header class="header"><a href="menu.html" class="back">←</a><div class="logo">2. Map Google</div><div style="width:2em"></div></header>
       <main class="main"><div class="main-dummy">Isi Map Google Disini<br><small>Swipe Kanan ke Chat</small></div></main>
       <footer class="footer">Swipe Kiri/Kanan</footer>
     </div>
     
-    <!-- HAL 3. CHAT = AKTIF -->
-    <div class="page" id="chat-page">
+    <!-- HAL 3. CHAT = TENGAH -->
+    <div class="page" id="p3">
       <header class="header"><a href="menu.html" class="back">←</a><div class="logo">3. Chat</div><div style="width:2em"></div></header>
       <main class="main">
         <button id="loginBtn" onclick="loginPi()">Login Pi Dulu</button>
         <div id="app" style="display:none; flex-direction:column; flex:1;">
-          <div class="tab-btns" id="appTabs"><button id="public" onclick="setMode('public')">Public</button><button id="team" onclick="setMode('team')">Team</button><button id="privasi" onclick="setMode('privasi')">Privasi</button></div>
+          <div class="tab-btns"><button id="public" onclick="setMode('public')">Public</button><button id="team" onclick="setMode('team')">Team</button><button id="privasi" onclick="setMode('privasi')">Privasi</button></div>
           <div id="user-list"></div><div id="chat-box">Pilih tab...</div>
           <div class="chat-input-wrap" id="inputWrap" style="display:none;"><input id="input" placeholder="Ketik pesan..." onkeypress="if(event.key==='Enter') kirimPesan()"><button id="kirim" onclick="kirimPesan()">Kirim</button></div>
         </div>
@@ -62,7 +59,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:#fff;f
     </div>
 
     <!-- HAL 4. NFT -->
-    <div class="page">
+    <div class="page" id="p4">
       <header class="header"><a href="menu.html" class="back">←</a><div class="logo">4. Galery NFT</div><div style="width:2em"></div></header>
       <main class="main"><div class="main-dummy">Isi Galery NFT Disini<br><small>Swipe Kiri ke Chat</small></div></main>
       <footer class="footer">Swipe Kiri/Kanan</footer>
@@ -77,7 +74,10 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:#fff;f
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
   let currentUser = null; let currentMode = 'public'; let currentReceiver = null; let channel = null;
   
-  window.onload = () => { document.getElementById('slider').scrollLeft = window.innerWidth * 1; } // Auto buka di Hal 3 Tengah
+  // KUNCI: Pas buka file, langsung scroll ke Hal 3 tengah
+  document.addEventListener('DOMContentLoaded', () => { 
+    document.getElementById('slider').scrollLeft = window.innerWidth; 
+  });
 
   window.loginPi = async () => {
     try { Pi.init({ version: "2.0", sandbox: true }); const auth = await Pi.authenticate(['username']);
@@ -129,4 +129,4 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:#fff;f
   }
 </script>
 </body>
-  </html>
+          </html>
