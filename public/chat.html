@@ -17,9 +17,10 @@ body{display:flex;flex-direction:column;padding:8px;box-sizing:border-box}
 .chatbox{flex:1;overflow-y:auto;border:2px solid #f9c74f;border-radius:10px;padding:8px;background:#2a0052}
 .msg{margin:6px 0;padding:6px 8px;border-radius:8px;background:#3a006a;word-wrap:break-word}
 .msg b{color:#f9c74f}
-.input{display:flex;gap:6px;margin-top:8px;flex-shrink:0}
+.input{display:flex;gap:6px;margin-top:8px;flex-shrink:0} /* KOTAK KIRIM GAK GUE SEMBUNYIIN LAGI */
 .input input{flex:1;padding:10px;border:2px solid #f9c74f;border-radius:10px;background:#2a0052;color:#fff;font-size:16px}
 .input button{width:50px;height:50px;border:0;border-radius:10px;background:#f9c74f;color:#000;font-weight:700;font-size:24px}
+.hide{display:none!important} /* BUAT SEMBUNYIIN LOGIN DOANG */
 </style>
 </head>
 <body>
@@ -42,7 +43,6 @@ body{display:flex;flex-direction:column;padding:8px;box-sizing:border-box}
 </div>
 
 <script>
-// === SUPABASE LU UDAH GUE ISI ===
 const SUPABASE_URL = 'https://aecidmcsdtkshjdnrrrd.supabase.co'; 
 const SUPABASE_KEY = 'sb_publishable_Ha3M2Q6FzUGaTVV4rtnong_lkHZrQWD'; 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -51,28 +51,30 @@ let user = null;
 let currentTab = 'public';
 let startX = 0;
 const tabTables = {public:'message_public', team:'message_team', dm:'message_dm'};
+let piReady = false;
 
-// === TUNGGU PI SDK 100% SIAP DULU ===
-window.addEventListener('load', () => {
+// KUNCI: JALANIN LANGSUNG PAS DOM SIAP, BUKAN WINDOW.LOAD
+document.addEventListener('DOMContentLoaded', initPi);
+
+function initPi(){
   if(!window.Pi){
-    alert('GAGAL: Pi SDK gak kebaca. WAJIB BUKA DI PI BROWSER');
+    document.getElementById('chatbox').innerHTML = '<div class="msg"><b>ERROR</b>: Pi SDK gak kebaca. WAJIB BUKA DI PI BROWSER, BUKAN DARI IFRAME.</div>';
     return;
   }
   
-  Pi.init({ version: "2.0", sandbox: true }); // TESTNET = TRUE
+  Pi.init({ version: "2.0", sandbox: true }); // TESTNET
+  piReady = true;
   console.log('Pi SDK Init OK');
 
   document.getElementById('btnLogin').onclick = async () => {
+    if(!piReady) return alert('SDK belum siap');
     try {
-      alert('1. Login diklik...'); 
       const auth = await Pi.authenticate(['username']); 
-      alert('2. Sukses: @' + auth.user.username); 
       user = {uid: auth.user.uid, username: auth.user.username};
-      document.getElementById('loginBox').style.display = 'none'; 
+      document.getElementById('loginBox').classList.add('hide'); // SEMBUNYIIN LOGIN
       loadChat();
     } catch(e) {
-      alert('3. Gagal Login: ' + e.message); // SS INI KALAU ERROR
-      console.error(e);
+      document.getElementById('chatbox').innerHTML = `<div class="msg"><b>Login Gagal:</b> ${e.message}</div>`;
     }
   }
 
@@ -88,26 +90,25 @@ window.addEventListener('load', () => {
   document.getElementById('kirim').onclick = sendMsg;
   document.getElementById('txt').onkeypress = e=>{ if(e.key==='Enter') sendMsg(); }
   
-  // SWIPE URUT: MAP <- CHAT -> NFT
+  // SWIPE: MAP <- CHAT -> NFT. INDEX CHAT = 1
   let currentIndex = 1; 
   const pages = ['map.html', 'chat.html', 'nft.html'];
   document.body.addEventListener('touchstart', e=>{ startX = e.changedTouches[0].screenX; }, {passive:true});
   document.body.addEventListener('touchend', e=>{
     let dx = e.changedTouches[0].screenX - startX;
     if(Math.abs(dx) > 70){
-      if(dx > 70 && currentIndex > 0){ currentIndex--; window.location.href = pages[currentIndex]; }
-      if(dx < -70 && currentIndex < pages.length - 1){ currentIndex++; window.location.href = pages[currentIndex]; }
+      if(dx > 70 && currentIndex > 0){ window.location.href = pages[currentIndex-1]; }
+      if(dx < -70 && currentIndex < pages.length - 1){ window.location.href = pages[currentIndex+1]; }
     }
   });
-});
+}
 
 async function loadChat(){
   if(!user) return;
   const table = tabTables[currentTab];
   let q = supabase.from(table).select('*').order('id',{ascending:false}).limit(50);
   if(currentTab==='dm'){ q = q.or(`sender_uid.eq.${user.uid},receiver_uid.eq.${user.uid}`); }
-  const {data, error} = await q;
-  if(error){ console.error(error); return; }
+  const {data} = await q;
   const box = document.getElementById('chatbox');
   box.innerHTML = '';
   data.reverse().forEach(m=>{
@@ -123,14 +124,12 @@ async function sendMsg(){
   if(!text) return;
   const table = tabTables[currentTab];
   let row = currentTab==='dm' 
-  ? {text, sender_uid:user.uid, sender_username:user.username, receiver_uid:'all'} 
+ ? {text, sender_uid:user.uid, sender_username:user.username, receiver_uid:'all'} 
     : {text, pi_uid:user.uid, pi_username:user.username};
-  const {error} = await supabase.from(table).insert(row);
-  if(error) alert('Gagal kirim: ' + error.message);
+  await supabase.from(table).insert(row);
   document.getElementById('txt').value = '';
 }
 
-// REALTIME
 supabase.channel('room1')
 .on('postgres_changes',{event:'INSERT',schema:'public',table:'message_public'},payload=>{ if(currentTab==='public') loadChat(); })
 .on('postgres_changes',{event:'INSERT',schema:'public',table:'message_team'},payload=>{ if(currentTab==='team') loadChat(); })
