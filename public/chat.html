@@ -3,25 +3,110 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Solusi Emas Chat - Pioneer Only</title>
+<title>Chat Public dan Privacy</title>
 <script src="https://sdk.minepi.com/pi-sdk.js"></script> 
 <style>
-  body { font-family: system-ui; background: #0f172a; color: #e2e8f0; margin: 0; display: flex; flex-direction: column; height: 100vh; }
-  header { padding: 12px; background: #1e293b; text-align: center; font-weight: 700; }
+  body { 
+    font-family: system-ui; 
+    background: #2d004d; /* Ungu tua kayak gambar */
+    color: #fff; 
+    margin: 0; 
+    display: flex; 
+    flex-direction: column; 
+    height: 100vh; 
+  }
+  
+  header { 
+    padding: 12px; 
+    background: #001f4d; /* Biru dongker header */
+    text-align: center; 
+    font-weight: 700; 
+    font-size: 18px;
+    color: #fbbf24; /* Kuning emas tulisannya */
+    border-bottom: 3px solid #fbbf24; /* Garis emas */
+  }
+  footer { 
+    padding: 8px; 
+    background: #001f4d; /* Biru dongker footer */
+    text-align: center; 
+    font-size: 12px;
+    color: #aaa;
+    border-top: 3px solid #fbbf24; /* Garis emas */
+  }
+
+  #tabs { display: none; gap: 8px; padding: 8px; background: #1a002e; }
+  .tabBtn { 
+    flex: 1; 
+    padding: 10px; 
+    border: 2px solid #fbbf24; /* Border emas */
+    border-radius: 12px; 
+    background: #5a189a; /* Ungu tombol kayak gambar */
+    color: #fff; 
+    font-weight: 700; 
+    cursor: pointer; 
+  }
+  .tabBtn.active { 
+    background: #7b2cbf; /* Ungu lebih terang pas active */
+    box-shadow: 0 0 10px #fbbf24; /* Glow emas */
+  }
+
   #loginWrap { text-align: center; padding: 40px 12px; }
-  #loginBtn { padding: 12px 24px; border: none; border-radius: 8px; background: #fbbf24; color: #000; font-weight: 700; cursor: pointer; font-size: 16px; }
+  #loginBtn { 
+    padding: 12px 24px; 
+    border: 2px solid #fbbf24;
+    border-radius: 12px; 
+    background: #5a189a; 
+    color: #fff; 
+    font-weight: 700; 
+    cursor: pointer; 
+    font-size: 16px; 
+  }
   #chatWrap { display: none; flex-direction: column; flex: 1; }
-  #chatBox { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-  .msg { padding: 8px 12px; border-radius: 12px; max-width: 75%; }
-  .me { background: #2563eb; align-self: flex-end; }
-  .other { background: #334155; align-self: flex-start; }
-  #inputWrap { display: flex; padding: 12px; background: #1e293b; gap: 8px; }
-  #msgInput { flex: 1; padding: 10px; border-radius: 8px; border: none; background: #0f172a; color: #e2e8f0; }
-  #sendBtn { padding: 10px 16px; border: none; border-radius: 8px; background: #2563eb; color: #fff; font-weight: 700; cursor: pointer; }
+  #chatBox { 
+    flex: 1; 
+    overflow-y: auto; 
+    padding: 12px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+  }
+  .msg { 
+    padding: 8px 12px; 
+    border-radius: 12px; 
+    max-width: 75%; 
+    border: 1px solid #fbbf24; /* Border emas tipis */
+  }
+  .me { background: #5a189a; align-self: flex-end; } /* Ungu chat gua */
+  .other { background: #3c096c; align-self: flex-start; } /* Ungu gelap chat orang */
+  
+  #inputWrap { 
+    display: flex; 
+    padding: 12px; 
+    background: #1a002e; 
+    gap: 8px; 
+    border-top: 2px solid #fbbf24; /* Garis emas */
+  }
+  #msgInput { 
+    flex: 1; 
+    padding: 10px; 
+    border-radius: 12px; 
+    border: 2px solid #fbbf24; 
+    background: #2d004d; 
+    color: #fff; 
+  }
+  #sendBtn { 
+    padding: 10px 16px; 
+    border: 2px solid #fbbf24;
+    border-radius: 12px; 
+    background: #5a189a; 
+    color: #fff; 
+    font-weight: 700; 
+    cursor: pointer; 
+  }
 </style>
 </head>
 <body>
-  <header>💬 Solusi Emas Chat</header>
+  <header>Chat Public dan Privacy</header>
   
   <div id="loginWrap">
     <h2>Wajib Login Pioneer</h2>
@@ -29,6 +114,10 @@
   </div>
 
   <div id="chatWrap">
+    <div id="tabs">
+      <button class="tabBtn active" id="tabPublic">Chat Public</button>
+      <button class="tabBtn" id="tabPrivacy">Chat Privacy</button>
+    </div>
     <div id="chatBox"></div>
     <div id="inputWrap">
       <input id="msgInput" placeholder="Ketik pesan...">
@@ -36,47 +125,40 @@
     </div>
   </div>
 
+  <footer>My Track V=43 © 2026</footer>
+
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-
   const SUPABASE_URL = 'https://aecidmcsdtkshjdnrrrd.supabase.co'
   const SUPABASE_ANON_KEY = 'sb_publishable_Ha3M2Q6FzUGaTVV4rtnong_lkHZrQWD'
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
   let myUsername = ''; 
   let myUid = '';  
+  let activeTab = 'message_public'; 
 
   Pi.init({ version: "2.0", sandbox: false });
 
   document.getElementById('loginBtn').onclick = async () => {
-    try {
-      const authResult = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
-      
-      myUsername = authResult.user.username; // Masuk ke kolom pi_username
-      myUid = authResult.user.uid;           // Masuk ke kolom pi_uid
-      
-      document.getElementById('loginWrap').style.display = 'none';
-      document.getElementById('chatWrap').style.display = 'flex';
-      
-      loadMessages();
-
-    } catch (err) { alert('Gagal login Pi: ' + err); }
+    const authResult = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
+    myUsername = authResult.user.username; 
+    myUid = authResult.user.uid;       
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('chatWrap').style.display = 'flex';
+    document.getElementById('tabs').style.display = 'flex';
+    loadMessages(); subscribeRealtime();
   }
 
   async function loadMessages() {
-    const { data } = await supabase.from('message_public').select('*').order('created_at', { ascending: true });
+    const { data } = await supabase.from(activeTab).select('*').order('created_at', { ascending: true });
     document.getElementById('chatBox').innerHTML = '';
-    data.forEach(m => addMessage(m.pi_username, m.text)); // Ambil pi_username & text
+    data.forEach(m => addMessage(m.pi_username, m.text));
   }
 
   async function sendMessage() {
     const text = document.getElementById('msgInput').value.trim();
     if (!text) return;
-    await supabase.from('message_public').insert({ 
-      pi_username: myUsername, // Kirim ke kolom pi_username
-      text: text,              // Kirim ke kolom text 
-      pi_uid: myUid            // Kirim ke kolom pi_uid
-    });
+    await supabase.from(activeTab).insert({ pi_username: myUsername, text: text, pi_uid: myUid });
     document.getElementById('msgInput').value = '';
   }
 
@@ -88,15 +170,31 @@
     document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
   }
 
-  supabase.channel('public:messages')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'message_public' }, payload => {
-      addMessage(payload.new.pi_username, payload.new.text); // Dengerin pi_username & text
-    })
-    .subscribe();
+  let channel;
+  function subscribeRealtime() {
+    if(channel) supabase.removeChannel(channel);
+    channel = supabase.channel('realtime:' + activeTab)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: activeTab }, payload => {
+        addMessage(payload.new.pi_username, payload.new.text);
+      })
+      .subscribe();
+  }
+
+  document.getElementById('tabPublic').onclick = () => {
+    activeTab = 'message_public';
+    document.getElementById('tabPublic').classList.add('active');
+    document.getElementById('tabPrivacy').classList.remove('active');
+    loadMessages(); subscribeRealtime();
+  }
+  document.getElementById('tabPrivacy').onclick = () => {
+    activeTab = 'message_privacy'; 
+    document.getElementById('tabPrivacy').classList.add('active');
+    document.getElementById('tabPublic').classList.remove('active');
+    loadMessages(); subscribeRealtime();
+  }
 
   document.getElementById('sendBtn').onclick = sendMessage;
   document.getElementById('msgInput').addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
-  
   function onIncompletePaymentFound(payment) { console.log('Incomplete:', payment); }
 </script>
 </body>
