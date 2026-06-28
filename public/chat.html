@@ -2,133 +2,126 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<title>Chat 2-3-4</title>
-<script src="https://sdk.minepi.com/pi-sdk.js"></script> <!-- LOAD DULU -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Track Chat</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--biru:#0A1F44;--ungu:#4B0082;--emas:#DAA520;--hitam:#000;--bg:#1A0033;}
-html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:#fff;font-family:'Segoe UI';}
-
-.slider-wrap{width:100vw;height:100vh;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;display:flex;}
-.slider-wrap::-webkit-scrollbar{display:none;}
-.page{width:100vw;height:100vh;flex-shrink:0;scroll-snap-align:start;display:flex;flex-direction:column;overflow-y:auto;background:var(--bg);}
-
-/* HEADER DI PRESS: padding kecil banget */
-.header{padding:6px 6px 4px 6px;display:flex;flex-direction:column;gap:4px;background:var(--biru);border-bottom:2px solid var(--emas);position:sticky;top:0;z-index:10;flex-shrink:0;}
-.header-top{display:flex;align-items:center;width:100%;}
-.back{font-size:1.8em;color:var(--emas);text-decoration:none;margin-right:8px;cursor:pointer;line-height:1;}
-.tab-btns{display:flex;gap:6px;width:100%;padding:0 2px;}
-.tab-btns button{flex:1;background:var(--ungu);color:#fff;border:2px solid var(--emas);border-radius:10px;padding:8px 2px;font-weight:700;font-size:0.95em;cursor:pointer;} /* DIPENDEKIN */
-.tab-btns button.active{background:var(--emas);color:var(--hitam);}
-
-.main{padding:10px;max-width:600px;margin:0 auto;flex:1;width:100%;box-sizing:border-box;display:flex;flex-direction:column;}
-
-/* FOOTER DI PRESS: padding kiri kanan 0 */
-.footer{padding:8px 0; font-size:0.8em;color:#aaa;text-align:center;flex-shrink:0; border-top:2px solid var(--emas); width:100vw; box-sizing:border-box;}
-
-#chat-box{flex:1;overflow-y:auto;background:#2a0044;border:2px solid var(--emas);border-radius:12px;padding:10px;text-align:left;margin-bottom:8px;height: calc(100vh - 180px);} /* KUNCI: 180px biar muat semua */
-#user-list{background:#2a0044;border:2px solid var(--emas);border-radius:12px;padding:10px;margin-bottom:8px;display:none;text-align:left;font-size:0.95em;max-height:15vh;overflow-y:auto;}
-.chat-input-wrap{display:flex;gap:6px;margin-top:auto;}
-#input{flex:1;background:#2a0044;color:#fff;border:2px solid var(--emas);border-radius:12px;padding:10px;font-weight:700;font-size:0.95em;}
-#kirim{background:var(--emas);color:var(--hitam);border:2px solid var(--emas);border-radius:12px;width:46px;height:46px;font-weight:700;font-size:1.2em;cursor:pointer;flex-shrink:0;} /* SEGI EMPAT PASTI */
-.main-dummy{text-align:center;padding-top:40px;font-size:1.2em;color:#aaa;}
+body{background:#1a0033;color:#fff;font-family:sans-serif;margin:0;padding:10px}
+.kotak-login{background:#2a0052;border:1px solid #f9c74f;border-radius:10px;padding:10px;margin-bottom:10px;text-align:center}
+.kotak-login button{background:#f9c74f;color:#000;border:0;border-radius:8px;padding:8px 15px;font-weight:700;cursor:pointer}
+.tabs{display:flex;gap:8px;margin-bottom:10px}
+.tabs button{flex:1;padding:10px;border:2px solid #f9c74f;background:#2a0052;color:#fff;border-radius:10px;font-weight:700}
+.tabs button.active{background:#f9c74f;color:#000}
+.chatbox{height:300px;overflow-y:auto;border:2px solid #f9c74f;border-radius:10px;padding:8px;background:#2a0052}
+.msg{margin:6px 0;padding:6px 8px;border-radius:8px;background:#3a006a}
+.msg b{color:#f9c74f}
+.input{display:flex;gap:8px;margin-top:10px}
+.input input{flex:1;padding:10px;border:2px solid #f9c74f;border-radius:10px;background:#2a0052;color:#fff}
+.input button{padding:10px 15px;border:0;border-radius:10px;background:#f9c74f;color:#000;font-weight:700}
+.hint{text-align:center;font-size:12px;margin-top:5px;opacity:.7}
 </style>
 </head>
 <body>
 
-  <div class="slider-wrap" id="slider">
+<div class="kotak-login" id="loginBox">
+  <div id="loginStatus">Belum Login</div>
+  <button id="btnLogin">Login dengan Pi</button>
+</div>
 
-    <!-- HAL 2. MAP -->
-    <div class="page"><header class="header"><div class="header-top"><a href="menu.html" class="back">←</a><div style="flex-grow:1"></div><div style="width:2em"></div></div></header><main class="main"><div class="main-dummy">Map<br><small>Swipe Kanan</small></div></main><footer class="footer">Swipe Kiri/Kanan</footer></div>
+<div class="tabs">
+  <button class="tab active" data-tab="public">Public</button>
+  <button class="tab" data-tab="team">Team</button>
+  <button class="tab" data-tab="dm">Privasi</button>
+</div>
 
-    <!-- HAL 3. CHAT -->
-    <div class="page" id="p3">
-      <header class="header">
-        <div class="header-top"><a href="menu.html" class="back">←</a><div style="flex-grow:1"></div><div style="width:2em"></div></div>
-        <div class="tab-btns"><button id="public">Public</button><button id="team">Team</button><button id="privasi">Privasi</button></div>
-      </header>
-      <main class="main">
-        <div id="app" style="display:flex; flex-direction:column; flex:1;">
-          <div id="user-list"></div><div id="chat-box">Auto login...</div>
-          <div class="chat-input-wrap"><input id="input" placeholder="Ketik pesan..."><button id="kirim">➤</button></div>
-        </div>
-      </main>
-      <footer class="footer">Swipe Kiri/Kanan</footer>
-    </div>
+<div class="chatbox" id="chatbox"></div>
 
-    <!-- HAL 4. NFT -->
-    <div class="page"><header class="header"><div class="header-top"><a href="menu.html" class="back">←</a><div style="flex-grow:1"></div><div style="width:2em"></div></div></header><main class="main"><div class="main-dummy">NFT<br><small>Swipe Kiri</small></div></main><footer class="footer">Swipe Kiri/Kanan</footer></div>
+<div class="input">
+  <input id="txt" placeholder="Ketik pesan...">
+  <button id="kirim">Kirim</button>
+</div>
+<div class="hint">Swipe Kiri/Kanan untuk ganti tab</div>
 
-  </div>
+<script>
+const SUPABASE_URL = 'https://xxxx.supabase.co'; // GANTI PUNYA LU
+const SUPABASE_KEY = 'xxx'; // GANTI PUNYA LU
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-  const SUPABASE_URL = 'https://aecidmcsdtkshjdnrrrd.supabase.co'
-  const SUPABASE_KEY = 'sb_publishable_Ha3M2Q6FzUGaTVV4rtnong_lkHZrQWD'
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
-  let currentUser = null; let currentMode = 'public'; let currentReceiver = null; let channel = null;
+let user = null;
+let currentTab = 'public';
+let startX = 0;
 
-  // KUNCI AUTO NYAMBUNG: Tunggu SDK ready dulu baru init
-  window.onload = async () => {
-    document.getElementById('slider').scrollLeft = window.innerWidth;
-    document.getElementById('kirim').onclick = kirimPesan;
-    document.getElementById('input').onkeypress = (e)=>{if(e.key==='Enter') kirimPesan()};
-    document.getElementById('public').onclick = ()=>setMode('public');
-    document.getElementById('team').onclick = ()=>setMode('team');
-    document.getElementById('privasi').onclick = ()=>setMode('privasi');
+const tabs = ['public','team','dm'];
+const tabTables = {public:'message_public', team:'message_team', dm:'message_dm'};
 
-    if (typeof Pi === 'undefined') { document.getElementById('chat-box').innerHTML = 'Error: Buka di Pi Browser'; return; }
+Pi.init({ version: "2.0", sandbox: true }); // GANTI sandbox:false kalau udah live
 
-    try {
-      Pi.init({ version: "2.0", sandbox: true }); // INIT DULU
-      const auth = await Pi.authenticate(['username']); // BARU AUTH
-      currentUser = { uid: auth.user.uid, username: auth.user.username };
-      setMode('public'); // AUTO MASUK PUBLIC
-    } catch(e) { document.getElementById('chat-box').innerHTML = 'Login Pi gagal: ' + e.message }
-  };
-
-  const TABLE_MAP = { public: 'message_public', team: 'message_team', privasi: 'message_dm' };
-  window.setMode = async (mode) => {
-    if(!currentUser) return;
-    currentMode = mode; currentReceiver = null;
-    document.querySelectorAll('.tab-btns button').forEach(b => b.classList.remove('active')); document.getElementById(mode).classList.add('active');
-    document.getElementById('chat-box').innerHTML = 'Loading...'; if(channel) supabase.removeChannel(channel);
-    if(mode === 'privasi') { document.getElementById('user-list').style.display = 'block'; await loadUsers(); }
-    else { document.getElementById('user-list').style.display = 'none'; loadMessages(); subscribeRealtime(); }
+document.getElementById('btnLogin').onclick = async () => {
+  try {
+    const auth = await Pi.authenticate(['username'], (p)=>{});
+    user = {uid: auth.user.uid, username: auth.user.username};
+    document.getElementById('loginStatus').innerText = 'Login: @' + user.username;
+    document.getElementById('loginBox').style.display = 'none';
+    loadChat();
+  } catch(e) {
+    document.getElementById('loginStatus').innerText = 'Login Pi gagal: ' + e;
   }
-  async function loadUsers() {
-    const box = document.getElementById('user-list'); box.innerHTML = 'Ambil data...';
-    const { data, error } = await supabase.from('message_public').select('pi_uid, pi_username').limit(50);
-    if(error) { box.innerHTML = 'Error: ' + error.message; return; }
-    const unique = [...new Map(data.map(i => [i.pi_uid, i])).values()].filter(u => u.pi_uid!== currentUser.uid);
-    box.innerHTML = ''; unique.forEach(u => { const div = document.createElement('div'); div.textContent = u.pi_username; div.style.padding='6px 0'; div.style.borderBottom='1px solid #444'; div.style.cursor='pointer'; div.onclick = () => { currentReceiver = {uid: u.pi_uid, username: u.pi_username}; box.style.display = 'none'; document.getElementById('chat-box').innerHTML = `<p style="text-align:center;color:var(--emas)">Chat ${u.pi_username}</p>`; loadMessages(); subscribeRealtime(); }; box.appendChild(div); });
+}
+
+document.querySelectorAll('.tab').forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    currentTab = b.dataset.tab;
+    loadChat();
   }
-  async function loadMessages() {
-    const box = document.getElementById('chat-box'); const table = TABLE_MAP[currentMode];
-    let query = supabase.from(table).select('*').order('created_at', {ascending: true}).limit(50);
-    if (currentMode === 'privasi' && currentReceiver) { query = query.or(`and(sender_uid.eq.${currentUser.uid},receiver_uid.eq.${currentReceiver.uid}),and(sender_uid.eq.${currentReceiver.uid},receiver_uid.eq.${currentUser.uid})`); } else if(currentMode === 'privasi') { box.innerHTML = 'Pilih orang'; return; }
-    const { data, error } = await query; if(error) { box.innerHTML = 'Error: ' + error.message; return; }
-    box.innerHTML = ''; data.forEach(renderMsg); box.scrollTop = box.scrollHeight;
+});
+
+// SWIPE KIRI KAN
+document.body.addEventListener('touchstart', e=>{ startX = e.touches[0].clientX; });
+document.body.addEventListener('touchend', e=>{
+  let dx = e.changedTouches[0].clientX - startX;
+  if(Math.abs(dx) > 50){
+    let i = tabs.indexOf(currentTab);
+    if(dx < 0 && i < tabs.length-1) i++; // swipe kiri
+    if(dx > 0 && i > 0) i--; // swipe kanan
+    document.querySelector(`.tab[data-tab="${tabs[i]}"]`).click();
   }
-  function subscribeRealtime() {
-    const table = TABLE_MAP[currentMode];
-    channel = supabase.channel('chat_' + currentMode).on('postgres_changes', { event: 'INSERT', schema: 'public', table: table }, payload => {
-      const msg = payload.new;
-      if(currentMode === 'privasi' && currentReceiver) { if(!(msg.sender_uid === currentUser.uid && msg.receiver_uid === currentReceiver.uid) &&!(msg.sender_uid === currentReceiver.uid && msg.receiver_uid === currentUser.uid)) return; }
-      renderMsg(msg);
-    }).subscribe();
-  }
-  function renderMsg(msg) {
-    const box = document.getElementById('chat-box'); const name = msg.pi_username || msg.sender_username || 'Anon';
-    const div = document.createElement('div'); div.style.margin = '5px 0'; div.innerHTML = `<b style="color:var(--emas)">${name}:</b> ${msg.text}`;
-    box.appendChild(div); box.scrollTop = box.scrollHeight;
-  }
-  window.kirimPesan = async () => {
-    const input = document.getElementById('input'); const text = input.value.trim(); if(!text ||!currentUser) return; input.value = '';
-    const table = TABLE_MAP[currentMode];
-    if(currentMode === 'public' || currentMode === 'team') { const { error } = await supabase.from(table).insert({text, pi_uid: currentUser.uid, pi_username: currentUser.username}); if(error) alert('Gagal: ' + error.message); }
-    if(currentMode === 'privasi') { if(!currentReceiver) return alert('Pilih orang'); const { error } = await supabase.from(table).insert({text, sender_uid: currentUser.uid, receiver_uid: currentReceiver.uid, sender_username: currentUser.username}); if(error) alert('Gagal DM: ' + error.message); }
-  }
+});
+
+async function loadChat(){
+  const table = tabTables[currentTab];
+  const {data} = await supabase.from(table).select('*').order('id',{ascending:false}).limit(50);
+  const box = document.getElementById('chatbox');
+  box.innerHTML = '';
+  data.reverse().forEach(m=>{
+    let name = m.pi_username || m.sender_username || 'Anon';
+    let text = m.text;
+    box.innerHTML += `<div class="msg"><b>@${name}</b>: ${text}</div>`;
+  });
+  box.scrollTop = box.scrollHeight;
+}
+
+document.getElementById('kirim').onclick = async ()=>{
+  if(!user) return alert('Login dulu bro');
+  const text = document.getElementById('txt').value.trim();
+  if(!text) return;
+  const table = tabTables[currentTab];
+  let row = currentTab==='dm' 
+   ? {text, sender_uid:user.uid, sender_username:user.username, receiver_uid:'all'} 
+    : {text, pi_uid:user.uid, pi_username:user.username};
+  await supabase.from(table).insert(row);
+  document.getElementById('txt').value = '';
+  loadChat();
+}
+
+// Realtime
+supabase.channel('room1')
+.on('postgres_changes',{event:'INSERT',schema:'public',table:'message_public'},loadChat)
+.on('postgres_changes',{event:'INSERT',schema:'public',table:'message_team'},loadChat)
+.on('postgres_changes',{event:'INSERT',schema:'public',table:'message_dm'},loadChat)
+.subscribe();
 </script>
 </body>
-        </html>
+</html>
