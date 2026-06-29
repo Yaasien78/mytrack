@@ -7,51 +7,39 @@
   <script src="https://sdk.minepi.com/pi-sdk.js"></script> <!-- Pi SDK -->
   <style>
     :root {
-      --head-foot: #2E5A8A; /* Biru Tua */
-      --col-1: #A0D8F1; /* Biru Muda -25% */
-      --col-2: #5A9BD5; /* Biru Muda -50% */
-      --col-3: #2E5A8A; /* Biru Tua -75% */
+      --head-foot: #2E5A8A; /* Biru Tua 100% = Head & Foot */
+      --col-1: #4A7BB8; /* Biru 75% dari head */
+      --col-2: #5A9BD5; /* Biru 50% dari head */ 
+      --col-3: #A0D8F1; /* Biru 25% dari head */
       --gold-border: #DAA520; 
       --content-bg: #F0F8FF; 
     }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
     html, body { height: 100%; }
-    body { 
-      display: flex; flex-direction: column; 
-      background: var(--content-bg); 
-    }
+    body { display: flex; flex-direction: column; background: var(--content-bg); }
 
-    /* HEAD */
+    /* HEAD BISA DI KLIK */
     .head {
       height: 60px; background: var(--head-foot);
       border-bottom: 2px solid var(--gold-border);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 20px; color: #fff; flex-shrink: 0;
+      display: flex; align-items: center; padding: 0 20px; 
+      color: #fff; flex-shrink: 0; cursor: pointer; /* Biar tau bisa di klik */
     }
-    .head .logo { font-weight: bold; font-size: 18px; }
-    .back-btn { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #fff; font-size: 14px; }
-    .hamburger { display: flex; flex-direction: column; gap: 4px; }
-    .hamburger span { width: 22px; height: 2px; background: #fff; border-radius: 2px; }
+    .head .logo { font-weight: bold; font-size: 20px; }
 
-    /* MENU KE SAMPING */
-    .sidebar {
-      width: 100%; 
-      border-bottom: 2px solid var(--gold-border);
-      flex-shrink: 0;
-    }
-    .sidebar ul { 
-      list-style: none; display: flex; height: 120px; /* Tinggi kolom */
-    }
-    .sidebar li { width: 33.33%; } 
+    /* MENU KE BAWAH, FULL LEBAR */
+    .sidebar { width: 100%; border-bottom: 2px solid var(--gold-border); flex-shrink: 0; }
+    .sidebar ul { list-style: none; }
     .sidebar li a {
-      display: flex; align-items: center; justify-content: center; height: 100%;
-      text-decoration: none; color: #fff; font-weight: 600; font-size: 16px;
-      border-right: 2px solid #fff; border-left: 6px solid var(--gold-border);
+      display: flex; align-items: center; justify-content: center; 
+      height: 60px; /* Sama tinggi head */
+      width: 100%; /* Sama lebar layar */
+      text-decoration: none; color: #fff; font-weight: 700; font-size: 18px;
+      border-bottom: 2px solid var(--gold-border);
     }
-    .sidebar li:last-child a { border-right: none; }
-    .nav-profil a { background: var(--col-1); } 
-    .nav-ads a { background: var(--col-2); }    
-    .nav-info a { background: var(--col-3); }   
+    .nav-profil a { background: var(--col-1); } /* 75% */
+    .nav-ads a { background: var(--col-2); }    /* 50% */
+    .nav-info a { background: var(--col-3); color: #003366; } /* 25% */
 
     /* KONTEN TENGAH */
     .content { 
@@ -65,7 +53,7 @@
     }
     .content p { font-size: 15px; }
 
-    /* FOOT NEMPEL BAWAH */
+    /* FOOT */
     .foot {
       height: 50px; background: var(--head-foot);
       border-top: 2px solid var(--gold-border);
@@ -76,15 +64,12 @@
 </head>
 <body>
 
-  <header class="head">
+  <!-- HEAD DI KLIK BALIK KE COVER -->
+  <header class="head" onclick="window.location.href='index.html'">
     <div class="logo">Menu</div> 
-    <a href="index.html" class="back-btn">
-      <div class="hamburger"><span></span><span></span><span></span></div>
-      Back to Cover
-    </a>
   </header>
 
-  <!-- MENU KE SAMPING -->
+  <!-- MENU 3 KOLOM KE BAWAH -->
   <nav class="sidebar">
     <ul>
       <li class="nav-profil"><a href="profil.html">Profil</a></li>
@@ -93,7 +78,7 @@
     </ul>
   </nav>
 
-  <!-- KONTEN DI BAWAH MENU, TENGAH -->
+  <!-- KONTEN -->
   <main class="content">
     <h2>
       Selamat Datang<br>
@@ -109,18 +94,17 @@
   </footer>
 
   <script>
-    // 1. Tanggal Auto
+    // Tanggal Auto
     const tgl = new Date();
     document.getElementById('tgl').innerText = tgl.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
     
-    // 2. Ambil @username dari Pi SDK
+    // Ambil @username dari Pi SDK
     Pi.init({ version: "2.0" });
     Pi.authenticate({ scopes: ['username'] }, function(authResult) {
         document.getElementById('username').innerText = '@' + authResult.user.username;
     }, function(error) {
-        document.getElementById('username').innerText = '@guest'; // Kalau gagal login
-        console.log(error);
+        document.getElementById('username').innerText = '@guest';
     });
   </script>
 </body>
-                   </html>
+  </html>
