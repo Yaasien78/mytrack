@@ -4,44 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MyTrack Menu</title>
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script> <!-- Pi SDK -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <style>
     :root {
-      --head-foot: #2E5A8A; /* Biru Tua 100% = Head & Foot */
-      --col-1: #4A7BB8; /* Biru 75% dari head */
-      --col-2: #5A9BD5; /* Biru 50% dari head */ 
-      --col-3: #A0D8F1; /* Biru 25% dari head */
-      --gold-border: #DAA520; 
+      --head-foot: #2E5A8A; 
+      --col-1: #4A7BB8; /* 75% */
+      --col-2: #5A9BD5; /* 50% */ 
+      --col-3: #A0D8F1; /* 25% */
+      --gold-border: #DAA520; /* 2px tipis semua */
       --content-bg: #F0F8FF; 
     }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
     html, body { height: 100%; }
     body { display: flex; flex-direction: column; background: var(--content-bg); }
 
-    /* HEAD BISA DI KLIK */
     .head {
       height: 60px; background: var(--head-foot);
-      border-bottom: 2px solid var(--gold-border);
+      border-bottom: 2px solid var(--gold-border); /* 2px tipis */
       display: flex; align-items: center; padding: 0 20px; 
-      color: #fff; flex-shrink: 0; cursor: pointer; /* Biar tau bisa di klik */
+      color: #fff; flex-shrink: 0; cursor: pointer;
     }
     .head .logo { font-weight: bold; font-size: 20px; }
 
-    /* MENU KE BAWAH, FULL LEBAR */
-    .sidebar { width: 100%; border-bottom: 2px solid var(--gold-border); flex-shrink: 0; }
+    .sidebar { width: 100%; flex-shrink: 0; }
     .sidebar ul { list-style: none; }
     .sidebar li a {
       display: flex; align-items: center; justify-content: center; 
-      height: 60px; /* Sama tinggi head */
-      width: 100%; /* Sama lebar layar */
+      height: 60px; width: 100%;
       text-decoration: none; color: #fff; font-weight: 700; font-size: 18px;
-      border-bottom: 2px solid var(--gold-border);
+      border-top: 2px solid var(--gold-border); /* Ganti jadi border-top biar gak dobel di bawah */
     }
-    .nav-profil a { background: var(--col-1); } /* 75% */
-    .nav-ads a { background: var(--col-2); }    /* 50% */
-    .nav-info a { background: var(--col-3); color: #003366; } /* 25% */
+    .nav-profil a { background: var(--col-1); } 
+    .nav-ads a { background: var(--col-2); }    
+    .nav-info a { background: var(--col-3); color: #003366; } 
 
-    /* KONTEN TENGAH */
     .content { 
       flex: 1; padding: 30px 20px; background: var(--content-bg); 
       text-align: center; display: flex; flex-direction: column; justify-content: center;
@@ -53,10 +49,9 @@
     }
     .content p { font-size: 15px; }
 
-    /* FOOT */
     .foot {
       height: 50px; background: var(--head-foot);
-      border-top: 2px solid var(--gold-border);
+      border-top: 2px solid var(--gold-border); /* 2px tipis */
       display: flex; align-items: center; justify-content: center;
       font-size: 14px; color: #fff; font-weight: 500; flex-shrink: 0;
     }
@@ -64,12 +59,10 @@
 </head>
 <body>
 
-  <!-- HEAD DI KLIK BALIK KE COVER -->
   <header class="head" onclick="window.location.href='index.html'">
     <div class="logo">Menu</div> 
   </header>
 
-  <!-- MENU 3 KOLOM KE BAWAH -->
   <nav class="sidebar">
     <ul>
       <li class="nav-profil"><a href="profil.html">Profil</a></li>
@@ -78,7 +71,6 @@
     </ul>
   </nav>
 
-  <!-- KONTEN -->
   <main class="content">
     <h2>
       Selamat Datang<br>
@@ -94,17 +86,21 @@
   </footer>
 
   <script>
-    // Tanggal Auto
     const tgl = new Date();
     document.getElementById('tgl').innerText = tgl.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
     
-    // Ambil @username dari Pi SDK
-    Pi.init({ version: "2.0" });
-    Pi.authenticate({ scopes: ['username'] }, function(authResult) {
-        document.getElementById('username').innerText = '@' + authResult.user.username;
-    }, function(error) {
+    // Pi SDK Auto Username - Versi Pasti Jalan
+    async function getPiUser() {
+      try {
+        Pi.init({ version: "2.0", sandbox: false }); // sandbox: true kalau masih ngetes
+        const auth = await Pi.authenticate(['username']);
+        document.getElementById('username').innerText = '@' + auth.user.username;
+      } catch (err) {
         document.getElementById('username').innerText = '@guest';
-    });
+        console.error("Pi Auth Error:", err);
+      }
+    }
+    getPiUser();
   </script>
 </body>
   </html>
