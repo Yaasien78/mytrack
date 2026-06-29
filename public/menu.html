@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MyTrack Menu</title>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script> <!-- Pi SDK -->
   <style>
     :root {
-      --head-foot: #2E5A8A; /* Biru Tua = Head & Foot */
+      --head-foot: #2E5A8A; /* Biru Tua */
       --col-1: #A0D8F1; /* Biru Muda -25% */
       --col-2: #5A9BD5; /* Biru Muda -50% */
       --col-3: #2E5A8A; /* Biru Tua -75% */
@@ -14,48 +15,62 @@
       --content-bg: #F0F8FF; 
     }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-    body { display: flex; flex-direction: column; min-height: 100vh; background: var(--content-bg); }
+    html, body { height: 100%; }
+    body { 
+      display: flex; flex-direction: column; 
+      background: var(--content-bg); 
+    }
 
+    /* HEAD */
     .head {
       height: 60px; background: var(--head-foot);
       border-bottom: 2px solid var(--gold-border);
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 20px; color: #fff;
+      padding: 0 20px; color: #fff; flex-shrink: 0;
     }
     .head .logo { font-weight: bold; font-size: 18px; }
     .back-btn { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #fff; font-size: 14px; }
     .hamburger { display: flex; flex-direction: column; gap: 4px; }
     .hamburger span { width: 22px; height: 2px; background: #fff; border-radius: 2px; }
 
-    .container { display: flex; flex: 1; }
-    .sidebar { width: 250px; background: var(--content-bg); }
-    .sidebar ul { list-style: none; height: 100%; }
-    .sidebar li { height: 33.33%; } /* Kolom panjang sama rata */
-    .sidebar li a {
-      display: flex; align-items: center; height: 100%; padding: 0 20px;
-      text-decoration: none; color: #fff; font-weight: 500;
-      border-left: 6px solid var(--gold-border); border-bottom: 2px solid #fff;
+    /* MENU KE SAMPING */
+    .sidebar {
+      width: 100%; 
+      border-bottom: 2px solid var(--gold-border);
+      flex-shrink: 0;
     }
+    .sidebar ul { 
+      list-style: none; display: flex; height: 120px; /* Tinggi kolom */
+    }
+    .sidebar li { width: 33.33%; } 
+    .sidebar li a {
+      display: flex; align-items: center; justify-content: center; height: 100%;
+      text-decoration: none; color: #fff; font-weight: 600; font-size: 16px;
+      border-right: 2px solid #fff; border-left: 6px solid var(--gold-border);
+    }
+    .sidebar li:last-child a { border-right: none; }
     .nav-profil a { background: var(--col-1); } 
     .nav-ads a { background: var(--col-2); }    
     .nav-info a { background: var(--col-3); }   
 
+    /* KONTEN TENGAH */
     .content { 
-      flex: 1; padding: 40px 20px; background: var(--content-bg); 
-      text-align: center; /* Biar teks di tengah */
+      flex: 1; padding: 30px 20px; background: var(--content-bg); 
+      text-align: center; display: flex; flex-direction: column; justify-content: center;
     }
-    .content h2 { font-size: 32px; line-height: 1.3; }
+    .content h2 { font-size: 28px; line-height: 1.3; font-weight: 800; }
     .content .username { 
-      font-size: 20px; font-weight: bold; color: var(--head-foot); 
-      margin-top: 8px; 
+      font-size: 18px; font-weight: bold; color: var(--head-foot); 
+      margin: 8px 0 15px 0; 
     }
-    .content p { font-size: 16px; margin-top: 10px; }
+    .content p { font-size: 15px; }
 
+    /* FOOT NEMPEL BAWAH */
     .foot {
       height: 50px; background: var(--head-foot);
       border-top: 2px solid var(--gold-border);
       display: flex; align-items: center; justify-content: center;
-      font-size: 14px; color: #fff; font-weight: 500;
+      font-size: 14px; color: #fff; font-weight: 500; flex-shrink: 0;
     }
   </style>
 </head>
@@ -69,37 +84,43 @@
     </a>
   </header>
 
-  <div class="container">
-    <nav class="sidebar">
-      <ul>
-        <li class="nav-profil"><a href="profil.html">Profil</a></li>
-        <li class="nav-ads"><a href="ads.html">Ads</a></li>
-        <li class="nav-info"><a href="info.html">Info Public</a></li>
-      </ul>
-    </nav>
+  <!-- MENU KE SAMPING -->
+  <nav class="sidebar">
+    <ul>
+      <li class="nav-profil"><a href="profil.html">Profil</a></li>
+      <li class="nav-ads"><a href="ads.html">Ads</a></li>
+      <li class="nav-info"><a href="info.html">Info Public</a></li>
+    </ul>
+  </nav>
 
-    <main class="content">
-      <h2>
-        Selamat Datang<br>
-        di My Track<br>
-        Appnya Pioneer
-      </h2>
-      <div class="username" id="username">@username</div> <!-- Gabung di sini -->
-      <p>Klik menu di kiri buat pindah view.</p>
-    </main>
-  </div>
+  <!-- KONTEN DI BAWAH MENU, TENGAH -->
+  <main class="content">
+    <h2>
+      Selamat Datang<br>
+      di My Track<br>
+      Appnya Pioneer
+    </h2>
+    <div class="username" id="username">@loading...</div>
+    <p>Klik menu di atas buat pindah view.</p>
+  </main>
 
   <footer class="foot">
     <div>My Track @2026 | Terbit: <span id="tgl"></span></div>
   </footer>
 
   <script>
+    // 1. Tanggal Auto
     const tgl = new Date();
     document.getElementById('tgl').innerText = tgl.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
     
-    // Auto ambil @username Pi. Ganti 'pioneer' ke data beneran lu
-    const user = localStorage.getItem('pi_username') || 'pioneer'; 
-    document.getElementById('username').innerText = '@' + user;
+    // 2. Ambil @username dari Pi SDK
+    Pi.init({ version: "2.0" });
+    Pi.authenticate({ scopes: ['username'] }, function(authResult) {
+        document.getElementById('username').innerText = '@' + authResult.user.username;
+    }, function(error) {
+        document.getElementById('username').innerText = '@guest'; // Kalau gagal login
+        console.log(error);
+    });
   </script>
 </body>
-</html>
+                   </html>
