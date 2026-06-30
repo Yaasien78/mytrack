@@ -1,74 +1,55 @@
-'use client'
-import { useState } from 'react'
-import PiLoginButton from './components/PiLoginButton'
+'use client';
+import { useState } from 'react';
+import dynamic from 'next/dynamic';
 
-// GANTI LINK + GAMBAR IKLAN LU DISINI BRO
-const ADS_DATA = [
-  { 
-    id: 1, 
-    title: 'Jasa Undangan Digital Palembang', 
-    img: 'https://i.imgur.com/8KmNpWb.png', 
-    link: 'https://wa.me/62812xxxx' // Ganti no WA lu
-  },
-  { 
-    id: 2, 
-    title: 'Promo Toko HP Murah', 
-    img: 'https://i.imgur.com/8KmNpWb.png', 
-    link: 'https://wa.me/62812xxxx' 
-  },
-  { 
-    id: 3, 
-    title: 'Buka Jasa Desain Logo', 
-    img: 'https://i.imgur.com/8KmNpWb.png', 
-    link: 'https://wa.me/62812xxxx' 
-  },
-]
+const PiLoginButton = dynamic(() => import('./components/PiLoginButton'), { ssr: false });
 
-export default function MyTrackAds() {
-  const [user, setUser] = useState(null)
+export default function Home() {
+  const [showApp, setShowApp] = useState(false); // false = Masih di Cover
 
-  const onLogin = (piUser) => {
-    setUser(piUser) // Cuma nyimpen username di memory doang
-  }
-
-  // HALAMAN 1: LOGIN PI
-  if (!user) {
+  // INI HALAMAN 1: COVER
+  if (showApp === false) {
     return (
-      <div style={{display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', height:'100vh', fontFamily:'sans-serif', background:'#f0f0f0'}}>
-        <h1 style={{marginBottom:8}}>My Track Ads</h1>
-        <p style={{marginBottom:20}}>Login Pi untuk buka papan iklan</p>
-        <PiLoginButton onLogin={onLogin} />
-      </div>
+      <main style={{ 
+        height: '100vh', 
+        background: 'linear-gradient(180deg, #1a1a2e, #0f0f1a)', 
+        color: 'white', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        fontFamily: 'sans-serif',
+        padding: '20px'
+      }}>
+        <div style={{position: 'absolute', top: 20, right: 20, fontSize: '28px', cursor: 'pointer'}} onClick={() => setShowApp(true)}>
+          ≡ 
+        </div>
+        
+        <img 
+          src="/index.html" 
+          alt="My Track Logo" 
+          style={{width: '200px', height: '200px', borderRadius: '24px', marginBottom: '20px'}}
+        />
+        <h1 style={{fontSize: '32px', margin: 0}}>My Track</h1>
+        <p style={{opacity: 0.7}}>App Track di Pi Network</p>
+        <p style={{fontSize: '12px', marginTop: '40px', opacity: 0.5}}>Klik ≡ untuk masuk</p>
+      </main>
     )
   }
 
-  // HALAMAN 2: LANGSUNG KE ADS - Cuan Disini
+  // INI HALAMAN 2: ADS + LOGIN
   return (
-    <div style={{padding:16, fontFamily:'sans-serif', background:'#f5f5f5', minHeight:'100vh'}}>
-      <header style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16}}>
-        <h2 style={{margin:0}}>Halo @{user.pi_username}</h2>
-        <button onClick={() => setUser(null)} style={{padding:'8px 12px', border:'none', background:'#f44336', color:'#fff', borderRadius:8, cursor:'pointer'}}>Logout</button>
-      </header>
-      
-      <h3 style={{margin:'0 0 12px 0'}}>Papan Iklan</h3>
-
-      <div style={{display:'grid', gap:16}}>
-        {ADS_DATA.map(ad => (
-          <a key={ad.id} href={ad.link} target="_blank" rel="noopener noreferrer" style={{textDecoration:'none', color:'inherit'}}>
-            <div style={{background:'#fff', borderRadius:12, overflow:'hidden', boxShadow:'0 2px 8px rgba(0,0,0,0.1)'}}>
-              <img src={ad.img} alt={ad.title} style={{width:'100%', display:'block'}} />
-              <div style={{padding:12}}>
-                <h4 style={{margin:0}}>{ad.title}</h4>
-                <p style={{margin:'4px 0 0', fontSize:12, color:'#4CAF50', fontWeight:'bold'}}>Klik untuk Chat WA</p>
-              </div>
-            </div>
-          </a>
-        ))}
+    <main style={{padding: '20px', background: '#0a0a0a', minHeight: '100vh', color: 'white'}}>
+      <div style={{textAlign: 'center', marginBottom: '20px'}}>
+        <button onClick={() => setShowApp(false)} style={{float: 'left', background: 'none', border: 'none', color: 'white', fontSize: '20px'}}>←</button>
+        <h2>My Track Ads</h2>
       </div>
 
-      <p style={{textAlign:'center', fontSize:12, color:'gray', marginTop:20}}>
-        Mau pasang iklan di sini? Chat Admin
-      </p>
-    </div>
+      <div style={{background: '#222', padding: '40px', borderRadius: '12px', textAlign: 'center', marginBottom: '20px'}}>
+        [Tempat Iklan Banner 728x90]
+      </div>
+
+      <PiLoginButton />
+    </main>
   )
-}
+  }
