@@ -12,75 +12,70 @@
  .bg-dongker { background-color: #0f1a2e; }
  .bg-ungu { background-color: #6d28d9; }
  .bg-biru-logo { background-color: #2563eb; }
-    header { height: 64px; z-index: 30; }
-    footer { height: 64px; z-index: 30; }
-    main { padding-top: 64px; padding-bottom: 64px; }
-    .price-up { color: #4ade80 !important; transition: color 0.3s; }
-    .price-down { color: #f87171 !important; transition: color 0.3s; }
+    header { height: 60px; z-index: 30; } /* HEADER DIKECILIN 4px */
+    footer { height: 60px; z-index: 30; } /* FOOTER DIKECILIN 4px */
+    main { padding-top: 60px; padding-bottom: 60px; }
+    .price-up { color: #4ade80 !important; }
+    .price-down { color: #f87171 !important; }
     
-    /* RAMPING + 3D HITAM */
+    /* KUNCI: SAMA BESAR + RAMPING + RAPET BANGET */
     .text-kurus {
       font-family: 'Arial Narrow', Arial, sans-serif;
       font-weight: 800;
-      text-shadow: 0 2px 3px #000; 
-      letter-spacing: -1px; 
-      line-height: 1.1; 
+      font-size: 1.125rem; /* text-lg = SAMA SEMUA */
+      text-shadow: 0 1px 2px #000; 
+      letter-spacing: -2px; /* RAMPING EKSTRIM */
+      line-height: 0.9; /* RAPET KE ATAS EKSTRIM */
     }
   </style>
 </head>
 <body class="font-sans bg-white">
-  <!-- HEAD FIXED -->
-  <header class="bg-dongker px-3 border-b-2 border-yellow-400 flex items-center justify-between fixed top-0 w-full">
-    <a href="menu.html" class="text-3xl text-yellow-400">≡</a>
-    <h1 class="text-2xl font-extrabold text-white tracking-wide">My Track</h1>
-    <img src="https://minepi.com/favicon.ico" alt="Pi" class="w-10 h-10 rounded-full border-2 border-yellow-400 ring-2 ring-yellow-300/50">
+  <!-- HEAD FIXED KECIL -->
+  <header class="bg-dongker px-2 border-b-2 border-yellow-400 flex items-center justify-between fixed top-0 w-full">
+    <a href="menu.html" class="text-2xl text-yellow-400">≡</a>
+    <h1 class="text-lg font-extrabold text-white">My Track</h1>
+    <img src="https://minepi.com/favicon.ico" alt="Pi" class="w-8 h-8 rounded-full border-2 border-yellow-400">
   </header>
 
-  <!-- BOX UNGU -->
-  <main class="px-3">
-    <div class="bg-ungu border-gold-2 rounded-2xl p-3 m-0.5 h-[calc(100vh-128px-4px)] flex-col items-center justify-start text-center"> 
+  <!-- BOX UNGU: PADDING MINIM -->
+  <main class="px-1.5">
+    <div class="bg-ungu border-gold-2 rounded-2xl p-1.5 m-0.5 h-[calc(100vh-120px-4px)] flex-col items-center justify-start text-center"> 
       
-      <!-- HARGA KURUS RAPET -->
+      <!-- SEMUA SAMA BESAR, RAPET GAP-0 -->
       <div class="flex-col gap-0">
-        <!-- 1. KALIMAT HARGA PI/USDT DI ATAS -->
-        <p class="text-2xl text-white text-kurus">Harga Pi/USDT</p>
-        <p id="hargaUSDT" class="text-3xl text-white text-kurus">$0.0000</p>
+        <p class="text-kurus text-white">Harga Pi/USDT</p>
+        <p id="hargaUSDT" class="text-kurus text-white">$0.0000</p>
 
-        <!-- 2. PI/RUPIAH -->
-        <p class="text-2xl text-blue-400 text-kurus">Pi/Rupiah</p>
-        <p id="hargaIDR" class="text-2xl text-white text-kurus">Rp 0</p>
+        <p class="text-kurus text-blue-400">Pi/Rupiah</p>
+        <p id="hargaIDR" class="text-kurus text-white">Rp 0</p>
 
-        <!-- 3. DOLLAR/RUPIAH -->
-        <p class="text-2xl text-green-400 text-kurus">Dollar/Rupiah</p>
-        <p id="kursUSDIDR" class="text-2xl text-white text-kurus">Rp 17,934.50</p>
+        <p class="text-kurus text-green-400">Dollar/Rupiah</p>
+        <p id="kursUSDIDR" class="text-kurus text-white">Rp 17,934.50</p>
 
-        <p id="tanggal" class="text-2xl text-yellow-400 text-kurus my-1">Loading...</p>
+        <p id="tanggal" class="text-kurus text-yellow-400">Loading...</p>
       </div>
 
-      <!-- LOGO + WELCOME DITURUNIN BANGET: mt-8 -->
-      <div class="mt-8">
-        <div class="bg-biru-logo w-20 h-20 rounded-2xl border-2 border-yellow-400 flex items-center justify-center mx-auto">
-          <p class="text-white text-3xl font-extrabold text-kurus leading-none">My<br>Track</p>
+      <!-- LOGO + WELCOME RAPET KE ATAS -->
+      <div class="mt-2"> <!-- Margin paling kecil -->
+        <div class="bg-biru-logo w-14 h-14 rounded-xl border-2 border-yellow-400 flex items-center justify-center mx-auto"> <!-- w-14 = 56px -->
+          <p class="text-kurus text-white leading-none">My<br>Track</p>
         </div>
 
-        <p class="text-sm font-extrabold text-white text-kurus leading-tight mt-2">Welcome to Pioneer<br>at My Track app @2026</p>
+        <p class="text-kurus text-white mt-0.5">Welcome to Pioneer<br>at My Track app @2026</p> <!-- mt-0.5 = 2px -->
       </div>
 
     </div>
   </main>
 
-  <!-- FOOT FIXED -->
-  <footer class="bg-dongker px-3 border-t-2 border-yellow-400 flex items-center justify-center fixed bottom-0 w-full">
-    <button id="btnLogin" class="text-lg font-extrabold text-yellow-400 w-full text-kurus">Loading...</button>
+  <!-- FOOT FIXED KECIL -->
+  <footer class="bg-dongker px-2 border-t-2 border-yellow-400 flex items-center justify-center fixed bottom-0 w-full">
+    <button id="btnLogin" class="text-kurus text-yellow-400 w-full">Loading...</button>
   </footer>
 
   <script>
     let lastPiUSDT = 0; let lastPiIDR = 0; let lastKurs = 0;
 
-    function updateTanggal() {
-      document.getElementById('tanggal').innerText = 'Loading...';
-    }
-    updateTanggal(); 
+    document.getElementById('tanggal').innerText = 'Loading...';
 
     try {
       Pi.init({ version: "2.0", sandbox: true });
@@ -98,7 +93,6 @@
 
     async function updateData() {
       try {
-        // AKTIFKAN SEMUA: PAKE API COINGECKO LANGSUNG
         const apiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=pi-network,usd&vs_currencies=usd,idr';
         const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(apiUrl);
         const res = await fetch(proxyUrl);
@@ -107,7 +101,7 @@
         const pi = data['pi-network'];
         const usd = data['usd'];
 
-        if(pi && pi.usd > 0) { // CUMA UPDATE KALAU ADA DATA
+        if(pi && pi.usd > 0) {
           const newUSDT = pi.usd;
           const newIDR = pi.idr;
           setColor('hargaUSDT', newUSDT, lastPiUSDT);
@@ -122,12 +116,10 @@
           document.getElementById('kursUSDIDR').innerText = `Rp ${newKurs.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
           lastKurs = newKurs;
         }
-      } catch (e) { 
-        console.log("API Gagal:", e);
-      }
+      } catch (e) { console.log("API Gagal:", e); }
     }
     updateData(); 
-    setInterval(updateData, 3000); // REALTIME 3 DETIK
+    setInterval(updateData, 3000);
   </script>
 </body>
-  </html>
+</html>
