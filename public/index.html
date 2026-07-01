@@ -9,63 +9,65 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { background-color: #ffffff; }
-.border-gold-2 { border: 2px solid #fbbf24; }
-.bg-dongker { background-color: #0f1a2e; }
-.bg-ungu { background-color: #6d28d9; }
-.text-dongker { color: #0f1a2e; }
-.text-hijau-tua { color: #065f46; }
-main { padding-top: 64px; padding-bottom: 64px; }
-.marquee { overflow: hidden; white-space: nowrap; box-sizing: border-box; }
-.marquee span { display: inline-block; padding-left: 100%; animation: marquee 15s linear infinite; }
-.marquee.reverse span { animation: marquee-reverse 15s linear infinite; }
-@keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
-@keyframes marquee-reverse { 0% { transform: translate(-100%, 0); } 100% { transform: translate(0, 0); } }
+   .border-gold-2 { border: 2px solid #fbbf24; }
+   .bg-dongker { background-color: #0f1a2e; }
+   .bg-ungu { background-color: #6d28d9; }
+   .text-dongker { color: #0f1a2e; }
+   .text-hijau-tua { color: #065f46; }
+    /* KUNCI SCROLL: BODY BOLEH SCROLL, HEAD/FOOT FIXED */
+    body { padding-top: 64px; padding-bottom: 64px; }
+    header, footer { height: 64px; }
+
+    /* MARQUEE / HURUF BERJALAN */
+   .marquee { overflow: hidden; white-space: nowrap; box-sizing: border-box; }
+   .marquee span { display: inline-block; padding-left: 100%; animation: marquee 15s linear infinite; }
+   .marquee.reverse span { animation: marquee-reverse 15s linear infinite; }
+    @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+    @keyframes marquee-reverse { 0% { transform: translate(-100%, 0); } 100% { transform: translate(0, 0); } }
   </style>
 </head>
-<body class="font-sans overflow-hidden">
-  <div class="w-full h-screen flex-col bg-white">
-    <header class="bg-dongker p-3 border-b-2 border-yellow-400 flex items-center justify-between fixed top-0 w-full z-20">
-      <a href="menu.html" class="text-3xl text-yellow-400">≡</a>
-      <h1 class="text-2xl font-extrabold text-white tracking-wide">My Track</h1>
-      <img src="https://minepi.com/favicon.ico" alt="Pi" class="w-8 h-8 rounded-full border-2 border-yellow-400">
-    </header>
+<body class="font-sans bg-white"> <!-- HAPUS overflow-hidden, HAPUS h-screen -->
 
-    <main class="flex-1 overflow-y-auto p-3 flex-col gap-0">
-      <div class="bg-ungu border-gold-2 rounded-2xl p-3 text-center">
-        <h2 class="text-lg text-white">Harga Pi/USD Live</h2>
-        <p id="hargaUSD" class="text-5xl font-extrabold text-yellow-400 my-1">$0.0000</p>
-        <p id="hargaIDR" class="text-xl text-yellow-400">Harga /pi = Rp 0</p>
-        <p id="persen" class="text-2xl font-bold text-black">0.00%</p> <!-- DIHITAMIN BIAR KELIATAN -->
-        <p class="text-xs text-purple-200 mt-1">Kurs: 1 USD = Rp 17934.50 | Update <span id="jam">-</span></p>
-      </div>
+  <!-- 1. HEAD FIXED DI ATAS -->
+  <header class="bg-dongker px-3 border-b-2 border-yellow-400 flex items-center justify-between fixed top-0 w-full z-20">
+    <a href="menu.html" class="text-3xl text-yellow-400 active:scale-90">≡</a>
+    <h1 class="text-2xl font-extrabold text-white tracking-wide">My Track</h1>
+    <!-- LOGO PI DIBESARIN + RING KEREN -->
+    <img src="https://minepi.com/favicon.ico" alt="Pi" class="w-10 h-10 rounded-full border-2 border-yellow-400 ring-2 ring-yellow-300/50">
+  </header>
 
-      <div class="my-3 h-8 flex items-center bg-yellow-50 border-y-2 border-dongker">
-        <div class="marquee w-full">
-          <span id="tanggalTicker" class="text-dongker font-extrabold text-base">Loading tanggal...</span>
-        </div>
-      </div>
+  <!-- 2. BODY BEBAS SCROLL -->
+  <main class="p-3 flex-col gap-0">
+    <div class="bg-ungu border-gold-2 rounded-2xl p-3 text-center">
+      <h2 class="text-lg text-white">Harga Pi/USD Live</h2>
+      <p id="hargaUSD" class="text-5xl font-extrabold text-yellow-400 my-1">$0.0000</p>
+      <p id="hargaIDR" class="text-xl text-yellow-400">Harga /pi = Rp 0</p>
+      <p id="persen" class="text-2xl font-bold text-black">0.00%</p> <!-- NANTI AUTO HIJAU/MERAH -->
+      <p class="text-xs text-purple-200 mt-1">Kurs: 1 USD = Rp 17934.50 | Update <span id="jam">-</span></p>
+    </div>
 
-      <div class="bg-ungu border-gold-2 rounded-2xl p-2 h-64"><canvas id="priceChart"></canvas></div>
+    <div class="my-3 h-8 flex items-center bg-yellow-50 border-y-2 border-dongker">
+      <div class="marquee w-full"><span id="tanggalTicker" class="text-dongker font-extrabold text-base">Loading tanggal...</span></div>
+    </div>
 
-      <div class="my-3 h-8 flex items-center bg-green-50 border-y-2 border-green-700">
-        <div class="marquee reverse w-full">
-          <span class="text-hijau-tua font-extrabold text-base">Welcome to Pioner at My Track app. Welcome to Pioner at My Track app. </span>
-        </div>
-      </div>
+    <div class="bg-ungu border-gold-2 rounded-2xl p-2 h-64"><canvas id="priceChart"></canvas></div>
 
-      <div class="bg-ungu border-gold-2 rounded-2xl p-3 text-white mb-4">
-        <h3 class="text-lg font-bold text-yellow-400 mb-2">Tentang Pi Network</h3>
-        <p class="text-sm leading-relaxed text-purple-100">Pi adalah mata uang kripto baru untuk semua orang. <b>Supply:</b> 100 Miliar Pi</p>
-      </div>
-    </main>
+    <div class="my-3 h-8 flex items-center bg-green-50 border-y-2 border-green-700">
+      <div class="marquee reverse w-full"><span class="text-hijau-tua font-extrabold text-base">Welcome to Pioner at My Track app. Welcome to Pioner at My Track app. </span></div>
+    </div>
 
-    <footer class="bg-dongker p-3 border-t-2 border-yellow-400 text-center fixed bottom-0 w-full z-20">
-      <button id="btnLogin" class="text-xl font-bold text-yellow-400 w-full">Loading...</button>
-    </footer>
-  </div>
+    <div class="bg-ungu border-gold-2 rounded-2xl p-3 text-white mb-4">
+      <h3 class="text-lg font-bold text-yellow-400 mb-2">Tentang Pi Network</h3>
+      <p class="text-sm leading-relaxed text-purple-100">Pi adalah mata uang kripto baru untuk semua orang. <b>Supply:</b> 100 Miliar Pi</p>
+    </div>
+  </main>
+
+  <!-- 3. FOOT FIXED DI BAWAH -->
+  <footer class="bg-dongker px-3 border-t-2 border-yellow-400 flex items-center justify-center fixed bottom-0 w-full z-20">
+    <button id="btnLogin" class="text-xl font-bold text-yellow-400 w-full">Loading...</button>
+  </footer>
 
   <script>
-    // 1. TICKER TANGGAL JALAN DULU, GAK NUNGGU API
     function updateTanggal() {
       const now = new Date();
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit', second:'2-digit' };
@@ -73,34 +75,31 @@ main { padding-top: 64px; padding-bottom: 64px; }
     }
     updateTanggal(); setInterval(updateTanggal, 1000);
 
-    // 2. LOGIN PI
     try {
       Pi.init({ version: "2.0", sandbox: true });
       Pi.authenticate({ scopes: ['username', 'payments'], onIncompletePaymentFound: () => {} })
-    .then(auth => { document.getElementById('btnLogin').innerText = `Welcome ${auth.user.username}`; })
-    .catch(() => { document.getElementById('btnLogin').innerText = 'Login Pi - Gagal Whitelist'; });
+   .then(auth => { document.getElementById('btnLogin').innerText = `Welcome ${auth.user.username}`; })
+   .catch(() => { document.getElementById('btnLogin').innerText = 'Login Pi - Gagal Whitelist'; });
     } catch(e) { document.getElementById('btnLogin').innerText = 'Buka di Pi Browser'; }
 
-    // 3. DATA HARGA PAKE PROXY BIAR TEMBUS PI BROWSER
     let chart; let dataPoints = [];
     async function updateData() {
       try {
         const apiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr&include_24hr_change=true';
-        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(apiUrl); // KUNCI ANTI BLOKIR
+        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(apiUrl);
         const res = await fetch(proxyUrl);
         const pi = (await res.json())['pi-network'];
-
         document.getElementById('hargaUSD').innerText = `$${pi.usd.toFixed(4)}`;
         document.getElementById('hargaIDR').innerText = `Harga /pi = Rp ${pi.idr.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+
+        // AUTO HIJAU / MERAH
         const persenEl = document.getElementById('persen');
         if (pi.usd_24h_change >= 0) { persenEl.className = 'text-2xl font-bold text-green-400'; persenEl.innerText = `+${pi.usd_24h_change.toFixed(2)}%`; }
         else { persenEl.className = 'text-2xl font-bold text-red-500'; persenEl.innerText = `${pi.usd_24h_change.toFixed(2)}%`; }
+
         dataPoints.push(pi.usd); if(dataPoints.length > 20) dataPoints.shift(); updateChart();
         document.getElementById('jam').innerText = new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
-      } catch (e) {
-        console.log("Gagal fetch:", e);
-        document.getElementById('hargaUSD').innerText = '$Gagal Load'; // KASIH TAU KALO GAGAL
-      }
+      } catch (e) { document.getElementById('hargaUSD').innerText = '$Gagal Load'; }
     }
     function initChart() {
       chart = new Chart(document.getElementById('priceChart'), {
@@ -112,4 +111,4 @@ main { padding-top: 64px; padding-bottom: 64px; }
     initChart(); updateData(); setInterval(updateData, 15000);
   </script>
 </body>
-  </html>
+</html>
