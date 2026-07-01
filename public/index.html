@@ -11,9 +11,9 @@
  .border-gold-2 { border: 2px solid #fbbf24; }
  .bg-dongker { background-color: #0f1a2e; }
  .bg-ungu { background-color: #6d28d9; }
-    header { height: 64px; z-index: 30; } /* HEAD PALING ATAS */
-    footer { height: 64px; z-index: 30; } /* FOOT PALING ATAS BIAR BISA KLIK */
-    main { padding-top: 64px; padding-bottom: 64px; } /* KASIH RUANG BIAR GAK KETUTUP */
+    header { height: 64px; z-index: 30; }
+    footer { height: 64px; z-index: 30; }
+    main { padding-top: 64px; padding-bottom: 64px; }
   </style>
 </head>
 <body class="font-sans bg-white">
@@ -24,31 +24,31 @@
     <img src="https://minepi.com/favicon.ico" alt="Pi" class="w-10 h-10 rounded-full border-2 border-yellow-400 ring-2 ring-yellow-300/50">
   </header>
 
-  <!-- BOX 1 LAYAR PENUH PAS DARI GARIS ATAS KE GARIS BAWAH -->
+  <!-- BOX DENGAN JARAK 2PX PUTIH ATAS BAWAH -->
   <main class="px-3">
-    <div class="bg-ungu border-gold-2 rounded-2xl p-4 text-center h-[calc(100vh-128px)] overflow-y-auto flex-col justify-start gap-1"> <!-- RAPET KE ATAS: gap-1 -->
+    <div class="bg-ungu border-gold-2 rounded-2xl p-3 m-0.5 h-[calc(100vh-128px-4px)] overflow-y-auto flex-col justify-start gap-0.5"> <!-- m-0.5 = 2px, gap-0.5 = rapet -->
       
-      <!-- SEMUA TEXT-2XL BIAR SAMA BESAR -->
-      <p class="text-2xl font-bold text-yellow-400">Harga Pi/USD</p>
-      <p id="hargaUSD" class="text-2xl font-extrabold text-white mb-2">$0.0000</p>
+      <!-- SEMUA RAPET KE ATAS -->
+      <p class="text-2xl font-bold text-yellow-400 leading-none">Harga Pi/USD</p>
+      <p id="hargaUSD" class="text-2xl font-extrabold text-white mb-1 leading-none">$0.0000</p>
 
-      <p class="text-2xl font-bold text-blue-400">Pi/Rupiah</p>
-      <p id="hargaIDR" class="text-2xl font-extrabold text-white mb-2">Rp 0</p>
+      <p class="text-2xl font-bold text-blue-400 leading-none">Pi/Rupiah</p>
+      <p id="hargaIDR" class="text-2xl font-extrabold text-white mb-1 leading-none">Rp 0</p>
 
-      <p class="text-2xl font-bold text-green-400">Dollar/Rupiah</p>
-      <p id="kursUSDIDR" class="text-2xl font-extrabold text-white mb-2">Rp 17,934.50</p>
+      <p class="text-2xl font-bold text-green-400 leading-none">Dollar/Rupiah</p>
+      <p id="kursUSDIDR" class="text-2xl font-extrabold text-white mb-1 leading-none">Rp 17,934.50</p>
 
-      <p id="tanggal" class="text-2xl font-extrabold text-yellow-400 leading-tight mb-2">Loading...</p> <!-- TANGGAL SAMA BESAR -->
+      <p id="tanggal" class="text-2xl font-extrabold text-yellow-400 leading-none mb-1">Loading...</p>
 
-      <!-- WELCOME MASUK KE DALAM BOX PALING BAWAH -->
-      <p class="text-2xl font-bold text-white mt-auto pt-4">Welcome to pioneer at My Track app @2026</p>
+      <!-- WELCOME DIKECILIN JADI text-sm BIAR MASUK -->
+      <p class="text-sm font-bold text-white mt-auto pt-2 leading-tight text-center">Welcome to pioneer at My Track app @2026</p>
 
     </div>
   </main>
 
   <!-- FOOT FIXED BISA DIKLIK -->
   <footer class="bg-dongker px-3 border-t-2 border-yellow-400 flex items-center justify-center fixed bottom-0 w-full">
-    <button id="btnLogin" class="text-lg font-bold text-yellow-400 w-full">Loading...</button> <!-- LOGIN KECILIN JADI text-lg -->
+    <button id="btnLogin" class="text-lg font-bold text-yellow-400 w-full">Loading...</button>
   </footer>
 
   <script>
