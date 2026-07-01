@@ -8,25 +8,26 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { background-color: #ffffff; } /* HAPUS OVERFLOW HIDDEN BIAR BISA SCROLL */
-  .border-gold-2 { border: 2px solid #fbbf24; }
-  .bg-dongker { background-color: #0f1a2e; }
-  .bg-ungu { background-color: #6d28d9; }
+    body { background-color: #ffffff; } /* BODY PUTIH SESUAI MINTA */
+ .border-gold-2 { border: 2px solid #fbbf24; } /* GARIS EMAS 2PX */
+ .bg-dongker { background-color: #0f1a2e; }
+ .bg-ungu { background-color: #6d28d9; } /* CUMA KOTAK AJA UNGU */
   </style>
 </head>
 <body class="font-sans">
 
-  <!-- GANTI H-SCREEN JADI MIN-H-SCREEN + OVERFLOW AUTO BIAR BISA SCROLL -->
-  <div class="w-full min-h-screen flex-col bg-ungu overflow-y-auto pb-20">
+  <!-- WRAPPER PUTIH + PADDING BAWAH BIAR GAK KETUTUP FOOT -->
+  <div class="w-full min-h-screen flex-col bg-white overflow-y-auto pb-24">
 
-    <!-- HEAD -->
+    <!-- HEAD BIRU DONGKER -->
     <header class="bg-dongker p-3 border-b-2 border-yellow-400 flex items-center justify-between sticky top-0 z-10">
-      <button id="btnMenu" class="text-3xl text-yellow-400 active:scale-90">≡</button> <!-- MENU HIDUP -->
+      <button id="btnMenu" class="text-3xl text-yellow-400 active:scale-90">≡</button>
       <h1 class="text-2xl font-extrabold text-white tracking-wide">My Track</h1>
       <img src="https://minepi.com/favicon.ico" alt="Pi" class="w-8 h-8 rounded-full border-2 border-yellow-400">
     </header>
 
     <main class="p-3 flex-1 flex-col gap-3">
+      <!-- KOTAK UNGU DOANG -->
       <div class="bg-ungu border-gold-2 rounded-2xl p-3 text-center">
         <h2 class="text-lg text-white">Harga Pi/USD Live</h2>
         <p id="hargaUSD" class="text-5xl font-extrabold text-yellow-400 my-1">$0.0000</p>
@@ -35,24 +36,25 @@
         <p class="text-xs text-purple-200 mt-1">Kurs: 1 USD = Rp 17934.50 | Update <span id="jam"></span></p>
       </div>
 
-      <div class="bg-ungu border-gold-2 rounded-2xl p-2 h-64"> <!-- KASIH TINGGI FIX BIAR CHART KELIATAN -->
+      <!-- KOTAK CHART UNGU DOANG -->
+      <div class="bg-ungu border-gold-2 rounded-2xl p-2 h-64">
         <canvas id="priceChart"></canvas>
       </div>
     </main>
 
     <!-- FOOT FIXED BAWAH -->
-    <footer class="bg-dongker p-3 border-t-2 border-yellow-400 text-center fixed bottom-0 w-full max-w-[430px] left-1/2 -translate-x-1/2">
-      <button id="btnLogin" class="text-xl font-bold text-yellow-400 active:scale-95 w-full">Loading...</button> <!-- LOGIN HIDUP -->
+    <footer class="bg-dongker p-3 border-t-2 border-yellow-400 text-center fixed bottom-0 w-full left-0">
+      <button id="btnLogin" class="text-xl font-bold text-yellow-400 active:scale-95 w-full">Loading...</button>
     </footer>
 
   </div>
 
   <script>
     let chart;
-    let dataPoints = []; // BUAT SIMPAN DATA 15 DETIK
+    let dataPoints = [];
 
-    // 1. FIX MENU & LOGIN HIDUP
-    document.getElementById('btnMenu').onclick = () => alert('Menu dibuka bro ≡'); // MENU HIDUP
+    // MENU & LOGIN HIDUP
+    document.getElementById('btnMenu').onclick = () => alert('Menu dibuka bro ≡');
     document.getElementById('btnLogin').onclick = () => {
       if(document.getElementById('btnLogin').innerText.includes('Welcome')){
         alert('Peringatan: Anda sudah login otomatis di Pi Browser ✅');
@@ -61,7 +63,7 @@
       }
     }
 
-    // 2. AUTO LOGIN PI
+    // AUTO LOGIN PI
     Pi.init({ version: "2.0", sandbox: false });
     Pi.authenticate(['username']).then(auth => {
       document.getElementById('btnLogin').innerText = `Welcome ${auth.user.username}`;
@@ -69,7 +71,7 @@
       document.getElementById('btnLogin').innerText = 'Login Pi';
     });
 
-    // 3. AMBIL DATA COINGECKO + UPDATE 15 DETIK
+    // DATA COINGECKO + UPDATE 15 DETIK
     async function updateData() {
       try {
         const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr&include_24hr_change=true');
@@ -92,9 +94,8 @@
           persenEl.className = 'text-2xl font-bold text-red-500';
         }
 
-        // SIMPAN KE DATA CHART TIAP 15 DETIK
         dataPoints.push(hargaUSD);
-        if(dataPoints.length > 20) dataPoints.shift(); // Jaga biar gak kepanjangan
+        if(dataPoints.length > 20) dataPoints.shift();
         updateChart();
 
         document.getElementById('jam').innerText = new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
@@ -103,7 +104,7 @@
       }
     }
 
-    // 4. CHART PUTIH HIDUP DARI DATA 15 DETIK
+    // CHART PUTIH
     function initChart() {
       const ctx = document.getElementById('priceChart');
       chart = new Chart(ctx, {
@@ -112,7 +113,7 @@
           labels: Array(20).fill(''),
           datasets: [{
             data: dataPoints,
-            borderColor: '#ffffff', // GARIS PUTIH
+            borderColor: '#ffffff',
             borderWidth: 2,
             backgroundColor: 'rgba(255, 255, 255, 0.1)',
             fill: true,
@@ -121,7 +122,7 @@
         }]},
         options: {
           maintainAspectRatio: false,
-          animation: false, // MATIIN ANIMASI BIAR GAK LAG PAS UPDATE
+          animation: false,
           scales: {
             y: { display: true, ticks: { color: 'white', callback: (val) => val.toFixed(4).replace('.', ',') }, grid: { color: 'rgba(255,255,255,0.1)' } },
             x: { display: false }
@@ -138,10 +139,9 @@
       }
     }
 
-    // JALANKAN PERTAMA KALI + LOOP 15 DETIK
     initChart();
     updateData();
-    setInterval(updateData, 15000); // 15 DETIK SEKALI UPDATE CHART
+    setInterval(updateData, 15000); // 15 DETIK
 
   </script>
 </body>
