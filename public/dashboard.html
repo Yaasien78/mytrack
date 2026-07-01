@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>My Track Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--biru:#0A1F44; --ungu:#4B0082; --emas:#DAA520; --hitam:#000;}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;background:#1A0033;color:#fff;font-family:'Segoe UI', Arial, sans-serif;overflow-y:auto}
+.header{position:sticky;top:0;left:0;width:100%;z-index:10;padding:12px 15px;display:flex;align-items:center;gap:10px;background:var(--biru);border-bottom:2px solid var(--emas)} <!-- DARI 3px -> 2px -->
+.menu{font-size:2em;cursor:pointer;color:var(--emas);font-weight:700;line-height:1;text-decoration:none}
+.logo{font-size:1.8em;font-weight:900;color:var(--emas);text-shadow:2px 2px 4px var(--hitam);flex-grow:1; text-align:center}
+#userName{color:var(--emas); font-weight:700; font-size:0.9em;}
+.main{padding:15px;max-width:600px;margin:0 auto}
+.card{background:var(--ungu);border-radius:15px;padding:15px;width:100%;border:2px solid var(--emas);box-shadow:0 0 8px rgba(218,165,32,0.2);text-align:center;margin-bottom:15px} <!-- DARI 2px -> 2px TETEP + shadow dikecilin -->
+.title{font-size:1.1em;font-weight:500;color:#ddd;margin-bottom:5px}
+.harga-usd{font-size:3em;font-weight:900;color:var(--emas);margin:5px 0;line-height:1}
+.harga-rp{font-size:1.2em;font-weight:700;color:var(--emas);margin-bottom:5px}
+.persen{font-size:1.2em;font-weight:700;margin-bottom:5px}
+.chart-box{position:relative;height:280px;width:100%}
+.grid{display:flex;gap:15px}
+.grid .card{flex:1}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a href="/menu.html" class="menu">≡</a>
+  <div class="logo">My Track</div>
+  <div id="userName">Loading...</div>
+</header>
+
+<main class="main">
+  <div class="card">
+    <div class="title">Harga Pi/USD Live</div>
+    <div class="harga-usd" id="hargaUsd">Loading...</div>
+    <div class="harga-rp" id="hargaRp">Harga /pi = Rp -</div>
+    <div class="persen" id="persenPi">-</div>
+  </div>
+  <div class="card">
+    <div class="chart-box"><canvas id="chartPi"></canvas></div>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="title">Market Cap</div><div style="color:var(--emas);font-weight:900;font-size:1.4em" id="mcap">-</div></div>
+    <div class="card"><div class="title">Volume 24h</div><div style="color:var(--emas);font-weight:900;font-size:1.4em" id="vol">-</div></div>
+  </div>
+</main>
+
+<script>
+let chart; 
+let rateIdr = 16000;
+
+window.onload = async function(){
+  let username = localStorage.getItem('pi_username');
+  if(!username){ 
+    window.location.href = '/index.html'; 
+    return;
+  }
+  document.getElementById('userName').textContent = 'Welcome ' + username;
+
+  await fetchKurs();
+  fetchData();
+  setInterval(fetchKurs, 60000);
+  setInterval(fetchData, 10000);
+}
+
+async function fetchKurs(){ try{ const r = await fetch('https://open.er-api.com/v6/latest/USD'); const d = await r.json(); if(d.rates.IDR) rateIdr = d.rates.IDR; }catch(e){} }
+
+async function fetchData(){
+  try{
+    const res = await fetch('https://api.coingecko.com/api/v3/coins/pi-network?localization=false&tickers=false&market_data=true&sparkline=true');
+    const data = await res.json();
+    const m = data.market_data;
+    let priceUsd = m.current_price.usd || 0.006;
+    let prices = m.sparkline_7d.price.slice(-50);
+    if(!prices || prices.length < 2){ prices = [priceUsd, priceUsd*1.02, priceUsd*0.98, priceUsd*1.01, priceUsd]; }
+    
+    document.getElementById('hargaUsd').textContent = '$' + priceUsd.toFixed(4);
+    document.getElementById('hargaRp').textContent = 'Harga /pi = Rp ' + Math.round(priceUsd * rateIdr).toLocaleString('id-ID');
+    document.getElementById('mcap').textContent = '$' + (m.market_cap.usd/1000000).toFixed(2) + 'M';
+    document.getElementById('vol').textContent = '$' + (m.total_volume.usd/1000000).toFixed(2) + 'M';
+    document.getElementById('persenPi').textContent = m.price_change_percentage_24h.toFixed(2) + '%';
+    document.getElementById('persenPi').style.color = m.price_change_percentage_24h >= 0 ? '#00ff88' : '#ff5555';
+
+    if(!chart){
+      chart = new Chart(document.getElementById('chartPi'), {
+        type: 'line',
+        data: {labels: prices.map((_,i)=>i), datasets: [{label: 'Pi/USD', data: prices, borderColor: '#DAA520', backgroundColor: 'rgba(218,165,32,0.15)', tension: 0.4, fill: true, pointRadius: 0, borderWidth: 2}]}, <!-- GARIS CHART TETEP 2px -->
+        options: {responsive: true, maintainAspectRatio: false, plugins:{legend:{display:false}}, scales:{x:{display:false}, y:{ticks:{color:'#ddd', callback: v => v.toFixed(4).replace('.',',')}}}}
+      });
+    }else{ chart.data.datasets[0].data = prices; chart.update(); }
+  }catch(e){
+    console.error(e);
+    document.getElementById('hargaUsd').textContent = '$0.0060';
+  }
+}
+</script>
+</body>
+</html>
