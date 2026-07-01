@@ -15,8 +15,6 @@
 .text-dongker { color: #0f1a2e; }
 .text-hijau-tua { color: #065f46; }
 main { padding-top: 64px; padding-bottom: 64px; }
-
-/* MARQUEE / HURUF BERJALAN */
 .marquee { overflow: hidden; white-space: nowrap; box-sizing: border-box; }
 .marquee span { display: inline-block; padding-left: 100%; animation: marquee 15s linear infinite; }
 .marquee.reverse span { animation: marquee-reverse 15s linear infinite; }
@@ -27,80 +25,71 @@ main { padding-top: 64px; padding-bottom: 64px; }
 <body class="font-sans overflow-hidden">
   <div class="w-full h-screen flex-col bg-white">
     <header class="bg-dongker p-3 border-b-2 border-yellow-400 flex items-center justify-between fixed top-0 w-full z-20">
-      <a href="menu.html" class="text-3xl text-yellow-400 active:scale-90">≡</a>
+      <a href="menu.html" class="text-3xl text-yellow-400">≡</a>
       <h1 class="text-2xl font-extrabold text-white tracking-wide">My Track</h1>
       <img src="https://minepi.com/favicon.ico" alt="Pi" class="w-8 h-8 rounded-full border-2 border-yellow-400">
     </header>
 
-    <main class="flex-1 overflow-y-auto p-3 flex-col gap-0"> <!-- GAP 0 BIAR KITA ATUR SENDIRI -->
-
-      <!-- BOX 1: HARGA -->
+    <main class="flex-1 overflow-y-auto p-3 flex-col gap-0">
       <div class="bg-ungu border-gold-2 rounded-2xl p-3 text-center">
         <h2 class="text-lg text-white">Harga Pi/USD Live</h2>
         <p id="hargaUSD" class="text-5xl font-extrabold text-yellow-400 my-1">$0.0000</p>
         <p id="hargaIDR" class="text-xl text-yellow-400">Harga /pi = Rp 0</p>
-        <p id="persen" class="text-2xl font-bold">0.00%</p>
-        <p class="text-xs text-purple-200 mt-1">Kurs: 1 USD = Rp 17934.50 | Update <span id="jam"></span></p>
+        <p id="persen" class="text-2xl font-bold text-black">0.00%</p> <!-- DIHITAMIN BIAR KELIATAN -->
+        <p class="text-xs text-purple-200 mt-1">Kurs: 1 USD = Rp 17934.50 | Update <span id="jam">-</span></p>
       </div>
 
-      <!-- JARAK 1: TICKER TANGGAL BIRU DONGKER KIRI KE KAN -->
       <div class="my-3 h-8 flex items-center bg-yellow-50 border-y-2 border-dongker">
         <div class="marquee w-full">
           <span id="tanggalTicker" class="text-dongker font-extrabold text-base">Loading tanggal...</span>
         </div>
       </div>
 
-      <!-- BOX 2: CHART -->
       <div class="bg-ungu border-gold-2 rounded-2xl p-2 h-64"><canvas id="priceChart"></canvas></div>
 
-      <!-- JARAK 2: TICKER WELCOME HIJAU TUA KAN KE KIRI -->
       <div class="my-3 h-8 flex items-center bg-green-50 border-y-2 border-green-700">
         <div class="marquee reverse w-full">
           <span class="text-hijau-tua font-extrabold text-base">Welcome to Pioner at My Track app. Welcome to Pioner at My Track app. </span>
         </div>
       </div>
 
-      <!-- BOX 3: TENTANG PI -->
       <div class="bg-ungu border-gold-2 rounded-2xl p-3 text-white mb-4">
         <h3 class="text-lg font-bold text-yellow-400 mb-2">Tentang Pi Network</h3>
-        <p class="text-sm leading-relaxed text-purple-100">
-          Pi adalah mata uang kripto baru untuk semua orang, yang dapat ditambang di ponsel tanpa menguras baterai.
-          Proyek ini bertujuan untuk membuat ekonomi kripto lebih mudah diakses.
-          <br><br>
-          <b>Supply:</b> 100 Miliar Pi <br>
-          <b>Status:</b> Enclosed Mainnet
-        </p>
+        <p class="text-sm leading-relaxed text-purple-100">Pi adalah mata uang kripto baru untuk semua orang. <b>Supply:</b> 100 Miliar Pi</p>
       </div>
     </main>
 
     <footer class="bg-dongker p-3 border-t-2 border-yellow-400 text-center fixed bottom-0 w-full z-20">
-      <button id="btnLogin" class="text-xl font-bold text-yellow-400 active:scale-95 w-full">Loading...</button>
+      <button id="btnLogin" class="text-xl font-bold text-yellow-400 w-full">Loading...</button>
     </footer>
   </div>
 
   <script>
-    let chart; let dataPoints = [];
-
-    // LOGIN PI
-    Pi.init({ version: "2.0", sandbox: true });
-    Pi.authenticate({ scopes: ['username', 'payments'], onIncompletePaymentFound: () => {} })
- .then(auth => { document.getElementById('btnLogin').innerText = `Welcome ${auth.user.username}`; })
- .catch(() => { document.getElementById('btnLogin').innerText = 'Login Pi - Gagal Whitelist'; });
-
-    // TICKER TANGGAL REAL TIME
+    // 1. TICKER TANGGAL JALAN DULU, GAK NUNGGU API
     function updateTanggal() {
       const now = new Date();
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit', second:'2-digit' };
       document.getElementById('tanggalTicker').innerText = now.toLocaleDateString('id-ID', options) + ' WIB ';
     }
-    updateTanggal();
-    setInterval(updateTanggal, 1000); // UPDATE TIAP DETIK
+    updateTanggal(); setInterval(updateTanggal, 1000);
 
-    // DATA COINGECKO + CHART
+    // 2. LOGIN PI
+    try {
+      Pi.init({ version: "2.0", sandbox: true });
+      Pi.authenticate({ scopes: ['username', 'payments'], onIncompletePaymentFound: () => {} })
+    .then(auth => { document.getElementById('btnLogin').innerText = `Welcome ${auth.user.username}`; })
+    .catch(() => { document.getElementById('btnLogin').innerText = 'Login Pi - Gagal Whitelist'; });
+    } catch(e) { document.getElementById('btnLogin').innerText = 'Buka di Pi Browser'; }
+
+    // 3. DATA HARGA PAKE PROXY BIAR TEMBUS PI BROWSER
+    let chart; let dataPoints = [];
     async function updateData() {
       try {
-        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr&include_24hr_change=true');
+        const apiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr&include_24hr_change=true';
+        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(apiUrl); // KUNCI ANTI BLOKIR
+        const res = await fetch(proxyUrl);
         const pi = (await res.json())['pi-network'];
+
         document.getElementById('hargaUSD').innerText = `$${pi.usd.toFixed(4)}`;
         document.getElementById('hargaIDR').innerText = `Harga /pi = Rp ${pi.idr.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
         const persenEl = document.getElementById('persen');
@@ -108,16 +97,19 @@ main { padding-top: 64px; padding-bottom: 64px; }
         else { persenEl.className = 'text-2xl font-bold text-red-500'; persenEl.innerText = `${pi.usd_24h_change.toFixed(2)}%`; }
         dataPoints.push(pi.usd); if(dataPoints.length > 20) dataPoints.shift(); updateChart();
         document.getElementById('jam').innerText = new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
-      } catch (e) {}
+      } catch (e) {
+        console.log("Gagal fetch:", e);
+        document.getElementById('hargaUSD').innerText = '$Gagal Load'; // KASIH TAU KALO GAGAL
+      }
     }
     function initChart() {
       chart = new Chart(document.getElementById('priceChart'), {
-        type: 'line', data: { labels: Array(20).fill(''), datasets: [{ data: dataPoints, borderColor: '#ffffff', borderWidth: 2, backgroundColor: 'rgba(255, 255, 255, 0.1)', fill: true, tension: 0.3, pointRadius: 0 }]},
-        options: { maintainAspectRatio: false, animation: false, scales: { y: { display: true, ticks: { color: 'white', callback: (val) => val.toFixed(4).replace('.', ',') }, grid: { color: 'rgba(255,255,255,0.1)' } }, x: { display: false } }, plugins: { legend: { display: false } }
+        type: 'line', data: { labels: Array(20).fill(''), datasets: [{ data: dataPoints, borderColor: '#ffffff', borderWidth: 2, fill: true, tension: 0.3, pointRadius: 0 }]},
+        options: { maintainAspectRatio: false, animation: false, scales: { y: { ticks: { color: 'white' }, grid: { color: 'rgba(255,255,255,0.1)' } }, x: { display: false } }, plugins: { legend: { display: false } }
       });
     }
     function updateChart() { if(chart) { chart.data.datasets[0].data = dataPoints; chart.update(); } }
     initChart(); updateData(); setInterval(updateData, 15000);
   </script>
 </body>
-</html>
+  </html>
