@@ -24,11 +24,10 @@
     <img src="https://minepi.com/favicon.ico" alt="Pi" class="w-10 h-10 rounded-full border-2 border-yellow-400 ring-2 ring-yellow-300/50">
   </header>
 
-  <!-- BOX DENGAN JARAK 2PX PUTIH ATAS BAWAH -->
+  <!-- BOX DENGAN JARAK 2PX + SEMUA CENTER -->
   <main class="px-3">
-    <div class="bg-ungu border-gold-2 rounded-2xl p-3 m-0.5 h-[calc(100vh-128px-4px)] overflow-y-auto flex-col justify-start gap-0.5"> <!-- m-0.5 = 2px, gap-0.5 = rapet -->
+    <div class="bg-ungu border-gold-2 rounded-2xl p-4 m-0.5 h-[calc(100vh-128px-4px)] overflow-y-auto flex-col items-center gap-0.5 text-center"> <!-- KUNCI: items-center text-center gap-0.5 -->
       
-      <!-- SEMUA RAPET KE ATAS -->
       <p class="text-2xl font-bold text-yellow-400 leading-none">Harga Pi/USD</p>
       <p id="hargaUSD" class="text-2xl font-extrabold text-white mb-1 leading-none">$0.0000</p>
 
@@ -38,10 +37,10 @@
       <p class="text-2xl font-bold text-green-400 leading-none">Dollar/Rupiah</p>
       <p id="kursUSDIDR" class="text-2xl font-extrabold text-white mb-1 leading-none">Rp 17,934.50</p>
 
-      <p id="tanggal" class="text-2xl font-extrabold text-yellow-400 leading-none mb-1">Loading...</p>
+      <p id="tanggal" class="text-2xl font-extrabold text-yellow-400 leading-none mb-4">Loading...</p> <!-- KASIH mb-4 BIAR ADA JEDA KE WELCOME -->
 
-      <!-- WELCOME DIKECILIN JADI text-sm BIAR MASUK -->
-      <p class="text-sm font-bold text-white mt-auto pt-2 leading-tight text-center">Welcome to pioneer at My Track app @2026</p>
+      <!-- WELCOME GAK NEMPEL, ADA JEDA -->
+      <p class="text-sm font-bold text-white leading-tight">Welcome to pioneer at My Track app @2026</p>
 
     </div>
   </main>
