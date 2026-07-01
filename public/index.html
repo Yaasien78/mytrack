@@ -11,7 +11,7 @@
  .border-gold-2 { border: 2px solid #fbbf24; }
  .bg-dongker { background-color: #0f1a2e; }
  .bg-ungu { background-color: #6d28d9; }
-    body { padding-top: 64px; padding-bottom: 64px; } /* RUANG BUAT HEAD+FOOT FIXED */
+    body { padding-top: 64px; padding-bottom: 64px; } /* RUANG HEAD+FOOT */
     header, footer { height: 64px; }
   </style>
 </head>
@@ -23,32 +23,38 @@
     <img src="https://minepi.com/favicon.ico" alt="Pi" class="w-10 h-10 rounded-full border-2 border-yellow-400 ring-2 ring-yellow-300/50">
   </header>
 
-  <!-- 1 BOX BESAR FULL LAYAR, BISA SCROLL -->
+  <!-- 1 BOX BESAR FULL, BISA SCROLL -->
   <main class="p-3">
-    <div class="bg-ungu border-gold-2 rounded-2xl p-6 text-center min-h-[calc(100vh-128px-24px)] overflow-y-auto"> <!-- TINGGI FULL - HEAD - FOOT - PADDING -->
+    <div class="bg-ungu border-gold-2 rounded-2xl p-6 text-center min-h-[calc(100vh-128px-24px)] overflow-y-auto"> 
       
-      <h2 class="text-xl font-bold text-yellow-400 mb-4">Harga Pi/USD</h2>
-      <p id="hargaUSD" class="text-4xl font-extrabold text-white mb-6">$0.0000</p> <!-- PUTIH -->
+      <!-- 1. PI/USD -->
+      <p class="text-xl font-bold text-yellow-400 mb-2">Harga Pi/USD</p> <!-- LABEL SAMA BESAR -->
+      <p id="hargaUSD" class="text-3xl font-extrabold text-white mb-6">$0.0000</p> <!-- ANGKA SAMA BESAR -->
 
-      <h2 class="text-xl font-bold text-blue-400 mb-4">Pi/Rupiah</h2>
-      <p id="hargaIDR" class="text-4xl font-extrabold text-white mb-6">Rp 0</p> <!-- PUTIH -->
+      <!-- 2. PI/RUPIAH -->
+      <p class="text-xl font-bold text-blue-400 mb-2">Pi/Rupiah</p>
+      <p id="hargaIDR" class="text-3xl font-extrabold text-white mb-6">Rp 0</p>
 
-      <h2 class="text-xl font-bold text-green-400 mb-4">Dollar/Rupiah</h2>
-      <p id="kursUSDIDR" class="text-4xl font-extrabold text-white mb-6">Rp 17,934.50</p> <!-- PUTIH -->
+      <!-- 3. DOLLAR/RUPIAH -->
+      <p class="text-xl font-bold text-green-400 mb-2">Dollar/Rupiah</p>
+      <p id="kursUSDIDR" class="text-3xl font-extrabold text-white mb-6">Rp 17,934.50</p>
 
-      <h2 class="text-xl font-bold text-yellow-400 mb-2">Hari, Tanggal, Tahun</h2>
-      <p id="tanggal" class="text-3xl font-extrabold text-yellow-400">Loading...</p> <!-- KUNING -->
+      <!-- 4. TANGGAL LANGSUNG AJA, GAK PAKE LABEL -->
+      <p id="tanggal" class="text-3xl font-extrabold text-yellow-400 leading-tight">Loading...</p> <!-- KUNING, ANGKA SAMA BESAR -->
+
+      <!-- TULISAN WELCOME DI BAWAH BOX -->
+      <p class="text-base font-bold text-white mt-8">Welcome to pioneer at My Track app @ 2026</p>
 
     </div>
   </main>
 
-  <!-- FOOT GANTI JADI UNGU + TULISAN -->
-  <footer class="bg-ungu px-3 border-t-2 border-yellow-400 flex items-center justify-center fixed bottom-0 w-full z-20">
-    <p class="text-lg font-bold text-white">Welcome to pioneer at My Track app @ 2026</p>
+  <!-- FOOT LOGIN BALIK LAGI -->
+  <footer class="bg-dongker px-3 border-t-2 border-yellow-400 flex items-center justify-center fixed bottom-0 w-full z-20">
+    <button id="btnLogin" class="text-xl font-bold text-yellow-400 w-full">Loading...</button>
   </footer>
 
   <script>
-    // 1. TANGGAL KUNING REAL TIME
+    // 1. TANGGAL REAL TIME KUNING
     function updateTanggal() {
       const now = new Date();
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -60,10 +66,11 @@
     try {
       Pi.init({ version: "2.0", sandbox: true });
       Pi.authenticate({ scopes: ['username', 'payments'], onIncompletePaymentFound: () => {} })
-  .catch(() => {});
-    } catch(e) {}
+  .then(auth => { document.getElementById('btnLogin').innerText = `Welcome ${auth.user.username}`; })
+  .catch(() => { document.getElementById('btnLogin').innerText = 'Login Pi - Gagal Whitelist'; });
+    } catch(e) { document.getElementById('btnLogin').innerText = 'Buka di Pi Browser'; }
 
-    // 3. DATA HARGA
+    // 3. DATA HARGA REAL TIME
     async function updateData() {
       try {
         const apiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=pi-network,usd&vs_currencies=idr';
@@ -81,9 +88,7 @@
         if(usd) {
           document.getElementById('kursUSDIDR').innerText = `Rp ${usd.idr.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
         }
-      } catch (e) {
-        console.log("API Gagal:", e);
-      }
+      } catch (e) { console.log("API Gagal:", e); }
     }
     updateData(); setInterval(updateData, 15000);
   </script>
