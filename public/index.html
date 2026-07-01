@@ -7,74 +7,84 @@
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { background-color: #ffffff; }
+    body { background-color: #ffffff; margin:0; }
  .border-kuning { border: 2px solid #facc15; }
  .bg-dongker { background-color: #1e293b; }
- .bg-ungu { background-color: #7c3aed; }
- .bg-biru-logo { background-color: #2563eb; }
-    header { height: 56px; z-index: 30; }
-    footer { height: 56px; z-index: 30; }
-    main { padding-top: 56px; padding-bottom: 56px; }
-    .price-up { color: #4ade80 !important; }
-    .price-down { color: #f87171 !important; }
+ .bg-ungu { background-color: #8b5cf6; }
+ .bg-biru-logo { background-color: #3b82f6; }
+    header { height: 52px; z-index: 30; }
+    footer { height: 52px; z-index: 30; }
+    main { padding-top: 52px; padding-bottom: 52px; }
     
+    /* KUNCI: SAMA BESAR + RAMPING + SHADOW */
     .text-ss {
       font-family: 'Impact', 'Arial Black', sans-serif;
       font-weight: 900;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 8px rgba(255,255,255,0.3);
-      letter-spacing: -2px;
-      line-height: 0.9;
+      font-size: 1.125rem; /* text-lg = SAMA SEMUA */
+      text-shadow: 0 3px 6px rgba(0,0,0,0.9);
+      letter-spacing: -2px; 
+      line-height: 0.9; 
     }
   </style>
 </head>
 <body class="font-sans bg-white">
-  <!-- HEAD FIXED DONGKER -->
-  <header class="bg-dongker px-3 border-b-2 border-kuning flex items-center justify-between fixed top-0 w-full">
+  <!-- HEAD -->
+  <header class="bg-dongker px-2 border-b-2 border-kuning flex items-center justify-between fixed top-0 w-full">
     <a href="menu.html" class="text-2xl text-yellow-400">≡</a>
-    <h1 class="text-xl font-black text-white text-ss">My Track</h1>
-    <img src="https://minepi.com/favicon.ico" alt="Pi" class="w-9 h-9 rounded-full border-2 border-yellow-400">
+    <h1 class="text-lg font-black text-white text-ss">My Track</h1>
+    <div class="w-9 h-9 rounded-full bg-dongker border-2 border-yellow-400 flex items-center justify-center">
+      <span class="text-yellow-400 text-xl font-black">π</span>
+    </div>
   </header>
 
-  <!-- BOX UNGU: KUNCI justify-between -->
-  <main class="px-2">
-    <div class="bg-ungu border-kuning rounded-3xl p-2 m-1 h-[calc(100vh-112px-8px)] flex-col justify-between text-center"> 
+  <!-- BOX UNGU -->
+  <main class="px-1.5">
+    <div class="bg-ungu border-kuning rounded-3xl p-1.5 m-0.5 h-[calc(100vh-104px-6px)] flex-col justify-between text-center overflow-hidden"> 
       
-      <!-- ATAS: HARGA RAPET -->
-      <div class="flex-col gap-0">
-        <p class="text-lg text-white text-ss">Harga Pi/USDT</p>
-        <p id="hargaUSDT" class="text-2xl text-white text-ss">$0.0000</p>
+      <!-- ATAS: HARGA SEMUA SAMA BESAR -->
+      <div class="flex-col gap-0 mt-1">
+        <p class="text-ss text-white">Harga Pi/USDT</p>
+        <p id="hargaUSDT" class="text-ss text-white">$0.0000</p>
 
-        <p class="text-lg text-blue-400 text-ss">Pi/Rupiah</p>
-        <p id="hargaIDR" class="text-lg text-white text-ss">Rp 0</p>
+        <p class="text-ss text-sky-400">Pi/Rupiah</p>
+        <p id="hargaIDR" class="text-ss text-white">Rp 0</p>
 
-        <p class="text-lg text-green-400 text-ss">Dollar/Rupiah</p>
-        <p id="kursUSDIDR" class="text-lg text-white text-ss">Rp 17,934.50</p>
+        <p class="text-ss text-green-400">Dollar/Rupiah</p>
+        <p id="kursUSDIDR" class="text-ss text-white">Rp 17,934.50</p>
 
-        <p id="tanggal" class="text-lg text-yellow-400 text-ss">Loading...</p>
+        <p id="tanggal" class="text-ss text-yellow-400">Loading...</p>
       </div>
 
-      <!-- BAWAH: LOGO + WELCOME NEMPEL BAWAH -->
-      <div class="mb-1"> <!-- mb-1 biar gak mentok banget -->
-        <div class="bg-biru-logo w-14 h-14 rounded-xl border-2 border-yellow-400 ring-2 ring-blue-400 flex items-center justify-center mx-auto">
-          <p class="text-white text-2xl font-black text-ss leading-none">My<br>Track</p>
+      <!-- BAWAH: LOGO + WELCOME DITURUNKAN BARANG -->
+      <div class="mb-0">
+        <div class="bg-biru-logo w-12 h-12 rounded-lg border-2 border-yellow-400 ring-2 ring-blue-300 flex items-center justify-center mx-auto">
+          <p class="text-ss text-white leading-none">My<br>Track</p>
         </div>
 
-        <p class="text-base text-white text-ss mt-1">Welcome to Pioneer<br>at My Track app @2026</p>
+        <p class="text-ss text-white mt-0.5">Welcome to Pioneer<br>at My Track app @2026</p>
       </div>
 
     </div>
   </main>
 
-  <!-- FOOT DONGKER LOADING KUNING -->
+  <!-- FOOT -->
   <footer class="bg-dongker px-3 border-t-2 border-kuning flex items-center justify-center fixed bottom-0 w-full">
-    <button id="btnLogin" class="text-lg font-black text-yellow-400 w-full text-ss">Loading...</button>
+    <button id="btnLogin" class="text-ss text-yellow-400 w-full">Loading...</button>
   </footer>
 
   <script>
     let lastPiUSDT = 0; let lastPiIDR = 0; let lastKurs = 0;
 
-    document.getElementById('tanggal').innerText = 'Loading...';
+    // 1. TANGGAL HARI + TGL + TAHUN ID REALTIME
+    function updateTanggal() {
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Jakarta' };
+      const tgl = new Date().toLocaleDateString('id-ID', options);
+      document.getElementById('tanggal').innerText = tgl;
+    }
+    updateTanggal(); 
+    setInterval(updateTanggal, 60000); // update per menit
 
+    // 2. LOGIN PI
     try {
       Pi.init({ version: "2.0", sandbox: true });
       Pi.authenticate({ scopes: ['username', 'payments'], onIncompletePaymentFound: () => {} })
@@ -89,6 +99,7 @@
       if(newVal < lastVal) el.classList.add('price-down');
     }
 
+    // 3. AKTIFKAN SEMUA DARI COINGECKO REALTIME 3 DETIK
     async function updateData() {
       try {
         const apiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=pi-network,usd&vs_currencies=usd,idr';
@@ -99,25 +110,27 @@
         const pi = data['pi-network'];
         const usd = data['usd'];
 
-        if(pi && pi.usd > 0) {
-          const newUSDT = pi.usd;
-          const newIDR = pi.idr;
+        if(pi) { // GAK PAKE IF > 0, BIAR 0.0000 JUGA MUNCUL
+          const newUSDT = pi.usd || 0;
+          const newIDR = pi.idr || 0;
           setColor('hargaUSDT', newUSDT, lastPiUSDT);
           setColor('hargaIDR', newIDR, lastPiIDR);
           document.getElementById('hargaUSDT').innerText = `$${newUSDT.toFixed(4)}`;
-          document.getElementById('hargaIDR').innerText = `Rp ${newIDR.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+          document.getElementById('hargaIDR').innerText = `Rp ${newIDR.toLocaleString('id-ID', {maximumFractionDigits: 0})}`;
           lastPiUSDT = newUSDT; lastPiIDR = newIDR;
         }
         if(usd) {
           const newKurs = usd.idr;
           setColor('kursUSDIDR', newKurs, lastKurs);
-          document.getElementById('kursUSDIDR').innerText = `Rp ${newKurs.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+          document.getElementById('kursUSDIDR').innerText = `Rp ${newKurs.toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
           lastKurs = newKurs;
         }
-      } catch (e) { console.log("API Gagal:", e); }
+      } catch (e) { 
+        console.log("API Gagal:", e);
+      }
     }
     updateData(); 
-    setInterval(updateData, 3000);
+    setInterval(updateData, 3000); // REALTIME 3 DETIK
   </script>
 </body>
 </html>
