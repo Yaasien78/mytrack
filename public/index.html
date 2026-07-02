@@ -9,33 +9,19 @@
   <script>
     tailwind.config = {
       theme: { extend: {
-        colors: { 
-          'emas': '#facc15', 
-          'bg-gelap': '#000',
-          'biru': '#38bdf8',
-          'hijau': '#4ade80',
-          'kuning': '#fde047',
-          'merah': '#f87171'
-        }
+        colors: { 'emas': '#facc15', 'bg-gelap': '#000' }
       }
     }
   </script>
   <style>
    .glow-putih { text-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 20px rgba(255,255,255,0.5); }
-   .glow-warna { text-shadow: 0 0 8px currentColor, 0 0 15px currentColor; }
    .glow-emas { box-shadow: 0 0 15px rgba(250, 204, 21, 0.6); }
    .text-neon {
      font-family: Impact, 'Arial Narrow', 'Arial Black', sans-serif;
      font-weight: 900;
-     font-size: 29px;
-     line-height: 1.2;
+     font-size: 32px;
+     line-height: 1.4;
      letter-spacing: -1px;
-   }
-   .text-label {
-     font-family: Impact, 'Arial Narrow', 'Arial Black', sans-serif;
-     font-weight: 900;
-     font-size: 22px; /* Label lebih kecil dikit dari angka */
-     line-height: 1.1;
    }
    .text-neon-kecil { 
      font-family: Impact, 'Arial Narrow', 'Arial Black', sans-serif;
@@ -61,25 +47,17 @@
   </header>
 
   <main class="px-2 pt-14 pb-14">
-    <div class="bg-bg-gelap border-emas glow-emas rounded-3xl px-2 py-3 m-1 flex-col justify-center" style="height: calc(100vh - 112px - 8px);">
+    <div class="bg-bg-gelap border-emas glow-emas rounded-3xl px-2 py-4 m-1 flex-col justify-between" style="height: calc(100vh - 112px - 8px);">
 
-        <div class="text-center space-y-1"> 
-          <p id="tanggal" class="text-neon text-white glow-putih mb-2"></p>
-          
-          <!-- KUNCI: LABEL WARNA + ANGKA PUTIH -->
-          <p class="text-label text-biru glow-warna">Harga Pi/USDT</p>
+        <div class="text-center space-y-4"> 
+          <p id="tanggal" class="text-neon text-white glow-putih"></p>
           <p id="hargaUSDT" class="text-neon text-white glow-putih">$0.1154</p>
-
-          <p class="text-label text-hijau glow-warna">Pi/Rupiah</p>
           <p id="hargaIDR" class="text-neon text-white glow-putih">Rp 2.076,48</p>
-
-          <p class="text-label text-kuning glow-warna">Dollar/Rupiah</p>
-          <p id="kursUSDIDR" class="text-neon text-white glow-putih">Loading...</p>
-
-          <p class="text-label text-merah glow-warna">Status</p>
+          <p id="kursUSDIDR" class="text-neon text-red-400 glow-putih">Error</p> <!-- KUNCI: Merah -->
         </div>
 
-        <div class="text-center mt-4">
+        <!-- KUNCI: mb-2 biar gak ketimpa footer -->
+        <div class="text-center mb-2"> 
           <div class="w-14 h-14 rounded-xl border-emas ring-2 ring-emas mx-auto bg-blue-600 flex items-center justify-center glow-emas">
             <p class="text-lg text-neon-kecil text-white" style="line-height:1;">My<br>Track</p>
           </div>
@@ -92,8 +70,9 @@
     </div>
   </main>
 
+  <!-- KUNCI: text-white glow-putih = Login Pi putih -->
   <footer class="bg-bg-gelap px-3 border-emas-t flex items-center justify-center fixed bottom-0 w-full h-14">
-    <button id="btnBayar" class="text-lg text-neon text-emas glow-putih w-full" style="font-size: 20px;">Login Pi</button>
+    <button id="btnBayar" class="text-lg text-neon text-white glow-putih w-full" style="font-size: 20px;">Login Pi</button>
   </footer>
 
   <script>
@@ -130,9 +109,11 @@
           document.getElementById('hargaIDR').innerText = `Rp ${idr.toLocaleString('id-ID')}`;
           const kurs = idr / usd;
           document.getElementById('kursUSDIDR').innerText = `Rp ${kurs.toLocaleString('id-ID', {minimumFractionDigits: 2})}`;
+          document.getElementById('kursUSDIDR').classList.remove('text-red-400'); // Hapus merah kalau sukses
         }
       } catch (e) {
         document.getElementById('kursUSDIDR').innerText = 'Error';
+        document.getElementById('kursUSDIDR').classList.add('text-red-400'); // Kasih merah kalau error
       }
     }
     updateData();
