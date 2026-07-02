@@ -99,26 +99,38 @@
       if(!currentUser){alert('Login dulu bro');loginPi();return;}
       if(isPaid){alert('Udah bayar bro');toggleMenu();return;}
       
-      Pi.createPayment({
-        amount:0.1,
-        memo:'Bayar Buka Menu VIP My Track 0.1 Pi',
-        metadata:{app:'mytrack', action:'unlock_menu'}
-      },{
-        onReadyForServerApproval: (paymentId) => { 
-          setTimeout(() => { Pi.submitPayment(paymentId); }, 500);
-        }, 
-        onReadyForServerCompletion: (paymentId, txid) => {
-          isPaid=true;
-          menuBayar.innerText='✅ Udah Bayar';
-          menuKonten.classList.remove('lock');
-          alert('✅ Sukses! Menu VIP Kebuka. Tx: '+txid);
-          Pi.completePayment(paymentId, txid);
-          toggleMenu();
-        }, 
-        onCancel: () => {alert('Batal Bayar')}, 
-        onError: (error) => {alert('Error: '+error)} 
+      function bayarBukaMenu(){
+  if(!currentUser){alert('Login dulu bro');loginPi();return;}
+  if(isPaid){alert('Udah bayar bro');toggleMenu();return;}
+
+  Pi.createPayment({
+    amount: 0.1,
+    memo: 'Bayar Buka Menu VIP My Track 0.1 Pi',
+    metadata: {app: 'mytrack', action: 'unlock_menu'},
+    onReadyForServerApproval: async (paymentId) => {
+      alert("Nembak approve...");
+      await fetch(`/api/payments/approve`, { 
+        method: "POST", 
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ paymentId }) 
       });
-    }
+    },
+    onReadyForServerCompletion: async (paymentId, txid) => {
+      await fetch(`/api/payments/complete`, { 
+        method: "POST", 
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ paymentId, txid }) 
+      });
+      isPaid = true;
+      menuBayar.innerText='✅ Udah Bayar';
+      menuKonten.classList.remove('lock');
+      alert('Sukses! Menu VIP Kebuka. Tx: ' + txid);
+      toggleMenu();
+    },
+    onCancel: () => alert('Batal Bayar'),
+    onError: (error) => alert('Error: ' + error)
+  });
+          }
 
     btn.onclick=loginPi;
     menuLogin.onclick=(e)=>{e.preventDefault();loginPi();}
