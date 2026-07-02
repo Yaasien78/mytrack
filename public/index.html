@@ -99,10 +99,6 @@
       if(!currentUser){alert('Login dulu bro');loginPi();return;}
       if(isPaid){alert('Udah bayar bro');toggleMenu();return;}
       
-      function bayarBukaMenu(){
-  if(!currentUser){alert('Login dulu bro');loginPi();return;}
-  if(isPaid){alert('Udah bayar bro');toggleMenu();return;}
-
   Pi.createPayment({
     amount: 0.1,
     memo: 'Bayar Buka Menu VIP My Track 0.1 Pi',
