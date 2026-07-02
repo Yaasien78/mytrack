@@ -23,6 +23,7 @@
    .menu a:hover{background:#facc15;color:#000}
    .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:none;z-index:97}
    .overlay.show{display:block}
+   .lock{opacity:0.5;pointer-events:none}
   </style>
 </head>
 <body>
@@ -38,7 +39,8 @@
 
   <div id="overlay" class="overlay"></div>
   <nav id="menu" class="menu">
-    <a href="#" id="menuBayar">💰 Bayar 0.1 Pi</a>
+    <a href="#" id="menuBayar">🔒 Buka Menu 0.1 Pi</a>
+    <a href="#" id="menuKonten" class="lock">📊 Konten VIP</a>
     <a href="#" id="menuLogin">🔑 Login Pi</a>
   </nav>
 
@@ -52,7 +54,7 @@
       <p class="label">Kurs USD/IDR</p>
       <p id="kurs" class="angka glow" style="color:#f87171">Error</p>
       <div class="badge glow-gold" style="margin-top:6px">My<br>Track</div>
-      <p class="angka glow" style="font-size:12px;line-height:1.2;margin-top:2px">Welcome to Pioneer<br>At My Track App<br>@2026</p>
+      <p class="angka glow" style="font-size:12px;line-height:1.2;margin-top:2px">Bayar 0.1 Pi Testnet<br>Untuk Buka Menu<br>@2026</p>
     </div>
   </main>
 
@@ -60,14 +62,18 @@
 
   <script>
     if(!window.Pi){alert('Buka di Pi Browser ya bro, bukan Chrome');}
-    Pi.init({version:"2.0", sandbox:true}); 
+    
+    // KUNCI FINAL: Pake OAuth Client ID dari SS lu
+    Pi.init({version:"2.0", sandbox:true, apiKey:"VFGq4KCSvwrG-srEpNIg23"}); 
     
     let currentUser=null;
+    let isPaid=false;
     const btn=document.getElementById('btn');
     const btnMenu=document.getElementById('btnMenu');
     const menu=document.getElementById('menu');
     const overlay=document.getElementById('overlay');
     const menuBayar=document.getElementById('menuBayar');
+    const menuKonten=document.getElementById('menuKonten');
     const menuLogin=document.getElementById('menuLogin');
 
     function toggleMenu(){menu.classList.toggle('open');overlay.classList.toggle('show');}
@@ -91,20 +97,23 @@
       }
     }
     
-    function bayarPi(){
+    function bayarBukaMenu(){
       if(!currentUser){alert('Login dulu bro');loginPi();return;}
+      if(isPaid){alert('Udah bayar bro');toggleMenu();return;}
       
       Pi.createPayment({
-        amount:0.1,
-        memo:'Bayar 0.1 Pi Testnet My Track',
-        metadata:{app:'mytrack'}
+        amount:0.1, // Bayar 0.1 Pi
+        memo:'Bayar Buka Menu VIP My Track 0.1 Pi',
+        metadata:{app:'mytrack', action:'unlock_menu'}
       },{
-        // KUNCI DEWA: SetTimeout 0 biar langsung lari
         onReadyForServerApproval: (paymentId) => { 
-          setTimeout(() => { Pi.submitPayment(paymentId); }, 0); 
+          setTimeout(() => { Pi.submitPayment(paymentId); }, 500);
         }, 
         onReadyForServerCompletion: (paymentId, txid) => {
-          alert('✅ Bayar Sukses! Tx: '+txid);
+          isPaid=true;
+          menuBayar.innerText='✅ Udah Bayar';
+          menuKonten.classList.remove('lock');
+          alert('✅ Sukses! Menu VIP Kebuka. Tx: '+txid);
           Pi.completePayment(paymentId, txid);
           toggleMenu();
         }, 
@@ -115,9 +124,10 @@
 
     btn.onclick=loginPi;
     menuLogin.onclick=(e)=>{e.preventDefault();loginPi();}
-    menuBayar.onclick=(e)=>{e.preventDefault();bayarPi();}
+    menuBayar.onclick=(e)=>{e.preventDefault();bayarBukaMenu();}
+    menuKonten.onclick=(e)=>{e.preventDefault();if(isPaid){alert('Selamat datang di Konten VIP')}};
 
     fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr')).then(r=>r.json()).then(d=>{if(d['pi-network']){const u=d['pi-network'].usd,i=d['pi-network'].idr;document.getElementById('usd').innerText=`$${u.toFixed(4)}`;document.getElementById('idr').innerText=`Rp ${i.toLocaleString('id-ID')}`;document.getElementById('kurs').innerText=`Rp ${(i/u).toLocaleString('id-ID',{minimumFractionDigits:2})}`;document.getElementById('kurs').style.color='#fff';}}).catch(()=>{});
   </script>
 </body>
-</html>
+  </html>
