@@ -79,7 +79,6 @@
       try{
         btn.innerText='Login...';
         menuLogin.innerText='Login...';
-        // KUNCI: Tambah 'payments' biar bisa bayar
         const auth=await Pi.authenticate(['username','payments']); 
         currentUser=auth.user;
         btn.innerText=`Halo ${auth.user.username}`;
@@ -95,10 +94,17 @@
     async function bayarPi(){
       if(!currentUser){alert('Login dulu bro');loginPi();return;}
       try{
-        alert('Konfirmasi Bayar 0.1 Pi Testnet');
-        const pay=await Pi.createPayment({amount:0.1,memo:'Bayar 0.1 Pi Testnet My Track',metadata:{app:'mytrack'}},{onReadyForServerPayment:()=>{},onIncompletePaymentFound:()=>{},onCancelled:()=>alert('Batal Bayar'),onError:err=>alert('Error: '+err)});
-        alert('Bayar Sukses! Tx: '+pay.identifier);
-        toggleMenu();
+        // KUNCI: Callback bener semua
+        const pay=await Pi.createPayment({
+          amount:0.1,
+          memo:'Bayar 0.1 Pi Testnet My Track',
+          metadata:{app:'mytrack'}
+        },{
+          onReadyForServerApproval: (paymentId) => {alert('Step 1: Approve di Server. ID: '+paymentId)}, // Wajib
+          onReadyForServerCompletion: (paymentId, txid) => {alert('Step 2: Sukses! Tx: '+txid); toggleMenu()}, // Wajib 
+          onCancel: (paymentId) => {alert('Batal Bayar: '+paymentId)}, // Wajib
+          onError: (error, payment) => {alert('Error: '+error)} // Wajib
+        });
       }catch(e){alert('Bayar Gagal: '+e.message);}
     }
 
