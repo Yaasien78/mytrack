@@ -141,6 +141,9 @@
         if(d && d['pi-network']){ // Cek d ada gak, pi-network ada gak
           const u=d['pi-network'].usd,i=d['pi-network'].idr;
           document.getElementById('usd').innerText=`$${u.toFixed(4)}`;
+           }); // buat nutup .then(d=>{
+} catch(e){console.log('Gagal ambil harga:',e)} // buat nutup try{
+</script> // buat nutup <script>
           document.getElementById('idr').innerText=`Rp ${i.toLocaleString('id-ID')}`;
           document.getElementById('kurs').innerText=`Rp ${(i/u).toLocaleString('id-ID',{minimumFractionDigits:2})}`;
           document.getElementById('kurs').style.color='#fff';
