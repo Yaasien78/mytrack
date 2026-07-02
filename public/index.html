@@ -59,10 +59,7 @@
   <footer><button id="btn" class="angka glow" style="font-size:20px;background:0;border:0;color:#fff">Login Pi</button></footer>
 
   <script>
-    // KUNCI 1: Cek Pi SDK udah load apa belum
     if(!window.Pi){alert('Buka di Pi Browser ya bro, bukan Chrome');}
-    
-    // KUNCI 2: Init cuma 1x pas load
     Pi.init({version:"2.0", sandbox:true}); 
     
     let currentUser=null;
@@ -82,8 +79,8 @@
       try{
         btn.innerText='Login...';
         menuLogin.innerText='Login...';
-        // KUNCI 3: scopes HARUS array ['username'] doang
-        const auth=await Pi.authenticate(['username']); 
+        // KUNCI: Tambah 'payments' biar bisa bayar
+        const auth=await Pi.authenticate(['username','payments']); 
         currentUser=auth.user;
         btn.innerText=`Halo ${auth.user.username}`;
         menuLogin.innerText=`Logout ${auth.user.username}`;
@@ -91,8 +88,7 @@
       }catch(e){
         btn.innerText='Login Pi';
         menuLogin.innerText='🔑 Login Pi';
-        alert('Login Gagal: '+e.message); // Tunjukin message doang biar gak panjang
-        console.log(e);
+        alert('Login Gagal: '+e.message);
       }
     }
     
