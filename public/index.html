@@ -107,7 +107,6 @@
   <footer class="bg-dongker px-3 border-kuning-t flex items-center justify-center fixed bottom-0 w-full">
     <button id="btnBayar" class="text-lg text-ss text-yellow w-full">Login Pi</button>
   </footer>
-
   <script>
     let currentUser = null;
     const btn = document.getElementById('btnBayar');
@@ -135,19 +134,28 @@
 
     async function updateData() {
       try {
-        const res = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.coingecko.com/api/v3/simple/price?ids=pi-network,usd&vs_currencies=usd,idr'));
+        // AMBIL PI + USD/IDR LIVE, NO DUMMY
+        const res = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr&include_market_cap=false&include_24hr_vol=false&include_24hr_change=false&include_last_updated_at=false'));
         const data = await res.json();
+        
         if(data['pi-network']) {
-          document.getElementById('hargaUSDT').innerText = `$${data['pi-network'].usd.toFixed(4)}`;
-          document.getElementById('hargaIDR').innerText = `Rp ${data['pi-network'].idr.toLocaleString('id-ID')}`;
+          const usd = data['pi-network'].usd;
+          const idr = data['pi-network'].idr;
+          
+          document.getElementById('hargaUSDT').innerText = `$${usd.toFixed(4)}`;
+          document.getElementById('hargaIDR').innerText = `Rp ${idr.toLocaleString('id-ID')}`;
+          
+          // HITUNG KURS DOLLAR REAL TIME DARI PI
+          const kurs = idr / usd; 
+          document.getElementById('kursUSDIDR').innerText = `Rp ${kurs.toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         }
-        if(data['usd']) {
-          document.getElementById('kursUSDIDR').innerText = `Rp ${data['usd'].idr.toLocaleString('id-ID', {minimumFractionDigits: 2})}`;
-        }
-      } catch (e) {}
+      } catch (e) {
+        console.log('Gagal update:', e);
+      }
     }
     updateData(); 
-    setInterval(updateData, 3000);
-  </script>
+    setInterval(updateData, 5000); // Update tiap 5 detik
+                       </script>
+  
 </body>
   </html>
