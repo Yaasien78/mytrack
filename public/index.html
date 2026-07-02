@@ -99,17 +99,16 @@
         memo:'Bayar 0.1 Pi Testnet My Track',
         metadata:{app:'mytrack'}
       },{
-        // KUNCI: Gak pake async/await. Langsung eksekusi
+        // KUNCI: GAK ADA ALERT DISINI SAMA SEKALI
         onReadyForServerApproval: (paymentId) => { 
-          console.log('Step 1 ID:', paymentId);
-          Pi.submitPayment(paymentId); // Langsung tembak tanpa nunggu
+          Pi.submitPayment(paymentId); // Langsung gas 0.01 detik
         }, 
         onReadyForServerCompletion: (paymentId, txid) => {
-          alert('Bayar Sukses! Tx: '+txid); // Cuma 1 alert pas sukses
+          alert('✅ Bayar Sukses! Tx: '+txid); // Alert cuma pas sukses
           Pi.completePayment(paymentId, txid);
           toggleMenu();
         }, 
-        onCancel: (paymentId) => {alert('Batal Bayar')}, 
+        onCancel: () => {alert('Batal Bayar')}, 
         onError: (error) => {alert('Error: '+error)} 
       });
     }
