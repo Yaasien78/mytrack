@@ -91,28 +91,27 @@
       }
     }
     
-    async function bayarPi(){
+    function bayarPi(){
       if(!currentUser){alert('Login dulu bro');loginPi();return;}
-      try{
-        const pay=await Pi.createPayment({
-          amount:0.1,
-          memo:'Bayar 0.1 Pi Testnet My Track',
-          metadata:{app:'mytrack'}
-        },{
-          onReadyForServerApproval: async (paymentId) => { 
-            alert('Step 1: Approve... ID: '+paymentId);
-            // KUNCI: Auto submit buat testnet. Pura2 jadi server
-            await Pi.submitPayment(paymentId); 
-          }, 
-          onReadyForServerCompletion: async (paymentId, txid) => {
-            alert('Step 2: Sukses! Tx: '+txid); 
-            await Pi.completePayment(paymentId, txid); // Wajib dipanggil
-            toggleMenu();
-          }, 
-          onCancel: (paymentId) => {alert('Batal Bayar: '+paymentId)}, 
-          onError: (error, payment) => {alert('Error: '+error)} 
-        });
-      }catch(e){alert('Bayar Gagal: '+e.message);}
+      
+      Pi.createPayment({
+        amount:0.1,
+        memo:'Bayar 0.1 Pi Testnet My Track',
+        metadata:{app:'mytrack'}
+      },{
+        // KUNCI: Gak pake async/await. Langsung eksekusi
+        onReadyForServerApproval: (paymentId) => { 
+          console.log('Step 1 ID:', paymentId);
+          Pi.submitPayment(paymentId); // Langsung tembak tanpa nunggu
+        }, 
+        onReadyForServerCompletion: (paymentId, txid) => {
+          alert('Bayar Sukses! Tx: '+txid); // Cuma 1 alert pas sukses
+          Pi.completePayment(paymentId, txid);
+          toggleMenu();
+        }, 
+        onCancel: (paymentId) => {alert('Batal Bayar')}, 
+        onError: (error) => {alert('Error: '+error)} 
+      });
     }
 
     btn.onclick=loginPi;
