@@ -99,12 +99,12 @@
         memo:'Bayar 0.1 Pi Testnet My Track',
         metadata:{app:'mytrack'}
       },{
-        // KUNCI: GAK ADA ALERT DISINI SAMA SEKALI
+        // KUNCI DEWA: SetTimeout 0 biar langsung lari
         onReadyForServerApproval: (paymentId) => { 
-          Pi.submitPayment(paymentId); // Langsung gas 0.01 detik
+          setTimeout(() => { Pi.submitPayment(paymentId); }, 0); 
         }, 
         onReadyForServerCompletion: (paymentId, txid) => {
-          alert('✅ Bayar Sukses! Tx: '+txid); // Alert cuma pas sukses
+          alert('✅ Bayar Sukses! Tx: '+txid);
           Pi.completePayment(paymentId, txid);
           toggleMenu();
         }, 
