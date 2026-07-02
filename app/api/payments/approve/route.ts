@@ -1,33 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
-  try {
-    const { paymentId } = await req.json();
+export async function POST(req: Request) {
+  const { paymentId } = await req.json();
+  if (!paymentId) return NextResponse.json({ error: 'paymentId kosong' }, { status: 400 });
 
-    if (!paymentId) {
-      return NextResponse.json({ error: 'paymentId kosong' }, { status: 400 });
-    }
+  console.log("NEMBAK APPROVE:", paymentId); // Biar keliatan di Logs
 
-    const res = await fetch(`https://api.testnet.minepi.com/v2/payments/${paymentId}/approve`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `KEY ${process.env.PI_NETWORK_API_KEY}`, // <-- PASTIIN SAMA
-        'Content-Type': 'application/json'
-      }
-    });
+  const res = await fetch(`https://api.minepi.com/v2/payments/${paymentId}/approve`, { // <- INI YG DIGANTI
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.PI_NETWORK_API_KEY}`, // <- PASTIIN SAMA DENGAN DI VERCEL ENV
+      "Content-Type": "application/json",
+    },
+  });
 
-    const data = await res.json();
-
-    if (!res.ok) { // <-- INGET PAKE !
-      console.error('Approve Pi Error:', data);
-      return NextResponse.json({ error: 'Approve gagal', detail: data }, { status: 500 });
-    }
-
-    console.log('Payment APPROVED:', paymentId);
-    return NextResponse.json(data); // <-- Kirim balik ke Pi
-
-  } catch (e) {
-    console.error(e);
-    return NextResponse.json({ error: 'Server error approve' }, { status: 500 });
+  const data = await res.json();
+  if (!res.ok) {
+    console.error("Approve GAGAL:", data); 
+    return NextResponse.json({ error: 'Approve gagal', detail: data }, { status: 500 });
   }
-      }
+
+  console.log("Payment APPROVED:", paymentId);
+  return NextResponse.json(data);
+}
