@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     const res = await fetch(`https://api.minepi.com/v2/payments/${paymentId}/approve`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.PI_NETWORK_API_KEY}`, // <-- PASTIIN SAMA
+        'Authorization': `key ${process.env.PI_NETWORK_API_KEY}`, // <-- PASTIIN SAMA
         'Content-Type': 'application/json'
       }
     });
