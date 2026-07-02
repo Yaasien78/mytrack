@@ -10,8 +10,8 @@
     tailwind.config = {
       theme: { extend: {
         colors: { 
-          'bg-gelap': '#000', 
-          'emas': '#facc15',
+          'emas': '#facc15', 
+          'bg-gelap': '#000',
           'biru': '#38bdf8',
           'hijau': '#4ade80',
           'kuning': '#fde047',
@@ -21,20 +21,27 @@
     }
   </script>
   <style>
-   .glow-text { text-shadow: 0 0 8px currentColor, 0 4px 8px rgba(0,0,0,0.9); }
-   .glow-box { box-shadow: 0 0 12px rgba(250, 204, 21, 0.4), inset 0 0 8px rgba(250, 204, 21, 0.1); }
+   .glow-putih { text-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 20px rgba(255,255,255,0.5); }
+   .glow-warna { text-shadow: 0 0 8px currentColor, 0 0 15px currentColor; }
+   .glow-emas { box-shadow: 0 0 15px rgba(250, 204, 21, 0.6); }
    .text-neon {
      font-family: Impact, 'Arial Narrow', 'Arial Black', sans-serif;
      font-weight: 900;
      font-size: 29px;
-     line-height: 1.05;
-     letter-spacing: -1.5px;
+     line-height: 1.2;
+     letter-spacing: -1px;
+   }
+   .text-label {
+     font-family: Impact, 'Arial Narrow', 'Arial Black', sans-serif;
+     font-weight: 900;
+     font-size: 22px; /* Label lebih kecil dikit dari angka */
+     line-height: 1.1;
    }
    .text-neon-kecil { 
      font-family: Impact, 'Arial Narrow', 'Arial Black', sans-serif;
      font-weight: 900;
+     font-size: 14px;
      line-height: 1.1;
-     letter-spacing: -0.5px;
    }
    .border-emas { border: 2px solid #facc15; }
    .border-emas-b { border-bottom: 2px solid #facc15; }
@@ -43,40 +50,40 @@
   </style>
 </head>
 <body>
-  <!-- KUNCI: border-emas-b + span bg-emas = Garis menu emas -->
   <header class="bg-bg-gelap px-2 border-emas-b flex items-center justify-between fixed top-0 w-full h-14">
     <a href="menu.html" class="flex flex-col justify-center space-y-1 w-6 h-6">
       <span class="w-full h-0.5 bg-emas"></span>
       <span class="w-full h-0.5 bg-emas"></span>
       <span class="w-full h-0.5 bg-emas"></span>
     </a>
-    <h1 class="text-2xl font-black text-white text-neon glow-text" style="font-size: 28px;">My Track</h1>
-    <!-- KUNCI: Logo emas -->
-    <div class="w-10 h-10 rounded-full border-2 border-emas flex items-center justify-center bg-bg-gelap glow-box">
-      <span class="text-emas text-2xl font-black">π</span>
-    </div>
+    <h1 class="text-2xl font-black text-white text-neon glow-putih" style="font-size: 28px;">My Track</h1>
+    <div class="w-10 h-10 rounded-full border-2 border-emas glow-emas"></div>
   </header>
 
   <main class="px-2 pt-14 pb-14">
-    <div class="bg-bg-gelap border-emas glow-box rounded-3xl px-2 pt-2 pb-2 m-1 flex-col justify-between" style="height: calc(100vh - 112px - 8px);">
+    <div class="bg-bg-gelap border-emas glow-emas rounded-3xl px-2 py-3 m-1 flex-col justify-center" style="height: calc(100vh - 112px - 8px);">
 
-        <div class="text-center">
-          <p id="tanggal" class="text-neon text-white glow-text"></p>
-          <!-- KUNCI: Warna label Biru, Hijau, Kuning, Merah -->
-          <p class="text-neon text-biru glow-text">Harga Pi/USDT</p>
-          <p id="hargaUSDT" class="text-neon text-white glow-text">$0.1154</p>
-          <p class="text-neon text-hijau glow-text">Pi/Rupiah</p>
-          <p id="hargaIDR" class="text-neon text-white glow-text">Rp 2.076,48</p>
-          <p class="text-neon text-kuning glow-text">Dollar/Rupiah</p>
-          <p id="kursUSDIDR" class="text-neon text-white glow-text">Loading...</p>
-          <p class="text-neon text-merah glow-text">Status</p>
+        <div class="text-center space-y-1"> 
+          <p id="tanggal" class="text-neon text-white glow-putih mb-2"></p>
+          
+          <!-- KUNCI: LABEL WARNA + ANGKA PUTIH -->
+          <p class="text-label text-biru glow-warna">Harga Pi/USDT</p>
+          <p id="hargaUSDT" class="text-neon text-white glow-putih">$0.1154</p>
+
+          <p class="text-label text-hijau glow-warna">Pi/Rupiah</p>
+          <p id="hargaIDR" class="text-neon text-white glow-putih">Rp 2.076,48</p>
+
+          <p class="text-label text-kuning glow-warna">Dollar/Rupiah</p>
+          <p id="kursUSDIDR" class="text-neon text-white glow-putih">Loading...</p>
+
+          <p class="text-label text-merah glow-warna">Status</p>
         </div>
 
         <div class="text-center mt-4">
-          <div class="w-14 h-14 rounded-xl border-emas ring-2 ring-emas mx-auto bg-blue-600 flex items-center justify-center glow-box">
+          <div class="w-14 h-14 rounded-xl border-emas ring-2 ring-emas mx-auto bg-blue-600 flex items-center justify-center glow-emas">
             <p class="text-lg text-neon-kecil text-white" style="line-height:1;">My<br>Track</p>
           </div>
-          <p class="text-sm text-neon-kecil text-white mt-0.5 mb-0 leading-tight glow-text">
+          <p class="text-sm text-neon-kecil text-white mt-1 mb-0 leading-tight glow-putih">
             Welcome to Pioneer<br>
             At My Track App<br>
             @2026
@@ -86,7 +93,7 @@
   </main>
 
   <footer class="bg-bg-gelap px-3 border-emas-t flex items-center justify-center fixed bottom-0 w-full h-14">
-    <button id="btnBayar" class="text-lg text-neon text-emas glow-text w-full" style="font-size: 20px;">Login Pi</button>
+    <button id="btnBayar" class="text-lg text-neon text-emas glow-putih w-full" style="font-size: 20px;">Login Pi</button>
   </footer>
 
   <script>
