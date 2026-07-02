@@ -5,119 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>My Track</title>
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: { extend: {
-        colors: { 'emas': '#facc15', 'bg-gelap': '#000' }
-      }
-    }
-  </script>
   <style>
-   .glow-putih { text-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 20px rgba(255,255,255,0.5); }
-   .glow-emas { box-shadow: 0 0 15px rgba(250, 204, 21, 0.6); }
-   .text-neon {
-     font-family: Impact, 'Arial Narrow', 'Arial Black', sans-serif;
-     font-weight: 900;
-     font-size: 32px;
-     line-height: 1.4;
-     letter-spacing: -1px;
-   }
-   .text-neon-kecil { 
-     font-family: Impact, 'Arial Narrow', 'Arial Black', sans-serif;
-     font-weight: 900;
-     font-size: 14px;
-     line-height: 1.1;
-   }
-   .border-emas { border: 2px solid #facc15; }
-   .border-emas-b { border-bottom: 2px solid #facc15; }
-   .border-emas-t { border-top: 2px solid #facc15; }
-   body { background: #000; }
+   *{margin:0;padding:0;box-sizing:border-box}
+   body{background:#000;color:#fff;font-family:Impact,'Arial Black',sans-serif;overflow:hidden}
+   .glow{ text-shadow: 0 0 12px rgba(255,255,255,0.9)}
+   .glow-gold{ box-shadow: 0 0 15px rgba(250,204,21,0.6)}
+   header,footer{position:fixed;width:100%;height:56px;background:#000;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-bottom:2px solid #facc15;z-index:99}
+   footer{bottom:0;border-top:2px solid #facc15;border-bottom:0;justify-content:center}
+   .box{border:2px solid #facc15;border-radius:24px;margin:8px;padding:12px 8px;height:calc(100vh - 120px);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;background:#000;overflow:hidden}
+   .text{font-size:28px;font-weight:900;line-height:1.3;text-align:center}
+   .logo{width:40px;height:40px;border:2px solid #facc15;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#facc15;font-size:24px;font-weight:900}
+   .badge{width:56px;height:56px;background:#2563eb;border:2px solid #facc15;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;line-height:1}
   </style>
 </head>
 <body>
-  <header class="bg-bg-gelap px-2 border-emas-b flex items-center justify-between fixed top-0 w-full h-14">
-    <a href="menu.html" class="flex flex-col justify-center space-y-1 w-6 h-6">
-      <span class="w-full h-0.5 bg-emas"></span>
-      <span class="w-full h-0.5 bg-emas"></span>
-      <span class="w-full h-0.5 bg-emas"></span>
-    </a>
-    <h1 class="text-2xl font-black text-white text-neon glow-putih" style="font-size: 28px;">My Track</h1>
-    <div class="w-10 h-10 rounded-full border-2 border-emas glow-emas"></div>
+  <header>
+    <div style="width:24px;display:flex;flex-direction:column;gap:4px"><span style="height:3px;background:#facc15;display:block"></span><span style="height:3px;background:#facc15;display:block"></span><span style="height:3px;background:#facc15;display:block"></span></div>
+    <h1 class="text glow" style="font-size:26px">My Track</h1>
+    <div class="logo glow-gold">π</div>
   </header>
 
-  <main class="px-2 pt-14 pb-14">
-    <div class="bg-bg-gelap border-emas glow-emas rounded-3xl px-2 py-4 m-1 flex-col justify-between" style="height: calc(100vh - 112px - 8px);">
-
-        <div class="text-center space-y-4"> 
-          <p id="tanggal" class="text-neon text-white glow-putih"></p>
-          <p id="hargaUSDT" class="text-neon text-white glow-putih">$0.1154</p>
-          <p id="hargaIDR" class="text-neon text-white glow-putih">Rp 2.076,48</p>
-          <p id="kursUSDIDR" class="text-neon text-red-400 glow-putih">Error</p> <!-- KUNCI: Merah -->
-        </div>
-
-        <!-- KUNCI: mb-2 biar gak ketimpa footer -->
-        <div class="text-center mb-2"> 
-          <div class="w-14 h-14 rounded-xl border-emas ring-2 ring-emas mx-auto bg-blue-600 flex items-center justify-center glow-emas">
-            <p class="text-lg text-neon-kecil text-white" style="line-height:1;">My<br>Track</p>
-          </div>
-          <p class="text-sm text-neon-kecil text-white mt-1 mb-0 leading-tight glow-putih">
-            Welcome to Pioneer<br>
-            At My Track App<br>
-            @2026
-          </p>
-        </div>
+  <main style="padding-top:56px;padding-bottom:56px">
+    <div class="box glow-gold">
+      <p id="tgl" class="text glow"></p>
+      <p id="usd" class="text glow">$0.1150</p>
+      <p id="idr" class="text glow">Rp 2.069</p>
+      <p id="kurs" class="text glow">Rp 17,994</p>
+      <div class="badge glow-gold">My<br>Track</div>
+      <p class="text glow" style="font-size:13px;line-height:1.2">Welcome to Pioneer<br>At My Track App<br>@2026</p>
     </div>
   </main>
 
-  <!-- KUNCI: text-white glow-putih = Login Pi putih -->
-  <footer class="bg-bg-gelap px-3 border-emas-t flex items-center justify-center fixed bottom-0 w-full h-14">
-    <button id="btnBayar" class="text-lg text-neon text-white glow-putih w-full" style="font-size: 20px;">Login Pi</button>
-  </footer>
+  <footer><button id="btn" class="text glow" style="font-size:20px;background:0;border:0;color:#fff">Login Pi</button></footer>
 
   <script>
-    let currentUser = null;
-    const btn = document.getElementById('btnBayar');
-    window.onload = function() { Pi.init({ version: "2.0", sandbox: true }); };
-
-    function updateTanggal() {
-      const now = new Date();
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Jakarta' };
-      document.getElementById('tanggal').innerText = now.toLocaleDateString('id-ID', options);
-    }
-    updateTanggal();
-
-    btn.onclick = async () => {
-      try {
-        btn.innerText = 'Login...';
-        const auth = await Pi.authenticate({ scopes: ['username'] });
-        btn.innerText = `Halo ${auth.user.username}`;
-      } catch (err) {
-        btn.innerText = 'Login Pi';
-        alert('Login Gagal: ' + err);
-      }
-    };
-
-    async function updateData() {
-      try {
-        const res = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr'));
-        const data = await res.json();
-        if(data['pi-network']) {
-          const usd = data['pi-network'].usd;
-          const idr = data['pi-network'].idr;
-          document.getElementById('hargaUSDT').innerText = `$${usd.toFixed(4)}`;
-          document.getElementById('hargaIDR').innerText = `Rp ${idr.toLocaleString('id-ID')}`;
-          const kurs = idr / usd;
-          document.getElementById('kursUSDIDR').innerText = `Rp ${kurs.toLocaleString('id-ID', {minimumFractionDigits: 2})}`;
-          document.getElementById('kursUSDIDR').classList.remove('text-red-400'); // Hapus merah kalau sukses
-        }
-      } catch (e) {
-        document.getElementById('kursUSDIDR').innerText = 'Error';
-        document.getElementById('kursUSDIDR').classList.add('text-red-400'); // Kasih merah kalau error
-      }
-    }
-    updateData();
-    setInterval(updateData, 5000);
+    Pi.init({version:"2.0",sandbox:true});
+    document.getElementById('tgl').innerText=new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'Asia/Jakarta'});
+    document.getElementById('btn').onclick=async()=>{try{document.getElementById('btn').innerText='Login...';const a=await Pi.authenticate({scopes:['username']});document.getElementById('btn').innerText=`Halo ${a.user.username}`}catch(e){document.getElementById('btn').innerText='Login Pi'}};
+    fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr')).then(r=>r.json()).then(d=>{if(d['pi-network']){const u=d['pi-network'].usd,i=d['pi-network'].idr;document.getElementById('usd').innerText=`$${u.toFixed(4)}`;document.getElementById('idr').innerText=`Rp ${i.toLocaleString('id-ID')}`;document.getElementById('kurs').innerText=`Rp ${(i/u).toLocaleString('id-ID',{minimumFractionDigits:2})}`}}).catch(()=>{});
   </script>
 </body>
-</html>
+            </html>
