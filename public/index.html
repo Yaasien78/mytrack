@@ -2,7 +2,6 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>My Track</title>
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
@@ -10,64 +9,71 @@
   <script>
     tailwind.config = {
       theme: { extend: {
-        colors: { 'ungu-tua': '#6d28d9', 'dongker': '#1e293b', 'emas': '#facc15' }
+        colors: { 
+          'bg-gelap': '#0a0a0f', 
+          'neon-ungu': '#a855f7',
+          'neon-kuning': '#facc15',
+          'neon-biru': '#38bdf8',
+          'neon-hijau': '#4ade80'
+        }
       }
     }
   </script>
   <style>
-   .text-ss { 
+   /* GLOW NEON PLEK SS KIRI */
+   .glow-box { box-shadow: 0 0 15px rgba(168, 85, 247, 0.5), inset 0 0 10px rgba(168, 85, 247, 0.2); }
+   .glow-text { text-shadow: 0 0 8px rgba(168, 85, 247, 0.8), 0 4px 8px rgba(0,0,0,0.9); }
+   .text-neon {
      font-family: Impact, 'Arial Narrow', 'Arial Black', sans-serif;
      font-weight: 900;
      font-size: 29px;
-     text-shadow: 0 4px 8px rgba(0,0,0,0.9);
      line-height: 1.05;
      letter-spacing: -1.5px;
    }
-   .text-ss-kecil { 
+   .text-neon-kecil { 
      font-family: Impact, 'Arial Narrow', 'Arial Black', sans-serif;
      font-weight: 900;
-     text-shadow: 0 2px 4px rgba(0,0,0,0.9);
      line-height: 1.1;
      letter-spacing: -0.5px;
    }
-   .border-kuning-b { border-bottom: 2px solid #facc15; }
-   .border-kuning-t { border-top: 2px solid #facc15; }
-   .border-kuning { border: 2px solid #facc15; }
-   .border-putih { border: 2px solid #ffffff; }
+   .border-neon { border: 2px solid #a855f7; }
+   .border-neon-b { border-bottom: 2px solid #a855f7; }
+   .border-neon-t { border-top: 2px solid #a855f7; }
+   body { background: #000; } /* Bg hitam plek SS */
   </style>
 </head>
-<body class="bg-white">
-  <header class="bg-dongker px-2 border-kuning-b flex items-center justify-between fixed top-0 w-full h-14">
+<body>
+  <header class="bg-bg-gelap px-2 border-neon-b flex items-center justify-between fixed top-0 w-full h-14">
     <a href="menu.html" class="flex flex-col justify-center space-y-1 w-6 h-6">
-      <span class="w-full h-0.5 bg-white"></span>
-      <span class="w-full h-0.5 bg-white"></span>
-      <span class="w-full h-0.5 bg-white"></span>
+      <span class="w-full h-0.5 bg-neon-ungu"></span>
+      <span class="w-full h-0.5 bg-neon-ungu"></span>
+      <span class="w-full h-0.5 bg-neon-ungu"></span>
     </a>
-    <h1 class="text-2xl font-black text-white text-ss" style="font-size: 28px;">My Track</h1>
-    <div class="w-10 h-10 rounded-full border-putih flex items-center justify-center">
-      <span class="text-white text-2xl font-black">π</span>
+    <h1 class="text-2xl font-black text-white text-neon glow-text" style="font-size: 28px;">My Track</h1>
+    <div class="w-10 h-10 rounded-full border-2 border-neon-kuning flex items-center justify-center bg-bg-gelap">
+      <span class="text-neon-kuning text-2xl font-black">π</span>
     </div>
   </header>
 
   <main class="px-2 pt-14 pb-14">
-    <div class="bg-ungu-tua border-kuning rounded-3xl px-2 pt-2 pb-2 m-1 flex-col justify-between" style="height: calc(100vh - 112px - 8px);">
+    <!-- KUNCI: bg-bg-gelap + border-neon + glow-box = Plek SS Kiri -->
+    <div class="bg-bg-gelap border-neon glow-box rounded-3xl px-2 pt-2 pb-2 m-1 flex-col justify-between" style="height: calc(100vh - 112px - 8px);">
 
         <div class="text-center">
-          <p id="tanggal" class="text-ss text-white"></p>
-          <p class="text-ss text-emas">Harga Pi/USDT</p>
-          <p id="hargaUSDT" class="text-ss text-white">$0.1154</p>
-          <p class="text-ss text-sky-300">Pi/Rupiah</p>
-          <p id="hargaIDR" class="text-ss text-white">Rp 2.076,48</p>
-          <p class="text-ss text-green-300">Dollar/Rupiah</p>
-          <p id="kursUSDIDR" class="text-ss text-white">Loading...</p>
+          <p id="tanggal" class="text-neon text-white glow-text"></p>
+          <p class="text-neon text-neon-kuning glow-text">Harga Pi/USDT</p>
+          <p id="hargaUSDT" class="text-neon text-white glow-text">$0.1154</p>
+          <p class="text-neon text-neon-biru glow-text">Pi/Rupiah</p>
+          <p id="hargaIDR" class="text-neon text-white glow-text">Rp 2.076,48</p>
+          <p class="text-neon text-neon-hijau glow-text">Dollar/Rupiah</p>
+          <p id="kursUSDIDR" class="text-neon text-white glow-text">Loading...</p>
         </div>
 
-        <!-- KUNCI: mt-4 = Jarak = Tinggi 1 huruf Welcome -->
         <div class="text-center mt-4">
-          <div class="w-14 h-14 rounded-xl border-kuning ring-2 mx-auto bg-blue-500 flex items-center justify-center">
-            <p class="text-lg text-ss-kecil text-white" style="line-height:1;">My<br>Track</p>
+          <div class="w-14 h-14 rounded-xl border-neon ring-2 ring-neon-ungu mx-auto bg-blue-600 flex items-center justify-center glow-box">
+            <p class="text-lg text-neon-kecil text-white" style="line-height:1;">My<br>Track</p>
           </div>
-          <p class="text-sm text-ss-kecil text-white mt-0.5 mb-0 leading-tight">
+          <p class="text-sm text-neon-kecil text-white mt-0.5 mb-0 leading-tight glow-text">
             Welcome to Pioneer<br>
             At My Track App<br>
             @2026
@@ -76,8 +82,8 @@
     </div>
   </main>
 
-  <footer class="bg-dongker px-3 border-kuning-t flex items-center justify-center fixed bottom-0 w-full h-14">
-    <button id="btnBayar" class="text-lg text-ss text-emas w-full" style="font-size: 20px;">Login Pi</button>
+  <footer class="bg-bg-gelap px-3 border-neon-t flex items-center justify-center fixed bottom-0 w-full h-14">
+    <button id="btnBayar" class="text-lg text-neon text-neon-kuning glow-text w-full" style="font-size: 20px;">Login Pi</button>
   </footer>
 
   <script>
