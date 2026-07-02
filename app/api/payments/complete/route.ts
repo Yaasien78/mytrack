@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'paymentId/txid kosong' }, { status: 400 });
     }
 
-    const res = await fetch(`https://api.minepi.com/v2/payments/${paymentId}/complete`, {
+    const res = await fetch(`https://api.testnet.minepi.com/v2/payments/${paymentId}/complete`, {
       method: 'POST',
       headers: {
         'Authorization': `KEY ${process.env.PI_NETWORK_API_KEY}`, // Pastiin Bearer
