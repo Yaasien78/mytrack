@@ -6,16 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>My Track</title>
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script> <!-- PAKAI TAILWIND BIAR MUDAH ATUR UKURAN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: { extend: {
-        colors: { 'ungu-tua': '#6d28d9', 'dongker': '#1e293b' } /* UNGU TUA KEBIRUAN */
+        colors: { 'ungu-tua': '#6d28d9', 'dongker': '#1e293b', 'emas': '#facc15' } /* EMAS */
       } }
     }
   </script>
   <style>
-   .text-ss { font-family: Impact, 'Arial Black', sans-serif; font-weight: 900; text-shadow: 0 3px 6px rgba(0,0,0,0.9); line-height: 1.1; letter-spacing: -0.5px; } /* RAMPING TINGGI */
+   .text-ss { font-family: Impact, 'Arial Black', sans-serif; font-weight: 900; text-shadow: 0 3px 6px rgba(0,0,0,0.9); line-height: 1.1; letter-spacing: -0.5px; }
    .border-kuning-b { border-bottom: 2px solid #facc15; }
    .border-kuning-t { border-top: 2px solid #facc15; }
    .border-kuning { border: 2px solid #facc15; }
@@ -38,18 +38,18 @@
   <main class="px-2 pt-14 pb-14">
     <div class="bg-ungu-tua border-kuning rounded-3xl px-2 pt-2 pb-2 m-1 flex-col justify-between" style="height: calc(100vh - 112px - 8px);">
 
-        <!-- ISI BOX = LEBIH BESAR RAMPING -->
         <div class="text-center">
-          <p id="tanggal" class="text-[26px] text-ss text-white"></p>
-          <p class="text-[26px] text-ss text-yellow">Harga Pi/USDT</p>
-          <p id="hargaUSDT" class="text-[26px] text-ss text-white">$0.1154</p>
-          <p class="text-[26px] text-ss text-sky-300">Pi/Rupiah</p>
-          <p id="hargaIDR" class="text-[26px] text-ss text-white">Rp 2.076,48</p>
-          <p class="text-[26px] text-ss text-green-300">Dollar/Rupiah</p>
-          <p id="kursUSDIDR" class="text-[26px] text-ss text-white">Rp 17.900,00</p> <!-- NO DUMMY -->
+          <p id="tanggal" class="text- text-ss text-white"></p>
+          <p class="text- text-ss text-emas">Harga Pi/USDT</p> <!-- EMAS -->
+          <p id="hargaUSDT" class="text- text-ss text-white">$0.1154</p>
+          <p class="text- text-ss text-sky-300">Pi/Rupiah</p>
+          <p id="hargaIDR" class="text- text-ss text-white">Rp 2.076,48</p>
+          <p class="text- text-ss text-green-300">Dollar/Rupiah</p>
+          <p id="kursUSDIDR" class="text- text-ss text-white">Rp 17.900,00</p>
         </div>
 
-        <div class="text-center mb-0">
+        <!-- TURUN KE BAWAH, KASIH JARAK DARI FOOT -->
+        <div class="text-center mb-2"> <!-- mb-2 = jarak 8px dari garis kuning foot -->
           <div class="w-12 h-12 rounded-lg border-kuning ring-2 mx-auto bg-blue-500 flex items-center justify-center">
             <p class="text-xl text-ss text-white" style="line-height:1;">My<br>Track</p>
           </div>
@@ -63,7 +63,7 @@
   </main>
 
   <footer class="bg-dongker px-3 border-kuning-t flex items-center justify-center fixed bottom-0 w-full h-14">
-    <button id="btnBayar" class="text-lg text-ss text-yellow w-full">Login Pi</button>
+    <button id="btnBayar" class="text-lg text-ss text-emas w-full">Login Pi</button> <!-- EMAS -->
   </footer>
 
   <script>
@@ -96,10 +96,10 @@
         if(data['pi-network']) {
           const usd = data['pi-network'].usd;
           const idr = data['pi-network'].idr;
-          document.getElementById('hargaUSDT').innerText = `$${usd.toFixed(4)}`; // LIVE
-          document.getElementById('hargaIDR').innerText = `Rp ${idr.toLocaleString('id-ID')}`; // LIVE
+          document.getElementById('hargaUSDT').innerText = `$${usd.toFixed(4)}`;
+          document.getElementById('hargaIDR').innerText = `Rp ${idr.toLocaleString('id-ID')}`;
           const kurs = idr / usd;
-          document.getElementById('kursUSDIDR').innerText = `Rp ${kurs.toLocaleString('id-ID', {minimumFractionDigits: 2})}`; // LIVE 17.9xx
+          document.getElementById('kursUSDIDR').innerText = `Rp ${kurs.toLocaleString('id-ID', {minimumFractionDigits: 2})}`;
         }
       } catch (e) {}
     }
@@ -107,4 +107,4 @@
     setInterval(updateData, 5000);
   </script>
 </body>
-      </html>
+</html>
