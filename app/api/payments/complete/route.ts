@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     const res = await fetch(`https://api.minepi.com/v2/payments/${paymentId}/complete`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.PI_NETWORK_API_KEY}`, // Pastiin Bearer
+        'Authorization': `key ${process.env.PI_NETWORK_API_KEY}`, // Pastiin Bearer
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ txid })
