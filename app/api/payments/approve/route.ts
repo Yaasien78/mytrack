@@ -11,21 +11,23 @@ export async function POST(req: NextRequest) {
     const res = await fetch(`https://api.minepi.com/v2/payments/${paymentId}/approve`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.PI_NETWORK_API_KEY}`, // Pastiin Bearer
+        'Authorization': `Bearer ${process.env.PI_NETWORK_API_KEY}`, // <-- PASTIIN SAMA
         'Content-Type': 'application/json'
       }
     });
 
-    if (!res.ok) {
-      const err = await res.text();
-      console.error('Approve Pi Error:', err);
-      return NextResponse.json({ error: 'Approve gagal', detail: err }, { status: 500 });
+    const data = await res.json();
+
+    if (!res.ok) { // <-- INGET PAKE !
+      console.error('Approve Pi Error:', data);
+      return NextResponse.json({ error: 'Approve gagal', detail: data }, { status: 500 });
     }
-    
-    return NextResponse.json({ success: true });
+
+    console.log('Payment APPROVED:', paymentId);
+    return NextResponse.json(data); // <-- Kirim balik ke Pi
 
   } catch (e) {
     console.error(e);
     return NextResponse.json({ error: 'Server error approve' }, { status: 500 });
   }
-    }
+      }
