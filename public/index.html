@@ -62,8 +62,6 @@
 
   <script>
     if(!window.Pi){alert('Buka di Pi Browser ya bro, bukan Chrome');}
-    
-    // KUNCI FINAL: Pake OAuth Client ID dari SS lu
     Pi.init({version:"2.0", sandbox:true, apiKey:"VFGq4KCSvwrG-srEpNIg23WzDxO4-H06qrcuOAJ5rgQ"}); 
     
     let currentUser=null;
@@ -102,7 +100,7 @@
       if(isPaid){alert('Udah bayar bro');toggleMenu();return;}
       
       Pi.createPayment({
-        amount:0.1, // Bayar 0.1 Pi
+        amount:0.1,
         memo:'Bayar Buka Menu VIP My Track 0.1 Pi',
         metadata:{app:'mytrack', action:'unlock_menu'}
       },{
@@ -127,7 +125,25 @@
     menuBayar.onclick=(e)=>{e.preventDefault();bayarBukaMenu();}
     menuKonten.onclick=(e)=>{e.preventDefault();if(isPaid){alert('Selamat datang di Konten VIP')}};
 
-    fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr')).then(r=>r.json()).then(d=>{if(d['pi-network']){const u=d['pi-network'].usd,i=d['pi-network'].idr;document.getElementById('usd').innerText=`$${u.toFixed(4)}`;document.getElementById('idr').innerText=`Rp ${i.toLocaleString('id-ID')}`;document.getElementById('kurs').innerText=`Rp ${(i/u).toLocaleString('id-ID',{minimumFractionDigits:2})}`;document.getElementById('kurs').style.color='#fff';}}).catch(()=>{});
+    // FIX FINAL: Anti Crash Harga Pi
+    try{
+      fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr'))
+      .then(r=>r.json())
+      .then(d=>{
+        if(d && d['pi-network']){ // Cek d ada gak, pi-network ada gak
+          const u=d['pi-network'].usd,i=d['pi-network'].idr;
+          document.getElementById('usd').innerText=`$${u.toFixed(4)}`;
+          document.getElementById('idr').innerText=`Rp ${i.toLocaleString('id-ID')}`;
+          document.getElementById('kurs').innerText=`Rp ${(i/u).toLocaleString('id-ID',{minimumFractionDigits:2})}`;
+          document.getElementById('kurs').style.color='#fff';
+        }else{
+          document.getElementById('kurs').innerText='API Down'; // Kalau gak ada data
+        }
+      })
+      .catch(()=>{document.getElementById('kurs').innerText='API Down';}); // Kalau fetch gagal
+    }catch(e){
+      document.getElementById('kurs').innerText='API Error'; // Kalau JS error
+    }
   </script>
 </body>
-  </html>
+</html>
