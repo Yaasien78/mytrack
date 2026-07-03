@@ -30,17 +30,27 @@
   </main>
 
   <script>
-  // 1. CUKUP INIT DOANG. Gak usah authenticate lagi
+  // 1. Init Dulu
   Pi.init({ 
     version: "2.0", 
     sandbox: true,  
     clientId: "mytrack.id"
   });
 
-  // 2. Ambil username dari storage aja, biar gak error
-  document.getElementById('btnUser').innerText = "Test User"; // Ganti manual dulu buat ngetes
+  // 2. Coba Ambil Izin Lagi Diam-Diam Pas Halaman Buka
+  let user = null;
+  Pi.authenticate(['username', 'payments'])
+    .then(auth => {
+        user = auth.user;
+        document.getElementById('btnUser').innerText = user.username;
+    })
+    .catch(err => {
+        // Kalau gagal, baru balik ke index. Gak usah alert
+        console.log("Belum ada session, balik login");
+        window.location.href = "index.html";
+    });
 
-  // 3. Fungsi Bayar Tetap Jalan
+  // 3. Fungsi Bayar
   async function bayarVIP() {
     try {
       const payment = await Pi.createPayment({
