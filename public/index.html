@@ -70,76 +70,78 @@
 </div>
 
 <script>
-  // V1 = Cuma gini doang. Gak ada appId, gak ada sandbox
-  Pi.init({ version: "1.0" });
+  // 1. JANGAN INIT DULUAN. TUNGGU SDK NYA SIAP
+  function onPiSDKLoaded() {
+    Pi.init({ version: "1.0" }); // V1 = Gak ada appId
 
-  let user = "";
-  let chart;
+    let user = "";
+    let chart;
 
-  window.onload = async function() {
-    try {
-      // V1 cuma butuh 'username'. 'payments' nanti di menu.html
-      const auth = await Pi.authenticate(['username']);
-      user = auth.user.username;
+    window.onload = async function() {
+      try {
+        const auth = await Pi.authenticate(['username']);
+        user = auth.user.username;
 
-      document.getElementById('username').innerText = user;
-      document.getElementById('footerUser').innerText = user;
-      setTanggal();
-      initChart();
-      getHarga();
-      setInterval(getHarga, 15000); // Update 15 detik
+        document.getElementById('username').innerText = user;
+        document.getElementById('footerUser').innerText = user;
+        setTanggal();
+        initChart();
+        getHarga();
+        setInterval(getHarga, 15000);
 
-      document.getElementById('loading').classList.add('hidden');
-      document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
 
-    } catch (err) {
-      document.getElementById('loading').innerText = "Gagal Auto Login. Error: " + err;
-      console.error(err);
+      } catch (err) {
+        document.getElementById('loading').innerText = "Gagal Auto Login. Error: " + err;
+      }
+    }
+
+    function setTanggal() {
+      const d = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('tanggal').innerText = d.toLocaleDateString('id-ID', options);
+    }
+
+    async function getHarga() {
+      try {
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network,tether&vs_currencies=usd,id');
+        const data = await res.json();
+        const piUsd = data['pi-network']?.usd || 0.0;
+        const usdtIdr = data['tether']?.idr || 16500;
+        const piIdr = piUsd * usdtIdr;
+        document.getElementById('piUsdt').innerText = `$${piUsd.toFixed(4)}`;
+        document.getElementById('usdtIdr').innerText = `Rp${usdtIdr.toLocaleString('id-ID')}`;
+        document.getElementById('piIdr').innerText = `Rp${piIdr.toLocaleString('id-ID')}`;
+        document.getElementById('lastUpdate').innerText = new Date().toLocaleTimeString('id-ID');
+        updateChart(piUsd);
+      } catch(e) { document.getElementById('piUsdt').innerText = "Gagal Load"; }
+    }
+
+    function initChart() {
+      const ctx = document.getElementById('chart').getContext('2d');
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: { labels: [], datasets: [{ label: 'Pi/USD', data: [], borderColor: '#fbbf24', tension: 0.3 }] },
+        options: { plugins:{legend:{display:false}}, scales:{x:{display:false}, y:{ticks:{color:'#fff'}}} }
+      });
+    }
+    function updateChart(harga) {
+      const now = new Date().toLocaleTimeString('id-ID', {minute:'2-digit', second:'2-digit'});
+      if(chart.data.labels.length > 20) { chart.data.labels.shift(); chart.data.datasets[0].data.shift(); }
+      chart.data.labels.push(now);
+      chart.data.datasets[0].data.push(harga);
+      chart.update();
     }
   }
 
-  function setTanggal() {
-    const d = new Date();
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('tanggal').innerText = d.toLocaleDateString('id-ID', options);
+  // 2. INI KUNCINYA BRO. PI BROWSER WAJIB PAKE INI
+  if(window.Pi){ 
+    onPiSDKLoaded(); // Kalau SDK udah load duluan
+  } else { 
+    document.addEventListener('pi-sdk-loaded', onPiSDKLoaded); // Kalau SDK telat load
   }
-
-  async function getHarga() {
-    try {
-      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network,tether&vs_currencies=usd,id');
-      const data = await res.json();
-
-      const piUsd = data['pi-network']?.usd || 0.0; // Pi blm listing = 0.00
-      const usdtIdr = data['tether']?.idr || 16500;
-      const piIdr = piUsd * usdtIdr;
-
-      document.getElementById('piUsdt').innerText = `$${piUsd.toFixed(4)}`;
-      document.getElementById('usdtIdr').innerText = `Rp${usdtIdr.toLocaleString('id-ID')}`;
-      document.getElementById('piIdr').innerText = `Rp${piIdr.toLocaleString('id-ID')}`;
-      document.getElementById('lastUpdate').innerText = new Date().toLocaleTimeString('id-ID');
-
-      updateChart(piUsd);
-    } catch(e) {
-      document.getElementById('piUsdt').innerText = "Gagal Load";
-    }
-  }
-
-  function initChart() {
-    const ctx = document.getElementById('chart').getContext('2d');
-    chart = new Chart(ctx, {
-      type: 'line',
-      data: { labels: [], datasets: [{ label: 'Pi/USD', data: [], borderColor: '#fbbf24', borderWidth:2, tension: 0.3, fill:false }] },
-      options: { plugins:{legend:{display:false}}, scales:{x:{display:false, ticks:{color:'#fff'}}, y:{ticks:{color:'#fff'}}} }
-    });
-  }
-  function updateChart(harga) {
-    const now = new Date().toLocaleTimeString('id-ID', {minute:'2-digit', second:'2-digit'});
-    if(chart.data.labels.length > 20) { chart.data.labels.shift(); chart.data.datasets[0].data.shift(); }
-    chart.data.labels.push(now);
-    chart.data.datasets[0].data.push(harga);
-    chart.update();
-  }
-</script>
+          </script>
 
 </body>
 </html>
