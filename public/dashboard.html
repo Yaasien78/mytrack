@@ -2,100 +2,90 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>My Track Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard My Track</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-:root{--biru:#0A1F44; --ungu:#4B0082; --emas:#DAA520; --hitam:#000;}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;height:100%;background:#1A0033;color:#fff;font-family:'Segoe UI', Arial, sans-serif;overflow-y:auto}
-.header{position:sticky;top:0;left:0;width:100%;z-index:10;padding:12px 15px;display:flex;align-items:center;gap:10px;background:var(--biru);border-bottom:2px solid var(--emas)} <!-- DARI 3px -> 2px -->
-.menu{font-size:2em;cursor:pointer;color:var(--emas);font-weight:700;line-height:1;text-decoration:none}
-.logo{font-size:1.8em;font-weight:900;color:var(--emas);text-shadow:2px 2px 4px var(--hitam);flex-grow:1; text-align:center}
-#userName{color:var(--emas); font-weight:700; font-size:0.9em;}
-.main{padding:15px;max-width:600px;margin:0 auto}
-.card{background:var(--ungu);border-radius:15px;padding:15px;width:100%;border:2px solid var(--emas);box-shadow:0 0 8px rgba(218,165,32,0.2);text-align:center;margin-bottom:15px} <!-- DARI 2px -> 2px TETEP + shadow dikecilin -->
-.title{font-size:1.1em;font-weight:500;color:#ddd;margin-bottom:5px}
-.harga-usd{font-size:3em;font-weight:900;color:var(--emas);margin:5px 0;line-height:1}
-.harga-rp{font-size:1.2em;font-weight:700;color:var(--emas);margin-bottom:5px}
-.persen{font-size:1.2em;font-weight:700;margin-bottom:5px}
-.chart-box{position:relative;height:280px;width:100%}
-.grid{display:flex;gap:15px}
-.grid .card{flex:1}
-</style>
 </head>
-<body>
-
-<header class="header">
-  <a href="/menu.html" class="menu">≡</a>
-  <div class="logo">My Track</div>
-  <div id="userName">Loading...</div>
+<body class="bg-[#0A0082] text-white font-sans">
+<header class="flex justify-between items-center p-4 bg-[#07004D]">
+  <h1 class="text-xl font-bold text-yellow-400">Dashboard</h1>
+  <button id="btnUser" class="text-sm font-bold text-yellow-400">Loading...</button>
 </header>
 
-<main class="main">
-  <div class="card">
-    <div class="title">Harga Pi/USD Live</div>
-    <div class="harga-usd" id="hargaUsd">Loading...</div>
-    <div class="harga-rp" id="hargaRp">Harga /pi = Rp -</div>
-    <div class="persen" id="persenPi">-</div>
+<main class="p-4">
+  <!-- HARGA PI LIVE -->
+  <div class="bg-[#1A10A3] p-4 rounded-2xl mb-4">
+    <div class="flex justify-between items-center">
+      <div>
+        <p class="text-sm text-gray-300">Pi / USD</p>
+        <p id="price" class="text-3xl font-bold">$. --</p>
+      </div>
+      <div class="text-right">
+        <p id="change" class="text-lg font-bold">--%</p>
+        <p id="idr" class="text-sm text-gray-300">Rp --</p>
+      </div>
+    </div>
+    <canvas id="chart" class="mt-2"></canvas>
   </div>
-  <div class="card">
-    <div class="chart-box"><canvas id="chartPi"></canvas></div>
-  </div>
-  <div class="grid">
-    <div class="card"><div class="title">Market Cap</div><div style="color:var(--emas);font-weight:900;font-size:1.4em" id="mcap">-</div></div>
-    <div class="card"><div class="title">Volume 24h</div><div style="color:var(--emas);font-weight:900;font-size:1.4em" id="vol">-</div></div>
-  </div>
+
+  <!-- TOMBOL KE MENU VIP -->
+  <a href="/menu.html" class="block w-full bg-yellow-400 text-black font-bold text-xl p-4 rounded-2xl text-center active:scale-95">
+    Buka Menu VIP 0.1 Pi
+  </a>
 </main>
 
 <script>
-let chart; 
-let rateIdr = 16000;
+Pi.init({ version: "2.0", sandbox: true });
 
-window.onload = async function(){
-  let username = localStorage.getItem('pi_username');
-  if(!username){ 
-    window.location.href = '/index.html'; 
-    return;
-  }
-  document.getElementById('userName').textContent = 'Welcome ' + username;
-
-  await fetchKurs();
-  fetchData();
-  setInterval(fetchKurs, 60000);
-  setInterval(fetchData, 10000);
+// 1. CEK LOGIN DULU. KALAU BELUM LOGIN = TENDANG KE INDEX
+const username = localStorage.getItem('pi_username');
+if(!username){
+  window.location.href = '/index.html';
+}else{
+  document.getElementById('btnUser').innerText = 'Hi, '+username;
 }
 
-async function fetchKurs(){ try{ const r = await fetch('https://open.er-api.com/v6/latest/USD'); const d = await r.json(); if(d.rates.IDR) rateIdr = d.rates.IDR; }catch(e){} }
+let chart;
+let dataPoints = [];
 
-async function fetchData(){
+// 2. GRAFIK HARGA
+function initChart(){
+  const ctx = document.getElementById('chart').getContext('2d');
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: [], datasets: [{ label: 'Pi/USD', data: [], borderColor: '#facc15', tension: 0.4, fill: false }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+  });
+}
+
+// 3. AMBIL DATA DARI COINGECKO
+async function updateData(){
   try{
-    const res = await fetch('https://api.coingecko.com/api/v3/coins/pi-network?localization=false&tickers=false&market_data=true&sparkline=true');
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr&include_24hr_change=true');
     const data = await res.json();
-    const m = data.market_data;
-    let priceUsd = m.current_price.usd || 0.006;
-    let prices = m.sparkline_7d.price.slice(-50);
-    if(!prices || prices.length < 2){ prices = [priceUsd, priceUsd*1.02, priceUsd*0.98, priceUsd*1.01, priceUsd]; }
+    const pi = data['pi-network'];
     
-    document.getElementById('hargaUsd').textContent = '$' + priceUsd.toFixed(4);
-    document.getElementById('hargaRp').textContent = 'Harga /pi = Rp ' + Math.round(priceUsd * rateIdr).toLocaleString('id-ID');
-    document.getElementById('mcap').textContent = '$' + (m.market_cap.usd/1000000).toFixed(2) + 'M';
-    document.getElementById('vol').textContent = '$' + (m.total_volume.usd/1000000).toFixed(2) + 'M';
-    document.getElementById('persenPi').textContent = m.price_change_percentage_24h.toFixed(2) + '%';
-    document.getElementById('persenPi').style.color = m.price_change_percentage_24h >= 0 ? '#00ff88' : '#ff5555';
+    document.getElementById('price').innerText = '$ '+pi.usd.toFixed(4);
+    document.getElementById('idr').innerText = 'Rp '+pi.idr.toLocaleString('id-ID');
+    document.getElementById('change').innerText = pi.usd_24h_change.toFixed(2)+'%';
+    document.getElementById('change').className = pi.usd_24h_change >= 0? 'text-lg font-bold text-green-400' : 'text-lg font-bold text-red-400';
+    
+    dataPoints.push(pi.usd);
+    if(dataPoints.length > 20) dataPoints.shift();
+    chart.data.labels = dataPoints.map((_,i)=>i);
+    chart.data.datasets[0].data = dataPoints;
+    chart.update();
 
-    if(!chart){
-      chart = new Chart(document.getElementById('chartPi'), {
-        type: 'line',
-        data: {labels: prices.map((_,i)=>i), datasets: [{label: 'Pi/USD', data: prices, borderColor: '#DAA520', backgroundColor: 'rgba(218,165,32,0.15)', tension: 0.4, fill: true, pointRadius: 0, borderWidth: 2}]}, <!-- GARIS CHART TETEP 2px -->
-        options: {responsive: true, maintainAspectRatio: false, plugins:{legend:{display:false}}, scales:{x:{display:false}, y:{ticks:{color:'#ddd', callback: v => v.toFixed(4).replace('.',',')}}}}
-      });
-    }else{ chart.data.datasets[0].data = prices; chart.update(); }
   }catch(e){
-    console.error(e);
-    document.getElementById('hargaUsd').textContent = '$0.0060';
+    document.getElementById('price').innerText = 'API Down';
   }
 }
+
+initChart();
+updateData();
+setInterval(updateData, 15000); // Update 15 detik sekali
 </script>
 </body>
 </html>
