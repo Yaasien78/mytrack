@@ -95,8 +95,10 @@ function bayarBukaMenu(){ // <- MESIN BAYAR
 Pi.authenticate({ scopes: ['username', 'payments'] }).then(auth => {
   currentUser = auth.user;
   document.getElementById('btnLogin').innerText = 'Welcome '+auth.user.username;
-}).catch(() => {
+  alert('LOGIN SUKSES: '+auth.user.username); // <- TAMBAH INI
+}).catch((err) => { // <- TANGKEP ERROR NYA
   document.getElementById('btnLogin').innerText = 'Login Pi';
+  alert('LOGIN GAGAL: '+err); // <- TAMBAH INI
 });
     initChart(); updateData(); setInterval(updateData, 15000);
   </script>
