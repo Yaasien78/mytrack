@@ -10,22 +10,26 @@
   <button id="btn">Masuk dengan Pi</button>
 
   <script>
-    alert("1. JS KELOAD"); // Tes A
+    let piReady = false;
 
-    // KUNCI V1: TUNGGU 1 DETIK SEBELUM INIT
-    setTimeout(() => {
-      alert("2. MAU INIT"); // Tes B
-      Pi.init({ version: "1.0" }); 
-      alert("3. INIT SUKSES"); // Tes C
-    }, 1000); 
-
+    // INIT HANYA PAS DIKLIK PERTAMA KALI
     document.getElementById('btn').onclick = async () => {
-      alert("4. TOMBOL KEKLICK");
+      const btn = document.getElementById('btn');
+      
+      if(!piReady){
+        btn.innerText = "Loading SDK...";
+        Pi.init({ version: "1.0" }); // INIT DI SINI
+        await new Promise(r => setTimeout(r, 500)); // Kasih jeda 0.5 detik
+        piReady = true;
+      }
+
+      btn.innerText = "Login...";
       try {
         const auth = await Pi.authenticate(['username']);
-        alert("5. SUKSES LOGIN: " + auth.user.username);
+        alert("SUKSES: " + auth.user.username); // Kalo nongol ini = MENANG
       } catch(e) {
         alert("ERROR: " + e.message);
+        btn.innerText = "Masuk dengan Pi";
       }
     }
   </script>
