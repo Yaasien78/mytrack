@@ -15,11 +15,13 @@ export async function POST(req: Request) {
   });
 
   const data = await res.json();
-  if (!res.ok) {
-    console.error("Approve GAGAL:", data); 
-    return NextResponse.json({ error: 'Approve gagal', detail: data }, { status: 500 });
-  }
-
+  const data = await res.json();
+if (!res.ok) { // <- KASIH TANDA SERU ! 
+  console.error("Approve GAGAL", data);
+  return NextResponse.json({ error: 'Approve gagal', detail: data }, { status: 500 });
+}
+console.log("Payment APPROVED:", paymentId);
+return NextResponse.json(data); // <- Kalau sukses, balikin data
   console.log("Payment APPROVED:", paymentId);
   return NextResponse.json(data);
 }
