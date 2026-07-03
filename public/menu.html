@@ -25,7 +25,7 @@
     <p class="font-bold">🔥 Sinyal VIP Terbuka</p>
     <p class="text-sm mt-2">1. BUY Pi < 0.35</p>
     <p class="text-sm">2. SELL Pi > 0.38</p>
-  </div>
+  </div><button id="btn-vip">Beli VIP 1 Bulan - 1 Pi</button>
 </main>
 
 <script>
@@ -97,5 +97,51 @@ function toggleMenu(open){
   }
 }
 </script>
+  <script>
+const btnVip = document.getElementById('btn-vip');
+
+btnVip.onclick = async () => {
+  try {
+    btnVip.disabled = true;
+    btnVip.textContent = 'Nembak approve...';
+
+    const payment = await Pi.createPayment({
+      amount: 1,
+      memo: "AKSES VIP 1 BULAN - mytrack.id", // <- INI YANG MUNCUL DI POPUP
+      metadata: { product: "vip_bulanan" }
+    }, {
+      onReadyForServerApproval: async (paymentId) => {
+        await fetch('/api/payments/approve', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ paymentId })
+        });
+      },
+      onReadyForServerCompletion: async (paymentId, txid) => {
+        await fetch('/api/payments/complete', {
+          method: 'POST', 
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ paymentId, txid })
+        });
+        alert('Sukses! VIP Aktif');
+        btnVip.textContent = 'Beli VIP 1 Bulan - 1 Pi';
+        btnVip.disabled = false;
+      },
+      onCancel: () => {
+        alert('Dibatalkan');
+        btnVip.textContent = 'Beli VIP 1 Bulan - 1 Pi';
+        btnVip.disabled = false;
+      },
+      onError: (err) => {
+        alert('Error: ' + err.message);
+        btnVip.textContent = 'Beli VIP 1 Bulan - 1 Pi';
+        btnVip.disabled = false;
+      }
+    });
+  } catch(e){
+    alert('Gagal: ' + e.message);
+  }
+};
+  </script>
 </body>
 </html>
