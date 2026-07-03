@@ -52,15 +52,42 @@
 
     // Fungsi tombol harus di luar window.onload
     async function bayarVIP() {
-      try {
-        await Pi.authenticate(['payments']); 
-        const payment = await Pi.createPayment({ amount: 0.1, memo: "Buka Menu VIP", metadata: { product: "VIP_1_BULAN" } });
-        document.getElementById('menuVIP').classList.remove('hidden');
-        document.getElementById('btnBayar').style.display = 'none';
-      } catch (err) { 
-        alert("Gagal: " + err); 
+  try {
+    await Pi.authenticate(['payments']); // Minta izin bayar dulu
+
+    const payment = await Pi.createPayment({ 
+      amount: 0.1, 
+      memo: "Buka Menu VIP", 
+      metadata: { product: "VIP_1_BULAN" },
+
+      // INI KUNCINYA BRO. WAJIB ADA 4 INI
+      callbacks: {
+        onReadyForServerApproval: function(paymentId) {
+          console.log("1. Approve:", paymentId);
+          // Nanti kita isi buat backend. Skrg kosongin aja
+        },
+        onReadyForServerCompletion: function(paymentId, txid) {
+          console.log("2. Sukses:", paymentId, txid);
+          // KALO BAYAR SUKSES, BUKA VIP NYA DI SINI
+          document.getElementById('menuVIP').classList.remove('hidden');
+          document.getElementById('btnBayar').style.display = 'none';
+          alert("Pembayaran Sukses! VIP Terbuka");
+        },
+        onCancel: function(paymentId) {
+          console.log("3. Dibatalin:", paymentId);
+          alert("Pembayaran dibatalkan");
+        },
+        onError: function(error, payment) {
+          console.log("4. Error:", error);
+          alert("Gagal: " + error);
+        }
       }
-    }
+    });
+
+  } catch (err) { 
+    alert("Gagal Auth: " + err); 
+  }
+                 }
   </script>
 </body>
 </html>
