@@ -30,18 +30,14 @@
         <p class="text-xs text-purple-200 mt-1">Kurs: 1 USD = Rp 17934.50 | Update <span id="jam"></span></p>
       </div>
       <div class="bg-ungu border-gold-2 rounded-2xl p-2 h-64"><canvas id="priceChart"></canvas></div>
-    </main>
+    </main> <button id="btnBayarMenu" onclick="bayarBukaMenu()" class="bg-yellow-400 text-black font-bold p-3 rounded-xl w-full mt-4">Bayar 0.1 Pi Buka Menu</button>
     <footer class="bg-dongker p-3 border-t-2 border-yellow-400 text-center fixed bottom-0 w-full left-0">
       <button id="btnLogin" class="text-xl font-bold text-yellow-400 active:scale-95 w-full">Loading...</button>
     </footer>
   </div>
   <script>
     let chart; let dataPoints = [];
-    Pi.init({ version: "2.0", sandbox: true });
-    Pi.authenticate({ scopes: ['username', 'payments'], onIncompletePaymentFound: () => {} })
-   .then(auth => { document.getElementById('btnLogin').innerText = `Welcome ${auth.user.username}`; })
-   .catch(() => { document.getElementById('btnLogin').innerText = 'Login Pi'; });
-    async function updateData() {
+Pi.init({ version: "2.0", sandbox: true }); // <- CUMA INIT DOANG, JANGAN AUTH DI SINI
       try {
         const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr&include_24hr_change=true');
         const pi = (await res.json())['pi-network'];
@@ -61,6 +57,47 @@
       });
     }
     function updateChart() { if(chart) { chart.data.datasets[0].data = dataPoints; chart.update(); } }
+    let currentUser = null;
+let isPaid = false;
+
+function bayarBukaMenu(){ // <- MESIN BAYAR
+    if(!currentUser){alert('Login dulu bro');return;}
+    if(isPaid){alert('Udah bayar bro');return;}
+
+    Pi.createPayment({ // <- INI YANG BIKIN POPUP MUNCUL
+      amount: 0.1,
+      memo: 'Bayar Buka Menu VIP My Track 0.1 Pi',
+      metadata: {app: 'mytrack', action: 'unlock_menu'},
+      onReadyForServerApproval: async (paymentId) => {
+        alert("Nembak approve...");
+        await fetch('/api/payments/approve', {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ paymentId })
+        });
+      },
+      onReadyForServerCompletion: async (paymentId, txid) => {
+        await fetch('/api/payments/complete', {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ paymentId, txid })
+        });
+        isPaid = true;
+        document.getElementById('btnBayarMenu').innerText='✅ Udah Bayar';
+        alert('Sukses! Menu VIP Kebuka. Tx: ' + txid);
+      },
+      onCancel: () => alert('Batal Bayar'),
+      onError: (error) => alert('Error: ' + error)
+    });
+} // <- TUTUP FUNGSI
+
+// SIMPAN USER PAS LOGIN
+Pi.authenticate({ scopes: ['username', 'payments'] }).then(auth => {
+  currentUser = auth.user;
+  document.getElementById('btnLogin').innerText = 'Welcome '+auth.user.username;
+}).catch(() => {
+  document.getElementById('btnLogin').innerText = 'Login Pi';
+});
     initChart(); updateData(); setInterval(updateData, 15000);
   </script>
 </body>
