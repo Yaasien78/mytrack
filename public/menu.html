@@ -1,58 +1,68 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Menu VIP</title>
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu VIP</title>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#0A0082] text-white font-sans">
-<header class="flex justify-between items-center p-4 bg-[#07004D]">
-  <a href="/dashboard.html" class="text-yellow-400">← Back</a>
-  <button id="btnUser" class="text-sm font-bold text-yellow-400">Loading...</button>
-</header>
+  <header class="flex justify-between items-center p-4 bg-[#07004D]">
+    <a href="dashboard.html" class="text-yellow-400">Back</a>
+    <button id="btnUser" class="text-sm font-bold text-yellow-400">Loading...</button>
+  </header>
 
-<main class="p-4 text-center">
-  <h1 class="text-2xl font-bold text-yellow-400 mb-4">Menu VIP</h1>
-  <p class="text-gray-300 mb-6">Buka akses semua sinyal premium</p>
+  <main class="p-4 text-center">
+    <h1 class="text-2xl font-bold text-yellow-400 mb-4">Menu VIP</h1>
+    <p class="text-gray-300 mb-6">Buka akses semua sinyal premium</p>
 
-  <button id="btnBayar" class="w-full bg-yellow-400 text-black font-bold text-xl p-4 rounded-2xl active:scale-95">
-    Bayar 0.1 Pi Untuk Buka
-  </button>
-  
-  <div id="menuVIP" class="hidden mt-6 text-left bg-[#1A10A3] p-4 rounded-2xl">
-    <p class="font-bold">🔥 Sinyal VIP Terbuka</p>
-    <p class="text-sm mt-2">1. BUY Pi < 0.35</p>
-    <p class="text-sm">2. SELL Pi > 0.38</p>
-  </div><button id="btn-vip">Beli VIP 1 Bulan - 1 Pi</button>
-</main>
+    <button id="btnBayar" onclick="bayarVIP()" class="w-full bg-yellow-400 text-black font-bold text-xl p-4 rounded-2xl active:scale-95">
+      Bayar 0.1 Pi Untuk Buka
+    </button>
 
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script>
-  // PENTING: Mode Sandbox = Test
-  Pi.init({ 
-    version: "2.0", 
-    sandbox: true,  // <-- ini kuncinya buat ngetes
-    clientId: "mytrack.id" 
-  });
+    <div id="menuVIP" class="hidden mt-6 text-left bg-[#1A1A3] p-4 rounded-2xl">
+      <p class="font-bold">🔥 Sinyal VIP Terbuka</p>
+      <p class="text-sm mt-2">1. BUY Pi < 0.35</p>
+      <p class="text-sm">2. SELL Pi > 0.38</p>
+      <button id="btn-vip" class="mt-4 w-full bg-green-600 p-2 rounded">Beli VIP 1 Bulan - 1 Pi</button>
+    </div>
+  </main>
 
-  async function login() {
-    const auth = await Pi.authenticate(['username', 'payments'], 
-      function onIncompletePayment(payment) { console.log(payment); }
-    );
-    console.log("Login OK:", auth);
-  }
-  
-  async function bayarVIP() {
-    const paymentData = {
-      amount: 0.1,
-      memo: "Buka Menu VIP My Track",
-      metadata: { product: "VIP_1_BULAN" }
-    };
-    const payment = await Pi.createPayment(paymentData);
-    console.log("Bayar:", payment);
-  }
-</script>
+  <script>
+    // 1. Init Sandbox
+    Pi.init({ 
+      version: "2.0", 
+      sandbox: true,  
+      clientId: "mytrack.id"
+    });
+
+    // 2. Cek Login + Tampilkan Username
+    Pi.authenticate(['username', 'payments']).then(auth => {
+        document.getElementById('btnUser').innerText = auth.user.username;
+    }).catch(err => {
+        alert("Belum login. Balik ke index dulu");
+        window.location.href = "index.html";
+    });
+
+    // 3. Fungsi Bayar
+    async function bayarVIP() {
+      try {
+        const payment = await Pi.createPayment({
+          amount: 0.1,
+          memo: "Buka Menu VIP My Track",
+          metadata: { product: "VIP_1_BULAN" }
+        });
+        console.log("Bayar Sukses:", payment);
+        
+        // Kalau sukses, tampilin menu VIP
+        document.getElementById('menuVIP').classList.remove('hidden');
+        document.getElementById('btnBayar').style.display = 'none';
+
+      } catch (err) {
+        alert("Bayar Gagal: " + err);
+      }
+    }
+  </script>
 </body>
 </html>
