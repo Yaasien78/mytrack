@@ -2,16 +2,31 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <style>body{background:#0f172a;color:#fff;text-align:center;padding-top:100px}</style>
+  <style>body{background:#0f172a;color:#fff;text-align:center;padding-top:100px} button{padding:14px 24px;background:#fbbf24;border:none;border-radius:12px;font-weight:bold}</style>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 </head>
 <body>
-  <h1>TEST TOMBOL</h1>
-  <button id="btn" style="padding:20px;background:yellow">KLIK GUA</button>
+  <h1>My Track 1.0</h1>
+  <button id="btn">Masuk dengan Pi</button>
 
   <script>
-    alert("JS KELOAD"); // TES 1: Kalo ini gak nongol = JS lu mati
-    document.getElementById('btn').onclick = () => {
-      alert("TOMBOL HIDUP"); // TES 2: Kalo ini nongol = Tombol aman
+    alert("1. JS KELOAD"); // Tes A
+
+    // KUNCI V1: TUNGGU 1 DETIK SEBELUM INIT
+    setTimeout(() => {
+      alert("2. MAU INIT"); // Tes B
+      Pi.init({ version: "1.0" }); 
+      alert("3. INIT SUKSES"); // Tes C
+    }, 1000); 
+
+    document.getElementById('btn').onclick = async () => {
+      alert("4. TOMBOL KEKLICK");
+      try {
+        const auth = await Pi.authenticate(['username']);
+        alert("5. SUKSES LOGIN: " + auth.user.username);
+      } catch(e) {
+        alert("ERROR: " + e.message);
+      }
     }
   </script>
 </body>
