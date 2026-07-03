@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Menu VIP</title>
+  <!-- Cukup 1 SDK aja -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -30,43 +31,44 @@
   </main>
 
   <script>
-  // 1. Init Dulu
-  Pi.init({ 
-    version: "2.0", 
-    sandbox: true,  
-    clientId: "mytrack.id"
-  });
-
-  // 2. Coba Ambil Izin Lagi Diam-Diam Pas Halaman Buka
-  let user = null;
-  Pi.authenticate(['username', 'payments'])
-    .then(auth => {
-        user = auth.user;
-        document.getElementById('btnUser').innerText = user.username;
-    })
-    .catch(err => {
-        // Kalau gagal, baru balik ke index. Gak usah alert
-        console.log("Belum ada session, balik login");
-        window.location.href = "index.html";
+    // 1. INIT DOANG. GAK ADA AUTHENTICATE
+    Pi.init({ 
+      version: "2.0", 
+      sandbox: true,  
+      clientId: "mytrack.id" // <-- GANTI INI
     });
 
-  // 3. Fungsi Bayar
-  async function bayarVIP() {
-    try {
-      const payment = await Pi.createPayment({
-        amount: 0.1,
-        memo: "Buka Menu VIP My Track",
-        metadata: { product: "VIP_1_BULAN" }
-      });
-      console.log("Bayar Sukses:", payment);
-      
-      document.getElementById('menuVIP').classList.remove('hidden');
-      document.getElementById('btnBayar').style.display = 'none';
-
-    } catch (err) {
-      alert("Bayar Gagal: " + err);
+    // 2. CEK LOGIN DARI localStorage
+    const piUser = localStorage.getItem('pi_user');
+    if (!piUser) {
+      // Kalau gak ada data login, tendang balik
+      window.location.href = "index.html"; 
+    } else {
+      // Kalau ada, tampilin nama
+      const user = JSON.parse(piUser);
+      document.getElementById('btnUser').innerText = user.username;
     }
-  }
+
+    // 3. FUNGSI BAYAR - AUTH CUMA PAS MAU BAYAR
+    async function bayarVIP() {
+      try {
+        // Minta izin bayar pas tombol dipencet doang
+        await Pi.authenticate(['payments']); 
+
+        const payment = await Pi.createPayment({
+          amount: 0.1,
+          memo: "Buka Menu VIP My Track",
+          metadata: { product: "VIP_1_BULAN" }
+        });
+        console.log("Bayar Sukses:", payment);
+        
+        document.getElementById('menuVIP').classList.remove('hidden');
+        document.getElementById('btnBayar').style.display = 'none';
+
+      } catch (err) {
+        alert("Bayar Gagal: " + err);
+      }
+    }
   </script>
 </body>
 </html>
