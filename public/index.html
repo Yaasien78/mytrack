@@ -1,108 +1,61 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Track 1.0</title>
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-  body { font-family: Arial; background: #0f172a; color: #fff; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column; }
-  header { display:flex; justify-content:space-between; align-items:center; padding:12px 20px; background:#1e293b; border-bottom:1px solid #334155; position:sticky; top:0; }
- .container { padding:20px; max-width:600px; margin:auto; flex:1; }
- .card { background:#1e293b; padding:16px; border-radius:16px; margin-bottom:16px; text-align:center; }
- .harga-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
- .harga-item { background:#334155; padding:12px; border-radius:12px; font-size:14px; }
- .harga-item b { font-size:18px; color:#fbbf24; }
-  footer { text-align:center; padding:20px; color:#94a3b8; font-size:13px; border-top:1px solid #334155; margin-top:auto; }
-  #loading { text-align:center; padding:100px 20px; font-size:18px; }
- .hidden { display: none; }
-  #username{color:#38bdf8}
-  #loginBtn { background:#fbbf24; color:#000; border:none; padding:12px 20px; border-radius:12px; font-size:14px; font-weight:bold; cursor:pointer; margin-top:10px; width:100%; }
+body{background:#0f172a;color:#fff;margin:0;font-family:Arial;text-align:center} 
+#loading{padding:100px 20px;font-size:18px}
+.hidden{display:none} 
+#loginBtn{background:#fbbf24;color:#000;border:none;padding:14px 24px;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;margin-top:20px}
 </style>
 </head>
 <body>
 
-<div id="loading">Cek Login...</div>
-
-<div id="dashboard" class="hidden">
-  <!-- HEADER -->
-  <header>
-    <div><img src="https://minepi.com/static/logo.png" height="28"> My Track 1.0</div>
-    <a href="menu.html" style="color:#fff;font-size:24px;text-decoration:none">☰</a>
-  </header>
-
-  <!-- BODY -->
-  <div class="container">
-    <div class="card">
-      <div id="tanggal" style="color:#94a3b8; font-size:14px;"></div>
-      <h2 style="margin:8px 0 0;">Welcome <span id="username">...</span> 👋</h2>
-    </div>
-
-    <div class="card harga-grid">
-      <div class="harga-item">Pi/USDT<br><b id="piUsdt">-</b></div>
-      <div class="harga-item">Pi/IDR<br><b id="piIdr">-</b></div>
-      <div class="harga-item">USDT/IDR<br><b id="usdtIdr">-</b></div>
-      <div class="harga-item">Update<br><b id="lastUpdate">-</b></div>
-    </div>
-
-    <div class="card">
-      <canvas id="chart"></canvas>
-    </div>
-  </div>
-
-  <!-- FOOTER + TOMBOL LOGIN DISINI -->
-  <footer>
-    <span id="footerText">Belum Login</span> <br>
-    <button id="loginBtn" class="hidden">Masuk dengan Pi</button>
-    <div style="margin-top:8px;">My Track 1.0 @2026</div>
-  </footer>
+<div id="loading">
+  <h2>My Track 1.0</h2>
+  <p>Klik sekali untuk masuk</p>
+  <button id="loginBtn">Masuk dengan Pi</button>
 </div>
 
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div id="dashboard" class="hidden">
+  <h2>Welcome <span id="username">...</span> 👋</h2>
+  <p>Udah masuk bro</p>
+</div>
 
 <script>
-  // JANGAN INIT DI SINI. Tunggu SDK bener2 load
-
+  // Tunggu SDK siap dulu
   window.onload = async function() {
-    // TUNGGU 300ms BIAR SDK BENER2 SIAP
     await new Promise(r => setTimeout(r, 300)); 
-
-    // BARU INIT DI DALAM SINI
     Pi.init({ version: "1.0" }); 
 
-    // BARU AUTH
+    // Cek udah pernah login belum
     const savedUser = localStorage.getItem('pi_user');
     if(savedUser){
-      masukDashboard(savedUser);
+      document.getElementById('username').innerText = savedUser;
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
       return; 
     }
+  }
 
-    document.getElementById('loading').innerText = "Auto Login...";
+  // AUTH HANYA PAS DIKLIK
+  document.getElementById('loginBtn').onclick = async function() {
+    document.getElementById('loginBtn').innerText = "Login...";
     try {
-      const auth = await Pi.authenticate(['username']); // SEKARANG INIT UDAH PASTI JALAN DULUAN
+      const auth = await Pi.authenticate(['username']);
       const user = auth.user.username;
       localStorage.setItem('pi_user', user);
-      masukDashboard(user);
+      
+      document.getElementById('username').innerText = user;
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
     } catch (err) {
-      document.getElementById('loading').innerText = "Auth Gagal: " + err.message;
+      alert("Gagal: " + err.message);
+      document.getElementById('loginBtn').innerText = "Masuk dengan Pi";
     }
   }
-
-  function masukDashboard(user){
-    document.getElementById('username').innerText = user;
-    document.getElementById('footerUser').innerText = user;
-    document.getElementById('tanggal').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    document.getElementById('loading').classList.add('hidden');
-    document.getElementById('dashboard').classList.remove('hidden');
-    getHarga();
-    setInterval(getHarga, 15000);
-  }
-
-  let chart;
-  async function getHarga(){try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network,tether&vs_currencies=usd,id');const d=await r.json();const p=d['pi-network']?.usd||0;const u=d['tether']?.idr||16500;document.getElementById('piUsdt').innerText=`$${p.toFixed(4)}`;document.getElementById('usdtIdr').innerText=`Rp${u.toLocaleString('id-ID')}`;document.getElementById('piIdr').innerText=`Rp${(p*u).toLocaleString('id-ID')}`;document.getElementById('lastUpdate').innerText=new Date().toLocaleTimeString('id-ID');if(!chart){const c=document.getElementById('chart').getContext('2d');chart=new Chart(c,{type:'line',data:{labels:[],datasets:[{data:[],borderColor:'#fbbf24'}]},options:{plugins:{legend:{display:false}},scales:{x:{display:false},y:{ticks:{color:'#fff'}}}})}if(chart.data.labels.length>20){chart.data.labels.shift();chart.data.datasets[0].data.shift()}chart.data.labels.push(new Date().toLocaleTimeString('id-ID',{minute:'2-digit',second:'2-digit'}));chart.data.datasets[0].data.push(p);chart.update()}catch(e){}}
-                      </script>
-
+</script>
 </body>
-                                                          </html>
+</html>
