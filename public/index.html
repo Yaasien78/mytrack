@@ -1,61 +1,161 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Track 1.0</title>
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-body{background:#0f172a;color:#fff;margin:0;font-family:Arial;text-align:center} 
-#loading{padding:100px 20px;font-size:18px}
-.hidden{display:none} 
-#loginBtn{background:#fbbf24;color:#000;border:none;padding:14px 24px;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;margin-top:20px}
+  body { font-family: Arial, sans-serif; background: #0f172a; color: #fff; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column; }
+  header { display:flex; justify-content:space-between; align-items:center; padding:12px 20px; background:#1e293b; border-bottom:1px solid #334155; position:sticky; top:0; z-index:10; }
+  header.logo { display:flex; align-items:center; gap:8px; font-weight:bold; font-size:16px; }
+  header.menu { font-size:24px; cursor:pointer; color:#fff; text-decoration:none; }
+ .container { padding:20px; max-width:600px; margin:auto; width:100%; flex:1; box-sizing:border-box; }
+ .card { background:#1e293b; padding:16px; border-radius:16px; margin-bottom:16px; text-align:center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+ .tanggal { color:#94a3b8; font-size:14px; margin-bottom:8px; }
+  h2 { margin:0; font-size:20px; }
+  h2 span { color:#38bdf8; }
+ .harga-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+ .harga-item { background:#334155; padding:12px; border-radius:12px; font-size:14px; }
+ .harga-item b { display:block; font-size:18px; color:#fbbf24; margin-top:4px; }
+ .logo-track { width:60px; height:60px; margin:0 auto 8px; }
+ .logo-track img { width:100%; height:100%; }
+  footer { text-align:center; padding:20px; color:#94a3b8; font-size:13px; border-top:1px solid #334155; margin-top:auto; }
+  #loading { text-align:center; padding:100px 20px; font-size:18px; }
+ .hidden { display: none!important; }
+  #loginBtn { background:#fbbf24; color:#000; border:none; padding:12px 20px; border-radius:12px; font-size:14px; font-weight:bold; cursor:pointer; margin-top:10px; width:100%; max-width:250px; }
+  #loginBtn:disabled { opacity:0.6; }
+  canvas { max-width:100%; }
 </style>
 </head>
 <body>
 
+<!-- HALAMAN LOADING / LOGIN -->
 <div id="loading">
   <h2>My Track 1.0</h2>
   <p>Klik sekali untuk masuk</p>
   <button id="loginBtn">Masuk dengan Pi</button>
 </div>
 
+<!-- DASHBOARD UTAMA -->
 <div id="dashboard" class="hidden">
-  <h2>Welcome <span id="username">...</span> 👋</h2>
-  <p>Udah masuk bro</p>
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <img src="https://minepi.com/static/logo.png" height="28" alt="Pi">
+      My Track 1.0
+    </div>
+    <a href="menu.html" class="menu">☰</a>
+  </header>
+
+  <!-- BODY -->
+  <div class="container">
+    <div class="card">
+      <div class="tanggal" id="tanggal">-</div>
+      <h2>Welcome <span id="username">...</span> 👋</h2>
+    </div>
+
+    <div class="card harga-grid">
+      <div class="harga-item">Pi/USDT <b id="piUsdt">-</b></div>
+      <div class="harga-item">Pi/IDR <b id="piIdr">-</b></div>
+      <div class="harga-item">USDT/IDR <b id="usdtIdr">-</b></div>
+      <div class="harga-item">Update <b id="lastUpdate">-</b></div>
+    </div>
+
+    <div class="card">
+      <canvas id="chart"></canvas>
+    </div>
+    
+    <div class="card">
+      <div class="logo-track">
+        <img src="https://i.imgur.com/8Qf9k3m.png" alt="My Track Logo"> <!-- Ganti link logo lu disini bro -->
+      </div>
+      <p>Welcome to Pioneer at My Track app @2026</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    Login: <span id="footerUser">-</span> | My Track 1.0 @2026
+  </footer>
 </div>
 
 <script>
-  // Tunggu SDK siap dulu
+  // 1. INIT PI SDK V1
   window.onload = async function() {
     await new Promise(r => setTimeout(r, 300)); 
     Pi.init({ version: "1.0" }); 
 
-    // Cek udah pernah login belum
+    // 2. CEK UDAH PERNAH LOGIN BELUM
     const savedUser = localStorage.getItem('pi_user');
     if(savedUser){
-      document.getElementById('username').innerText = savedUser;
-      document.getElementById('loading').classList.add('hidden');
-      document.getElementById('dashboard').classList.remove('hidden');
-      return; 
+      masukDashboard(savedUser);
     }
   }
 
-  // AUTH HANYA PAS DIKLIK
+  // 3. TOMBOL LOGIN WAJIB KLIK 1X UNTUK V1
   document.getElementById('loginBtn').onclick = async function() {
-    document.getElementById('loginBtn').innerText = "Login...";
+    const btn = document.getElementById('loginBtn');
+    btn.innerText = "Login...";
+    btn.disabled = true;
     try {
-      const auth = await Pi.authenticate(['username']);
+      const auth = await Pi.authenticate(['username']); // HANYA MINTA USERNAME
       const user = auth.user.username;
       localStorage.setItem('pi_user', user);
-      
-      document.getElementById('username').innerText = user;
-      document.getElementById('loading').classList.add('hidden');
-      document.getElementById('dashboard').classList.remove('hidden');
+      masukDashboard(user);
     } catch (err) {
-      alert("Gagal: " + err.message);
-      document.getElementById('loginBtn').innerText = "Masuk dengan Pi";
+      alert("Gagal Login: " + err.message);
+      btn.innerText = "Masuk dengan Pi";
+      btn.disabled = false;
     }
   }
+
+  // 4. FUNGSI MASUK DASHBOARD
+  function masukDashboard(user){
+    document.getElementById('username').innerText = user;
+    document.getElementById('footerUser').innerText = user;
+    document.getElementById('tanggal').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    
+    getHarga();
+    setInterval(getHarga, 15000); // Update tiap 15 detik
+  }
+
+  // 5. AMBIL HARGA LIVE DARI COINGECKO
+  let chart;
+  async function getHarga(){
+    try{
+      const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network,tether&vs_currencies=usd,id');
+      const d = await r.json();
+      const piUsd = d['pi-network']?.usd || 0;
+      const usdtIdr = d['tether']?.idr || 16500;
+      const piIdr = piUsd * usdtIdr;
+
+      document.getElementById('piUsdt').innerText = `$${piUsd.toFixed(4)}`;
+      document.getElementById('usdtIdr').innerText = `Rp${usdtIdr.toLocaleString('id-ID')}`;
+      document.getElementById('piIdr').innerText = `Rp${piIdr.toLocaleString('id-ID', {maximumFractionDigits: 0})}`;
+      document.getElementById('lastUpdate').innerText = new Date().toLocaleTimeString('id-ID');
+
+      // CHART
+      if(!chart){
+        const ctx = document.getElementById('chart').getContext('2d');
+        chart = new Chart(ctx, {
+          type: 'line',
+          data: { labels: [], datasets: [{ label: 'Pi/USD', data: [], borderColor: '#fbbf24', tension: 0.3, fill: false }] },
+          options: { plugins: { legend: { display: false } }, scales: { x: { display: false, ticks: { color: '#fff' } }, y: { ticks: { color: '#fff' }
+        });
+      }
+      if(chart.data.labels.length > 20){ chart.data.labels.shift(); chart.data.datasets[0].data.shift(); }
+      chart.data.labels.push(new Date().toLocaleTimeString('id-ID', {minute:'2-digit', second:'2-digit'}));
+      chart.data.datasets[0].data.push(piUsd);
+      chart.update();
+
+    }catch(e){ console.error(e); }
+  }
 </script>
+
 </body>
 </html>
