@@ -1,12 +1,48 @@
 <!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><script src="https://sdk.minepi.com/pi-sdk.js"></script></head><body style="background:#0f172a;color:#fff;text-align:center;padding-top:100px">
 <button id="btn" style="padding:14px 24px;background:#fbbf24;border:none;border-radius:12px;font-weight:bold">Masuk dengan Pi</button>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-Pi.init({version:"1.0"});
-document.getElementById('btn').onclick=async()=>{
-  alert("Tombol Kepencet"); // Tes 1
-  try{
-    const a=await Pi.authenticate(['username']);
-    alert("SUKSES: "+a.user.username); // Tes 2
-  }catch(e){alert("ERROR: "+e.message)} // Tes 3
-}
-</script></body></html>
+  // 1. INIT LANGSUNG PAS SCRIPT KELOAD. JANGAN TUNGGU ONLOAD
+  Pi.init({ version: "1.0" }); 
+
+  // 2. CEK LOGIN PAS HALAMAN SIAP
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedUser = localStorage.getItem('pi_user');
+    if(savedUser){
+      masukDashboard(savedUser);
+    }
+  });
+
+  // 3. TOMBOL LOGIN
+  document.getElementById('loginBtn').onclick = async function() {
+    const btn = document.getElementById('loginBtn');
+    btn.innerText = "Login...";
+    btn.disabled = true;
+    try {
+      const auth = await Pi.authenticate(['username']); 
+      const user = auth.user.username; // PENTING: ambil .user.username
+      localStorage.setItem('pi_user', user);
+      masukDashboard(user);
+    } catch (err) {
+      alert("Gagal Login: " + err.message);
+      btn.innerText = "Masuk dengan Pi";
+      btn.disabled = false;
+    }
+  }
+
+  // 4. FUNGSI MASUK DASHBOARD
+  function masukDashboard(user){
+    document.getElementById('username').innerText = user;
+    document.getElementById('footerUser').innerText = user;
+    document.getElementById('tanggal').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    getHarga();
+    setInterval(getHarga, 15000);
+  }
+
+  let chart;
+  async function getHarga(){try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network,tether&vs_currencies=usd,id');const d=await r.json();const p=d['pi-network']?.usd||0;const u=d['tether']?.idr||16500;document.getElementById('piUsdt').innerText=`$${p.toFixed(4)}`;document.getElementById('usdtIdr').innerText=`Rp${u.toLocaleString('id-ID')}`;document.getElementById('piIdr').innerText=`Rp${(p*u).toLocaleString('id-ID')}`;document.getElementById('lastUpdate').innerText=new Date().toLocaleTimeString('id-ID');if(!chart){const c=document.getElementById('chart').getContext('2d');chart=new Chart(c,{type:'line',data:{labels:[],datasets:[{data:[],borderColor:'#fbbf24'}]},options:{plugins:{legend:{display:false}},scales:{x:{display:false},y:{ticks:{color:'#fff'}}}})}if(chart.data.labels.length>20){chart.data.labels.shift();chart.data.datasets[0].data.shift()}chart.data.labels.push(new Date().toLocaleTimeString('id-ID',{minute:'2-digit',second:'2-digit'}));chart.data.datasets[0].data.push(p);chart.update()}catch(e){}}
+        </script></body></html>
