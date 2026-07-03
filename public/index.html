@@ -1,53 +1,74 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Track - Login</title>
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<style>
-body{background:#0b1220;color:#fff;font-family:system-ui;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
-.card{background:#1a2333;padding:30px;border-radius:16px;width:90%;max-width:350px;text-align:center;box-shadow:0 8px 30px #000}
-h1{margin:0 0 10px;font-size:24px}
-p{color:#a8b3cf;margin:0 0 20px}
-button{width:100%;padding:14px;border:0;border-radius:12px;background:#fbbf24;color:#0b1220;font-weight:800;font-size:16px;cursor:pointer}
-button:active{transform:scale(.98)}
-#warn{color:#f87171;font-size:13px;margin-top:10px;display:none}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Track | Login</title>
+  
+  <!-- 1. SDK Pi Cukup 1 Kali Saja, Taruh di Head -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+
+  <style>
+    body {background:#f1f3f6; font-family:system-ui; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;}
+    .card {background:#fff; padding:30px; border:1px solid #ddd; border-radius:12px; width:90%; max-width:380px; text-align:center; box-shadow:0 3px 8px rgba(0,0,0,.08);}
+    h1 {margin:0 0 20px; font-size:22px;}
+    button {width:100%; padding:12px; border:0; border-radius:10px; background:#4f46e5; color:#fff; font-weight:800; font-size:16px; cursor:pointer;}
+    button:active {transform:scale(.98);}
+    #warn {color:#ef4447; font-size:13px; margin-top:10px; display:none;}
+    #ok {color:#16a34a; font-size:13px; margin-top:10px; display:none;}
+  </style>
 </head>
 <body>
-<div class="card">
-  <h1>My Track</h1>
-  <p>Login pakai akun Pi lu</p>
-  <button id="btnLogin">Login dengan Pi</button>
-  <div id="warn"></div>
-</div>
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script>
-  // PENTING: Mode Sandbox = Test
-  Pi.init({ 
-    version: "2.0", 
-    sandbox: true,  // <-- ini kuncinya buat ngetes
-    clientId: "mytrack.id" 
-  });
+  <div class="card">
+    <h1>Login MyTrack Pi</h1>
+    <button id="btnLogin">Login dengan Pi</button>
+    <div id="ok"></div>
+    <div id="warn"></div>
+  </div>
 
-  async function login() {
-    const auth = await Pi.authenticate(['username', 'payments'], 
-      function onIncompletePayment(payment) { console.log(payment); }
-    );
-    console.log("Login OK:", auth);
-  }
-  
-  async function bayarVIP() {
-    const paymentData = {
-      amount: 0.1,
-      memo: "Buka Menu VIP My Track",
-      metadata: { product: "VIP_1_BULAN" }
+  <script>
+    // 2. Init Sandbox WAJIB
+    Pi.init({ 
+      version: "2.0", 
+      sandbox: true,  // <-- Mode Tes
+      clientId: "MU0h1YCvr5HMSJdt_iNaR7YPv0T4qV7MtUnv5uGUz48" // <-- Ganti sama ID App lu di Developer Portal
+    });
+
+    const btnLogin = document.getElementById('btnLogin');
+    const warn = document.getElementById('warn');
+    const ok = document.getElementById('ok');
+
+    // 3. Logic Login Pas Tombol Diklik
+    btnLogin.onclick = async () => {
+      warn.style.display = 'none';
+      ok.style.display = 'none';
+      btnLogin.disabled = true;
+      btnLogin.innerText = 'Menunggu...';
+
+      try {
+        // Minta izin username + payments
+        const auth = await Pi.authenticate(['username', 'payments'], 
+          function onIncompletePayment(payment) { console.log("Payment belum selesai:", payment); }
+        );
+        
+        ok.innerText = "Login OK: " + auth.user.username;
+        ok.style.display = 'block';
+        console.log("Auth Data:", auth);
+
+        // Sukses login -> langsung ke menu.html
+        setTimeout(() => {
+          window.location.href = "menu.html"; 
+        }, 800);
+
+      } catch (err) {
+        warn.innerText = "Gagal Login: " + err;
+        warn.style.display = 'block';
+        console.error(err);
+      } finally {
+        btnLogin.disabled = false;
+        btnLogin.innerText = 'Login dengan Pi';
+      }
     };
-    const payment = await Pi.createPayment(paymentData);
-    console.log("Bayar:", payment);
-  }
-    </script>
-
+  </script>
 </body>
 </html>
