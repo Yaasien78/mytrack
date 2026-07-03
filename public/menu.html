@@ -2,70 +2,65 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Menu VIP</title>
-  <!-- Cukup 1 SDK aja -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#0A0082] text-white font-sans">
-  <header class="flex justify-between items-center p-4 bg-[#07004D]">
+<body class="bg-[#0A0082] text-white">
+  <header class="flex justify-between p-4 bg-[#07004D]">
     <a href="dashboard.html" class="text-yellow-400">Back</a>
-    <button id="btnUser" class="text-sm font-bold text-yellow-400">Loading...</button>
+    <button id="btnUser" class="font-bold text-yellow-400">Loading...</button>
   </header>
 
   <main class="p-4 text-center">
     <h1 class="text-2xl font-bold text-yellow-400 mb-4">Menu VIP</h1>
-    <p class="text-gray-300 mb-6">Buka akses semua sinyal premium</p>
-
-    <button id="btnBayar" onclick="bayarVIP()" class="w-full bg-yellow-400 text-black font-bold text-xl p-4 rounded-2xl active:scale-95">
+    <button id="btnBayar" onclick="bayarVIP()" class="w-full bg-yellow-400 text-black font-bold text-xl p-4 rounded-2xl">
       Bayar 0.1 Pi Untuk Buka
     </button>
-
-    <div id="menuVIP" class="hidden mt-6 text-left bg-[#1A1A3] p-4 rounded-2xl">
+    <div id="menuVIP" class="hidden mt-6 bg-[#1A1A3D] p-4 rounded-2xl">
       <p class="font-bold">🔥 Sinyal VIP Terbuka</p>
-      <p class="text-sm mt-2">1. BUY Pi < 0.35</p>
-      <p class="text-sm">2. SELL Pi > 0.38</p>
-      <button id="btn-vip" class="mt-4 w-full bg-green-600 p-2 rounded">Beli VIP 1 Bulan - 1 Pi</button>
     </div>
   </main>
 
   <script>
-  // 1. WAJIB PALING ATAS: INIT DULUAN
-  Pi.init({ 
-    version: "2.0", 
-    sandbox: true,  
-    clientId: "MU0h1YCvr5HMSJdt_iNaR7YPv0T4qV7MtUnv5uGUz48" // <-- PASTIIN INI BENER
-  });
+    // JURUS TERAKHIR: TUNGGU SDK SIAP DULU
+    window.onload = function() {
+      // Kasih jeda 500ms biar SDK Pi bener2 nongol
+      setTimeout(function() { 
+        
+        console.log("Pi SDK:", Pi); // Cek di console Pi Browser
 
-  // 2. BARU CEK LOGIN. JANGAN DIBALIK
-  const isLoggedIn = localStorage.getItem('pi_auth');
-  const piUser = localStorage.getItem('pi_user');
+        Pi.init({ 
+          version: "2.0", 
+          sandbox: true,  
+          clientId: "MU0h1YCvr5HMSJdt_iNaR7YPv0T4qV7MtUnv5uGUz48" // <-- CEK 3X. HARUS SAMA DGN DI DEVELOPER PI
+        });
 
-  if (isLoggedIn !== 'true' || !piUser) {
-    localStorage.clear(); 
-    window.location.replace("index.html"); 
-  } else {
-    document.getElementById('btnUser').innerText = JSON.parse(piUser).username;
-  }
+        const isLoggedIn = localStorage.getItem('pi_auth');
+        const piUser = localStorage.getItem('pi_user');
 
-  // 3. FUNGSI TOMBOL BAYAR
-  async function bayarVIP() {
-    try {
-      // Karena init udah paling atas, ini gak error lagi
-      await Pi.authenticate(['payments']); 
+        if (isLoggedIn !== 'true' || !piUser) {
+          localStorage.clear(); 
+          window.location.replace("index.html"); 
+          return; // Stop di sini
+        } 
+        
+        document.getElementById('btnUser').innerText = JSON.parse(piUser).username;
 
-      const payment = await Pi.createPayment({ 
-        amount: 0.1, 
-        memo: "Buka Menu VIP", 
-        metadata: { product: "VIP_1_BULAN" } 
-      });
-      document.getElementById('menuVIP').classList.remove('hidden');
-      document.getElementById('btnBayar').style.display = 'none';
-    } catch (err) { 
-      alert("Gagal: " + err); 
+      }, 500); // Jeda 0.5 detik
+    };
+
+    // Fungsi tombol harus di luar window.onload
+    async function bayarVIP() {
+      try {
+        await Pi.authenticate(['payments']); 
+        const payment = await Pi.createPayment({ amount: 0.1, memo: "Buka Menu VIP", metadata: { product: "VIP_1_BULAN" } });
+        document.getElementById('menuVIP').classList.remove('hidden');
+        document.getElementById('btnBayar').style.display = 'none';
+      } catch (err) { 
+        alert("Gagal: " + err); 
+      }
     }
-  }
   </script>
 </body>
 </html>
