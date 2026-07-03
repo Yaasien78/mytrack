@@ -30,39 +30,33 @@
   </main>
 
   <script>
-    // 1. Init Sandbox
-    Pi.init({ 
-      version: "2.0", 
-      sandbox: true,  
-      clientId: "mytrack.id"
-    });
+  // 1. CUKUP INIT DOANG. Gak usah authenticate lagi
+  Pi.init({ 
+    version: "2.0", 
+    sandbox: true,  
+    clientId: "mytrack.id"
+  });
 
-    // 2. Cek Login + Tampilkan Username
-    Pi.authenticate(['username', 'payments']).then(auth => {
-        document.getElementById('btnUser').innerText = auth.user.username;
-    }).catch(err => {
-        alert("Belum login. Balik ke index dulu");
-        window.location.href = "index.html";
-    });
+  // 2. Ambil username dari storage aja, biar gak error
+  document.getElementById('btnUser').innerText = "Test User"; // Ganti manual dulu buat ngetes
 
-    // 3. Fungsi Bayar
-    async function bayarVIP() {
-      try {
-        const payment = await Pi.createPayment({
-          amount: 0.1,
-          memo: "Buka Menu VIP My Track",
-          metadata: { product: "VIP_1_BULAN" }
-        });
-        console.log("Bayar Sukses:", payment);
-        
-        // Kalau sukses, tampilin menu VIP
-        document.getElementById('menuVIP').classList.remove('hidden');
-        document.getElementById('btnBayar').style.display = 'none';
+  // 3. Fungsi Bayar Tetap Jalan
+  async function bayarVIP() {
+    try {
+      const payment = await Pi.createPayment({
+        amount: 0.1,
+        memo: "Buka Menu VIP My Track",
+        metadata: { product: "VIP_1_BULAN" }
+      });
+      console.log("Bayar Sukses:", payment);
+      
+      document.getElementById('menuVIP').classList.remove('hidden');
+      document.getElementById('btnBayar').style.display = 'none';
 
-      } catch (err) {
-        alert("Bayar Gagal: " + err);
-      }
+    } catch (err) {
+      alert("Bayar Gagal: " + err);
     }
+  }
   </script>
 </body>
 </html>
