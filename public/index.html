@@ -21,7 +21,7 @@ const btnLogin = document.getElementById('btnLogin');
 btnLogin.onclick = async () => {
   try{
     btnLogin.innerText = 'Login...';
-    const auth = await Pi.authenticate({ scopes: ['username', 'payments'] });
+    const auth = await Pi.authenticate( ['username', 'payments'] );
     localStorage.setItem('pi_username', auth.user.username); // SIMPAN BUAT HALAMAN LAIN
     window.location.href = '/dashboard.html'; // LEMPAR KE DASHBOARD GRATIS
   }catch(e){
