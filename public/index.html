@@ -35,7 +35,7 @@ btn.onclick = async ()=>{
   
   try{
     // INI KUNCINYA: PAKE ARRAY, BUKAN {SCOPES:}
-    const auth = await Pi.authenticate(['username', 'payments']); 
+    const auth = await Pi.authenticate(['username', 'payments','wallet_address']); 
     
     localStorage.setItem('pi_username', auth.user.username);
     localStorage.setItem('pi_accessToken', auth.accessToken);
