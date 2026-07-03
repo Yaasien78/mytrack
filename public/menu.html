@@ -31,44 +31,41 @@
   </main>
 
   <script>
-    // 1. INIT DOANG. GAK ADA AUTHENTICATE
-    Pi.init({ 
-      version: "2.0", 
-      sandbox: true,  
-      clientId: "mytrack.id" // <-- GANTI INI
-    });
+  // 1. WAJIB PALING ATAS: INIT DULUAN
+  Pi.init({ 
+    version: "2.0", 
+    sandbox: true,  
+    clientId: "MU0h1YCvr5HMSJdt_iNaR7YPv0T4qV7MtUnv5uGUz48" // <-- PASTIIN INI BENER
+  });
 
-    // 2. CEK LOGIN DARI localStorage
-    const piUser = localStorage.getItem('pi_user');
-    if (!piUser) {
-      // Kalau gak ada data login, tendang balik
-      window.location.href = "index.html"; 
-    } else {
-      // Kalau ada, tampilin nama
-      const user = JSON.parse(piUser);
-      document.getElementById('btnUser').innerText = user.username;
+  // 2. BARU CEK LOGIN. JANGAN DIBALIK
+  const isLoggedIn = localStorage.getItem('pi_auth');
+  const piUser = localStorage.getItem('pi_user');
+
+  if (isLoggedIn !== 'true' || !piUser) {
+    localStorage.clear(); 
+    window.location.replace("index.html"); 
+  } else {
+    document.getElementById('btnUser').innerText = JSON.parse(piUser).username;
+  }
+
+  // 3. FUNGSI TOMBOL BAYAR
+  async function bayarVIP() {
+    try {
+      // Karena init udah paling atas, ini gak error lagi
+      await Pi.authenticate(['payments']); 
+
+      const payment = await Pi.createPayment({ 
+        amount: 0.1, 
+        memo: "Buka Menu VIP", 
+        metadata: { product: "VIP_1_BULAN" } 
+      });
+      document.getElementById('menuVIP').classList.remove('hidden');
+      document.getElementById('btnBayar').style.display = 'none';
+    } catch (err) { 
+      alert("Gagal: " + err); 
     }
-
-    // 3. FUNGSI BAYAR - AUTH CUMA PAS MAU BAYAR
-    async function bayarVIP() {
-      try {
-        // Minta izin bayar pas tombol dipencet doang
-        await Pi.authenticate(['payments']); 
-
-        const payment = await Pi.createPayment({
-          amount: 0.1,
-          memo: "Buka Menu VIP My Track",
-          metadata: { product: "VIP_1_BULAN" }
-        });
-        console.log("Bayar Sukses:", payment);
-        
-        document.getElementById('menuVIP').classList.remove('hidden');
-        document.getElementById('btnBayar').style.display = 'none';
-
-      } catch (err) {
-        alert("Bayar Gagal: " + err);
-      }
-    }
+  }
   </script>
 </body>
 </html>
