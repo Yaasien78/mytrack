@@ -46,19 +46,16 @@
   // 3. Fungsi Bayar
   async function bayarVIP() {
     try {
-      // Trik: Panggil authenticate 1x pas mau bayar doang
-      await Pi.authenticate(['payments']); 
+  const auth = await Pi.authenticate(['username', 'payments']);
+  
+  // 1. SIMPEN DATA DULU
+  localStorage.setItem('pi_user', JSON.stringify(auth.user)); 
+  localStorage.setItem('pi_auth', 'true'); // Tandain udah login
 
-      const payment = await Pi.createPayment({
-        amount: 0.1,
-        memo: "Buka Menu VIP My Track",
-        metadata: { product: "VIP_1_BULAN" }
-      });
-      console.log("Bayar Sukses:", payment);
-      document.getElementById('menuVIP').classList.remove('hidden');
-      document.getElementById('btnBayar').style.display = 'none';
+  // 2. BARU LEMPAR KE MENU
+  window.location.href = "menu.html"; 
 
-    } catch (err) {
+} catch (err) { ... }
       alert("Bayar Gagal: " + err);
     }
   }
