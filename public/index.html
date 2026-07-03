@@ -2,34 +2,48 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Login MyTrack</title>
+  <title>Menu VIP</title>
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-[#0A0082] flex items-center justify-center h-screen">
-  <div class="bg-[#1A1A3D] p-8 rounded-2xl text-center">
-    <h1 class="text-2xl font-bold text-yellow-400 mb-4">MyTrack Login</h1>
-    <button id="btnLogin" class="bg-yellow-400 text-black font-bold px-8 py-3 rounded-xl">Login dengan Pi</button>
-    <p id="status" class="mt-4 text-gray-300"></p>
-  </div>
+<body class="bg-[#0A0082] text-white">
+  <header class="flex justify-between p-4 bg-[#07004D]">
+    <a href="dashboard.html" class="text-yellow-400">Back</a>
+    <button id="btnUser" class="font-bold text-yellow-400">...</button>
+  </header>
+
+  <main class="p-4 text-center">
+    <h1 class="text-2xl font-bold text-yellow-400 mb-4">Menu VIP</h1>
+    <button id="btnBayar" onclick="bayarVIP()" class="w-full bg-yellow-400 text-black font-bold text-xl p-4 rounded-2xl">
+      Bayar 0.1 Pi Untuk Buka
+    </button>
+    <div id="menuVIP" class="hidden mt-6 bg-[#1A1A3D] p-4 rounded-2xl">
+      <p class="font-bold">🔥 Sinyal VIP Terbuka</p>
+    </div>
+  </main>
 
   <script>
-    Pi.init({ version: "2.0", sandbox: true, clientId: "MU0h1YCvr5HMSJdt_iNaR7YPv0T4qV7MtUnv5uGUz48" }); // <-- GANTI
+    Pi.init({ version: "2.0", sandbox: true, clientId: "MU0h1YCvr5HMSJdt_iNaR7YPv0T4qV7MtUnv5uGUz48" });
 
-    document.getElementById('btnLogin').onclick = async () => {
-      document.getElementById('status').innerText = "Membuka Pi...";
+    // KUNCI 2: CEK DOBEL BIAR GAK LOOP
+    const isLoggedIn = localStorage.getItem('pi_auth');
+    const piUser = localStorage.getItem('pi_user');
+
+    if (isLoggedIn !== 'true' || !piUser) {
+      localStorage.clear(); // Hapus data rusak biar gak loop
+      window.location.replace("index.html"); // replace biar gak bisa back
+    } else {
+      document.getElementById('btnUser').innerText = JSON.parse(piUser).username;
+    }
+
+    async function bayarVIP() {
       try {
-        const auth = await Pi.authenticate(['username', 'payments']);
-        
-        // KUNCI 1: SIMPEN SEMUA DATA KE HP
-        localStorage.setItem('pi_user', JSON.stringify(auth.user)); 
-        localStorage.setItem('pi_auth', 'true'); 
-
-        window.location.href = "menu.html"; 
-      } catch (err) {
-        document.getElementById('status').innerText = "Login Gagal: " + err;
-      }
-    };
+        await Pi.authenticate(['payments']); // Minta izin pas mau bayar
+        const payment = await Pi.createPayment({ amount: 0.1, memo: "Buka Menu VIP", metadata: { product: "VIP_1_BULAN" } });
+        document.getElementById('menuVIP').classList.remove('hidden');
+        document.getElementById('btnBayar').style.display = 'none';
+      } catch (err) { alert("Gagal: " + err); }
+    }
   </script>
 </body>
 </html>
