@@ -28,120 +28,31 @@
   </div><button id="btn-vip">Beli VIP 1 Bulan - 1 Pi</button>
 </main>
 
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script>
-Pi.init({ version: "2.0", sandbox: true });
-const btnUser = document.getElementById('btnUser');
-const btnBayar = document.getElementById('btnBayar');
-const menuVIP = document.getElementById('menuVIP');
-let currentUser = null;
+  // PENTING: Mode Sandbox = Test
+  Pi.init({ 
+    version: "2.0", 
+    sandbox: true,  // <-- ini kuncinya buat ngetes
+    clientId: "mytrack.id" 
+  });
 
-// 1. CEK LOGIN. KALAU BELUM LOGIN = TENDANG KE INDEX
-const username = localStorage.getItem('pi_username');
-if(!username){
-  window.location.href = '/index.html';
-}else{
-  btnUser.innerText = 'Hi, '+username;
-  // Cek kalau udah pernah bayar
-  if(localStorage.getItem('pi_paid') === 'true'){
-    toggleMenu(true);
+  async function login() {
+    const auth = await Pi.authenticate(['username', 'payments'], 
+      function onIncompletePayment(payment) { console.log(payment); }
+    );
+    console.log("Login OK:", auth);
   }
-}
-
-// 2. FUNGSI BAYAR - INI KUNCINYA
-btnBayar.onclick = async () => {
-  if(!username) return alert('Login dulu bro');
   
-  alert('Nembak approve...'); // BUAT NGETES SAMPE SINI GAK
-  
-  const paymentData = {
-    amount: 0.1,
-    memo: 'Buka Menu VIP My Track',
-    metadata: { app: 'mytrack', user: username }
-  };
-
-  const callbacks = {
-    onReadyForServerApproval: async (paymentId) => {
-      alert('Server approve...'); // LINE 78 VERSI LU
-      const res = await fetch('/api/approve', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ paymentId })
-      });
-      if(!res.ok) throw new Error('Approve gagal');
-    },
-    onReadyForServerCompletion: async (paymentId, txid) => {
-      await fetch('/api/complete', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ paymentId, txid })
-      });
-      localStorage.setItem('pi_paid', 'true'); // SIMPEN UDAH BAYAR
-      toggleMenu(true);
-      alert('Sukses! Menu VIP Kebuka'); // LINE 93 VERSI LU
-    },
-    onCancel: () => alert('Bayar dibatalkan'),
-    onError: (error) => alert('Error: '+error)
-  };
-
-  try{
-    await Pi.createPayment(paymentData, callbacks); // <- INI YANG BIKIN POPUP
-  }catch(e){
-    alert('Gagal buka popup: '+e.message);
+  async function bayarVIP() {
+    const paymentData = {
+      amount: 0.1,
+      memo: "Buka Menu VIP My Track",
+      metadata: { product: "VIP_1_BULAN" }
+    };
+    const payment = await Pi.createPayment(paymentData);
+    console.log("Bayar:", payment);
   }
-}
-
-function toggleMenu(open){
-  if(open){
-    menuVIP.classList.remove('hidden');
-    btnBayar.classList.add('hidden');
-  }
-}
 </script>
-  <script>
-const btnVip = document.getElementById('btn-vip');
-
-btnVip.onclick = async () => {
-  try {
-    btnVip.disabled = true;
-    btnVip.textContent = 'Nembak approve...';
-
-    const payment = await Pi.createPayment({
-      amount: 1,
-      memo: "AKSES VIP 1 BULAN - mytrack.id", // <- INI YANG MUNCUL DI POPUP
-      metadata: { product: "vip_bulanan" }
-    }, {
-      onReadyForServerApproval: async (paymentId) => {
-        await fetch('/api/payments/approve', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ paymentId })
-        });
-      },
-      onReadyForServerCompletion: async (paymentId, txid) => {
-        await fetch('/api/payments/complete', {
-          method: 'POST', 
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ paymentId, txid })
-        });
-        alert('Sukses! VIP Aktif');
-        btnVip.textContent = 'Beli VIP 1 Bulan - 1 Pi';
-        btnVip.disabled = false;
-      },
-      onCancel: () => {
-        alert('Dibatalkan');
-        btnVip.textContent = 'Beli VIP 1 Bulan - 1 Pi';
-        btnVip.disabled = false;
-      },
-      onError: (err) => {
-        alert('Error: ' + err.message);
-        btnVip.textContent = 'Beli VIP 1 Bulan - 1 Pi';
-        btnVip.disabled = false;
-      }
-    });
-  } catch(e){
-    alert('Gagal: ' + e.message);
-  }
-};
-  </script>
 </body>
 </html>
