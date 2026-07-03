@@ -1,160 +1,34 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>My Track</title>
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <style>
-   *{margin:0;padding:0;box-sizing:border-box}
-   body{background:#0a0a1f;color:#fff;font-family:Impact,'Arial Black',sans-serif;overflow:hidden}
-   .glow{ text-shadow: 0 0 10px rgba(168,85,247,0.9), 0 0 20px rgba(168,85,247,0.5)}
-   .glow-gold{ box-shadow: 0 0 12px rgba(250,204,21,0.6), inset 0 0 8px rgba(250,204,21,0.1)}
-   header,footer{position:fixed;width:100%;height:56px;background:#0a0a1f;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-bottom:2px solid #facc15;z-index:99}
-   footer{bottom:0;border-top:2px solid #facc15;border-bottom:0;justify-content:center}
-   .box{border:2px solid #facc15;border-radius:24px;margin:8px;padding:10px 8px;height:calc(100vh - 120px);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;background:#0a0a1f;overflow:hidden}
-   .angka{font-size:26px;font-weight:900;line-height:1.2;text-align:center}
-   .label{font-size:14px;font-weight:900;color:#38bdf8;text-align:center;line-height:1;margin-top:2px}
-   .logo{width:40px;height:40px;border:2px solid #facc15;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#facc15;font-size:24px;font-weight:900}
-   .badge{width:56px;height:56px;background:#2563eb;border:2px solid #facc15;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;line-height:1}
-   .menu{position:fixed;top:56px;left:-200px;width:200px;height:calc(100vh - 56px);background:#1a1a3f;border-right:2px solid #facc15;transition:left .3s;z-index:98;padding-top:10px}
-   .menu.open{left:0}
-   .menu a{display:block;padding:14px 20px;color:#fff;text-decoration:none;font-size:18px;border-bottom:1px solid #333}
-   .menu a:hover{background:#facc15;color:#000}
-   .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:none;z-index:97}
-   .overlay.show{display:block}
-   .lock{opacity:0.5;pointer-events:none}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login My Track</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <header>
-    <div id="btnMenu" style="width:24px;display:flex;flex-direction:column;gap:4px;cursor:pointer">
-      <span style="height:3px;background:#facc15;display:block"></span>
-      <span style="height:3px;background:#facc15;display:block"></span>
-      <span style="height:3px;background:#facc15;display:block"></span>
-    </div>
-    <h1 class="angka glow" style="font-size:26px">My Track</h1>
-    <div class="logo glow-gold">π</div>
-  </header>
+<body class="bg-[#0A0082] flex items-center justify-center h-screen">
+  <div class="text-center">
+    <h1 class="text-3xl font-bold text-yellow-400 mb-6">My Track Pi/USD</h1>
+    <button id="btnLogin" class="bg-yellow-400 text-black font-bold text-xl p-4 rounded-2xl active:scale-95">
+      Login with Pi
+    </button>
+  </div>
+<script>
+Pi.init({ version: "2.0", sandbox: true });
+const btnLogin = document.getElementById('btnLogin');
 
-  <div id="overlay" class="overlay"></div>
-  <nav id="menu" class="menu">
-    <a href="#" id="menuBayar">🔒 Buka Menu 0.1 Pi</a>
-    <a href="#" id="menuKonten" class="lock">📊 Konten VIP</a>
-    <a href="#" id="menuLogin">🔑 Login Pi</a>
-  </nav>
-
-  <main style="padding-top:56px;padding-bottom:56px">
-    <div class="box glow-gold">
-      <p id="tgl" class="angka glow"></p>
-      <p class="label">Harga Pi/USDT</p>
-      <p id="usd" class="angka glow">$0.1150</p>
-      <p class="label">Harga Pi/IDR</p>
-      <p id="idr" class="angka glow">Rp 2.069,3</p>
-      <p class="label">Kurs USD/IDR</p>
-      <p id="kurs" class="angka glow" style="color:#f87171">Error</p>
-      <div class="badge glow-gold" style="margin-top:6px">My<br>Track</div>
-      <p class="angka glow" style="font-size:12px;line-height:1.2;margin-top:2px">Bayar 0.1 Pi Testnet<br>Untuk Buka Menu<br>@2026</p>
-    </div>
-  </main>
-
-  <footer><button id="btn" class="angka glow" style="font-size:20px;background:0;border:0;color:#fff">Login Pi</button></footer>
-
-  <script>
-    if(!window.Pi){alert('Buka di Pi Browser ya bro, bukan Chrome');}
-    Pi.init({version:"2.0", sandbox:true, oAuth Client ID:"VFGq4KCSvwrG-srEpNIg23WzDxO4-H06qrcuOAJ5rgQ"}); 
-    
-    let currentUser=null;
-    let isPaid=false;
-    const btn=document.getElementById('btn');
-    const btnMenu=document.getElementById('btnMenu');
-    const menu=document.getElementById('menu');
-    const overlay=document.getElementById('overlay');
-    const menuBayar=document.getElementById('menuBayar');
-    const menuKonten=document.getElementById('menuKonten');
-    const menuLogin=document.getElementById('menuLogin');
-
-    function toggleMenu(){menu.classList.toggle('open');overlay.classList.toggle('show');}
-    btnMenu.onclick=toggleMenu;
-    overlay.onclick=toggleMenu;
-    document.getElementById('tgl').innerText=new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'Asia/Jakarta'});
-
-    async function loginPi(){
-      try{
-        btn.innerText='Login...';
-        menuLogin.innerText='Login...';
-        const auth=await Pi.authenticate(['username','payments']); 
-        currentUser=auth.user;
-        btn.innerText=`Halo ${auth.user.username}`;
-        menuLogin.innerText=`Logout ${auth.user.username}`;
-        toggleMenu();
-      }catch(e){
-        btn.innerText='Login Pi';
-        menuLogin.innerText='🔑 Login Pi';
-        alert('Login Gagal: '+e.message);
-      }
-    }
-    
-    function bayarBukaMenu(){
-      if(!currentUser){alert('Login dulu bro');loginPi();return;}
-      if(isPaid){alert('Udah bayar bro');toggleMenu();return;}
-      
-  Pi.createPayment({
-    amount: 0.1,
-    memo: 'Bayar Buka Menu VIP My Track 0.1 Pi',
-    metadata: {app: 'mytrack', action: 'unlock_menu'},
-    onReadyForServerApproval: async (paymentId) => {
-      alert("Nembak approve...");
-      await fetch(`/api/payments/approve`, { 
-        method: "POST", 
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ paymentId }) 
-      });
-    },
-    onReadyForServerCompletion: async (paymentId, txid) => {
-      await fetch(`/api/payments/complete`, { 
-        method: "POST", 
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ paymentId, txid }) 
-      });
-      isPaid = true;
-      menuBayar.innerText='✅ Udah Bayar';
-      menuKonten.classList.remove('lock');
-      alert('Sukses! Menu VIP Kebuka. Tx: ' + txid);
-      toggleMenu();
-    },
-    onCancel: () => alert('Batal Bayar'),
-    onError: (error) => alert('Error: ' + error)
-  });
-          }
-
-    btn.onclick=loginPi;
-    menuLogin.onclick=(e)=>{e.preventDefault();loginPi();}
-    menuBayar.onclick=(e)=>{e.preventDefault();bayarBukaMenu();}
-    menuKonten.onclick=(e)=>{e.preventDefault();if(isPaid){alert('Selamat datang di Konten VIP')}};
-
-    // FIX FINAL: Anti Crash Harga Pi
-    try{
-      fetch('https://api.allorigins.win/raw?url='+encodeURIComponent('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr'))
-      .then(r=>r.json())
-      .then(d=>{
-        if(d && d['pi-network']){ // Cek d ada gak, pi-network ada gak
-          const u=d['pi-network'].usd,i=d['pi-network'].idr;
-          document.getElementById('usd').innerText=`$${u.toFixed(4)}`;
-           }); // buat nutup .then(d=>{
-} catch(e){console.log('Gagal ambil harga:',e)} // buat nutup try{
-</script> // buat nutup <script>
-          document.getElementById('idr').innerText=`Rp ${i.toLocaleString('id-ID')}`;
-          document.getElementById('kurs').innerText=`Rp ${(i/u).toLocaleString('id-ID',{minimumFractionDigits:2})}`;
-          document.getElementById('kurs').style.color='#fff';
-        }else{
-          document.getElementById('kurs').innerText='API Down'; // Kalau gak ada data
-        }
-      })
-      .catch(()=>{document.getElementById('kurs').innerText='API Down';}); // Kalau fetch gagal
-    }catch(e){
-      document.getElementById('kurs').innerText='API Error'; // Kalau JS error
-    }
-  </script>
+btnLogin.onclick = async () => {
+  try{
+    btnLogin.innerText = 'Login...';
+    const auth = await Pi.authenticate({ scopes: ['username', 'payments'] });
+    localStorage.setItem('pi_username', auth.user.username); // SIMPAN BUAT HALAMAN LAIN
+    window.location.href = '/dashboard.html'; // LEMPAR KE DASHBOARD GRATIS
+  }catch(e){
+    btnLogin.innerText = 'Login Gagal, Coba Lagi';
+    alert('Login Gagal: '+e.message);
+  }
+}
+</script>
 </body>
 </html>
