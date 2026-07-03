@@ -22,32 +22,32 @@ button:active{transform:scale(.98)}
   <button id="btnLogin">Login dengan Pi</button>
   <div id="warn"></div>
 </div>
-
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script>
-Pi.init({ version: "2.0", sandbox: true, clientId: "MU0h1YCvr5HMSJdt_iNaR7YPv0T4qV7MtUnv5uGUz48"});
-const btn = document.getElementById('btnLogin');
-const warn = document.getElementById('warn');
+  // PENTING: Mode Sandbox = Test
+  Pi.init({ 
+    version: "2.0", 
+    sandbox: true,  // <-- ini kuncinya buat ngetes
+    clientId: "mytrack.id" 
+  });
 
-btn.onclick = async ()=>{
-  warn.style.display='none';
-  btn.disabled = true;
-  btn.textContent = 'Nunggu Pi...';
-  
-  try{
-    // INI KUNCINYA: PAKE ARRAY, BUKAN {SCOPES:}
-    const auth = await Pi.authenticate(['username','payments','wallet_address']); 
-    
-    localStorage.setItem('pi_username', auth.user.username);
-    localStorage.setItem('pi_accessToken', auth.accessToken);
-    location.href = 'menu.html'; // langsung lempar ke menu
-
-  }catch(e){
-    warn.textContent = 'Login Gagal: ' + e.message;
-    warn.style.display='block';
-    btn.disabled = false;
-    btn.textContent = 'Login dengan Pi';
+  async function login() {
+    const auth = await Pi.authenticate(['username', 'payments'], 
+      function onIncompletePayment(payment) { console.log(payment); }
+    );
+    console.log("Login OK:", auth);
   }
-};
-</script>
+  
+  async function bayarVIP() {
+    const paymentData = {
+      amount: 0.1,
+      memo: "Buka Menu VIP My Track",
+      metadata: { product: "VIP_1_BULAN" }
+    };
+    const payment = await Pi.createPayment(paymentData);
+    console.log("Bayar:", payment);
+  }
+    </script>
+
 </body>
 </html>
