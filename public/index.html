@@ -72,8 +72,9 @@
       const auth = await Pi.authenticate(['username']);
       alert("5. Sukses: " + auth.user.username); // TES 5
     } catch (err) {
-  alert("ERROR DI AUTH: " + JSON.stringify(err)); // Kirim SS ini bro
-            }
+  alert("ERROR CODE: " + err.code + "\nPESAN: " + err.message); 
+  document.getElementById('loading').innerText = "Auth Gagal: " + err.message;
+  }
   }
 </script>
 
