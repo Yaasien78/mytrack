@@ -26,49 +26,42 @@
     <div id="warn"></div>
   </div>
 
-  <script>
-    // 2. Init Sandbox WAJIB
-    Pi.init({ 
-      version: "2.0", 
-      sandbox: true,  // <-- Mode Tes
-      clientId: "MU0h1YCvr5HMSJdt_iNaR7YPv0T4qV7MtUnv5uGUz48" // <-- Ganti sama ID App lu di Developer Portal
-    });
+<script>
+  // 1. Init doang
+  Pi.init({ 
+    version: "2.0", 
+    sandbox: true,  
+    clientId: "MU0h1YCvr5HMSJdt_iNaR7YPv0T4qV7MtUnv5uGUz48"
+  });
 
-    const btnLogin = document.getElementById('btnLogin');
-    const warn = document.getElementById('warn');
-    const ok = document.getElementById('ok');
+  // 2. Cek login dari localStorage, bukan dari Pi lagi
+  const piUser = localStorage.getItem('pi_user');
+  if (!piUser) {
+    window.location.href = "index.html"; // Kalau gak ada data, balik login
+  } else {
+    const user = JSON.parse(piUser);
+    document.getElementById('btnUser').innerText = user.username;
+  }
 
-    // 3. Logic Login Pas Tombol Diklik
-    btnLogin.onclick = async () => {
-      warn.style.display = 'none';
-      ok.style.display = 'none';
-      btnLogin.disabled = true;
-      btnLogin.innerText = 'Menunggu...';
+  // 3. Fungsi Bayar
+  async function bayarVIP() {
+    try {
+      // Trik: Panggil authenticate 1x pas mau bayar doang
+      await Pi.authenticate(['payments']); 
 
-      try {
-        // Minta izin username + payments
-        const auth = await Pi.authenticate(['username', 'payments'], 
-          function onIncompletePayment(payment) { console.log("Payment belum selesai:", payment); }
-        );
-        
-        ok.innerText = "Login OK: " + auth.user.username;
-        ok.style.display = 'block';
-        console.log("Auth Data:", auth);
+      const payment = await Pi.createPayment({
+        amount: 0.1,
+        memo: "Buka Menu VIP My Track",
+        metadata: { product: "VIP_1_BULAN" }
+      });
+      console.log("Bayar Sukses:", payment);
+      document.getElementById('menuVIP').classList.remove('hidden');
+      document.getElementById('btnBayar').style.display = 'none';
 
-        // Sukses login -> langsung ke menu.html
-        setTimeout(() => {
-          window.location.href = "menu.html"; 
-        }, 800);
-
-      } catch (err) {
-        warn.innerText = "Gagal Login: " + err;
-        warn.style.display = 'block';
-        console.error(err);
-      } finally {
-        btnLogin.disabled = false;
-        btnLogin.innerText = 'Login dengan Pi';
-      }
-    };
-  </script>
+    } catch (err) {
+      alert("Bayar Gagal: " + err);
+    }
+  }
+</script>
 </body>
 </html>
