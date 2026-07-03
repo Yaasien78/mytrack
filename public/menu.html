@@ -31,8 +31,8 @@
       </div>
       <div class="bg-ungu border-gold-2 rounded-2xl p-2 h-64"><canvas id="priceChart"></canvas></div>
     </main> <button id="btnBayarMenu" onclick="bayarBukaMenu()" class="bg-yellow-400 text-black font-bold p-3 rounded-xl w-full mt-4">Bayar 0.1 Pi Buka Menu</button>
+    <button id="btnLogin" onclick="loginPi()" class="text-xl font-bold text-yellow-400 active:scale-95 w-full">Loading...</button>
     <footer class="bg-dongker p-3 border-t-2 border-yellow-400 text-center fixed bottom-0 w-full left-0">
-      <button id="btnLogin" class="text-xl font-bold text-yellow-400 active:scale-95 w-full">Loading...</button>
     </footer>
   </div>
   <script>
@@ -59,7 +59,13 @@ Pi.init({ version: "2.0", sandbox: true }); // <- CUMA INIT DOANG, JANGAN AUTH D
     function updateChart() { if(chart) { chart.data.datasets[0].data = dataPoints; chart.update(); } }
     let currentUser = null;
 let isPaid = false;
-
+function loginPi(){
+  Pi.authenticate({ scopes: ['username', 'payments'] }).then(auth => {
+    currentUser = auth.user;
+    document.getElementById('btnLogin').innerText = 'Welcome '+auth.user.username;
+    alert('LOGIN SUKSES');
+  }).catch((err) => alert('LOGIN GAGAL: '+err));
+                                       }
 function bayarBukaMenu(){ // <- MESIN BAYAR
     if(!currentUser){alert('Login dulu bro');return;}
     if(isPaid){alert('Udah bayar bro');return;}
@@ -90,16 +96,6 @@ function bayarBukaMenu(){ // <- MESIN BAYAR
       onError: (error) => alert('Error: ' + error)
     });
 } // <- TUTUP FUNGSI
-
-// SIMPAN USER PAS LOGIN
-Pi.authenticate({ scopes: ['username', 'payments'] }).then(auth => {
-  currentUser = auth.user;
-  document.getElementById('btnLogin').innerText = 'Welcome '+auth.user.username;
-  alert('LOGIN SUKSES: '+auth.user.username); // <- TAMBAH INI
-}).catch((err) => { // <- TANGKEP ERROR NYA
-  document.getElementById('btnLogin').innerText = 'Login Pi';
-  alert('LOGIN GAGAL: '+err); // <- TAMBAH INI
-});
     initChart(); updateData(); setInterval(updateData, 15000);
   </script>
 </body>
