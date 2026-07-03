@@ -2,63 +2,34 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Track | Login</title>
-  
-  <!-- 1. SDK Pi Cukup 1 Kali Saja, Taruh di Head -->
+  <title>Login MyTrack</title>
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-
-  <style>
-    body {background:#f1f3f6; font-family:system-ui; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;}
-    .card {background:#fff; padding:30px; border:1px solid #ddd; border-radius:12px; width:90%; max-width:380px; text-align:center; box-shadow:0 3px 8px rgba(0,0,0,.08);}
-    h1 {margin:0 0 20px; font-size:22px;}
-    button {width:100%; padding:12px; border:0; border-radius:10px; background:#4f46e5; color:#fff; font-weight:800; font-size:16px; cursor:pointer;}
-    button:active {transform:scale(.98);}
-    #warn {color:#ef4447; font-size:13px; margin-top:10px; display:none;}
-    #ok {color:#16a34a; font-size:13px; margin-top:10px; display:none;}
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="card">
-    <h1>Login MyTrack Pi</h1>
-    <button id="btnLogin">Login dengan Pi</button>
-    <div id="ok"></div>
-    <div id="warn"></div>
+<body class="bg-[#0A0082] flex items-center justify-center h-screen">
+  <div class="bg-[#1A1A3D] p-8 rounded-2xl text-center">
+    <h1 class="text-2xl font-bold text-yellow-400 mb-4">MyTrack Login</h1>
+    <button id="btnLogin" class="bg-yellow-400 text-black font-bold px-8 py-3 rounded-xl">Login dengan Pi</button>
+    <p id="status" class="mt-4 text-gray-300"></p>
   </div>
 
-<script>
-  // 1. Init doang
-  Pi.init({ 
-    version: "2.0", 
-    sandbox: true,  
-    clientId: "MU0h1YCvr5HMSJdt_iNaR7YPv0T4qV7MtUnv5uGUz48"
-  });
+  <script>
+    Pi.init({ version: "2.0", sandbox: true, clientId: "MU0h1YCvr5HMSJdt_iNaR7YPv0T4qV7MtUnv5uGUz48" }); // <-- GANTI
 
-  // 2. Cek login dari localStorage, bukan dari Pi lagi
-  const piUser = localStorage.getItem('pi_user');
-  if (!piUser) {
-    window.location.href = "index.html"; // Kalau gak ada data, balik login
-  } else {
-    const user = JSON.parse(piUser);
-    document.getElementById('btnUser').innerText = user.username;
-  }
+    document.getElementById('btnLogin').onclick = async () => {
+      document.getElementById('status').innerText = "Membuka Pi...";
+      try {
+        const auth = await Pi.authenticate(['username', 'payments']);
+        
+        // KUNCI 1: SIMPEN SEMUA DATA KE HP
+        localStorage.setItem('pi_user', JSON.stringify(auth.user)); 
+        localStorage.setItem('pi_auth', 'true'); 
 
-  // 3. Fungsi Bayar
-  async function bayarVIP() {
-    try {
-  const auth = await Pi.authenticate(['username', 'payments']);
-  
-  // 1. SIMPEN DATA DULU
-  localStorage.setItem('pi_user', JSON.stringify(auth.user)); 
-  localStorage.setItem('pi_auth', 'true'); // Tandain udah login
-
-  // 2. BARU LEMPAR KE MENU
-  window.location.href = "menu.html"; 
-
-} catch (err) { ... }
-      alert("Bayar Gagal: " + err);
-    }
-  }
-</script>
+        window.location.href = "menu.html"; 
+      } catch (err) {
+        document.getElementById('status').innerText = "Login Gagal: " + err;
+      }
+    };
+  </script>
 </body>
 </html>
