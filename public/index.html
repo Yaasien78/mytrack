@@ -1,47 +1,147 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Login MyTrack</title>
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Track</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body { font-family: Arial; background: #0f172a; color: #fff; margin:0; padding:0; }
+  header { display:flex; justify-content:space-between; align-items:center; padding:12px 20px; background:#1e293b; border-bottom:1px solid #334155; }
+  header.logo { display:flex; align-items:center; gap:10px; font-weight:bold; font-size:18px; }
+  header.logo img { height:28px; }
+ .menu-icon { font-size:24px; cursor:pointer; }
+
+ .container { padding:20px; max-width:600px; margin:auto; }
+ .card { background:#1e293b; padding:16px; border-radius:16px; margin-bottom:16px; text-align:center; }
+ .harga-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+ .harga-item { background:#334155; padding:12px; border-radius:12px; font-size:14px; }
+ .harga-item b { font-size:18px; color:#fbbf24; }
+  #chart { max-height:220px; }
+  footer { text-align:center; padding:20px; color:#94a3b8; font-size:13px; }
+  #username { color: #38bdf8; font-weight: bold; }
+  #loading { text-align:center; padding:100px 20px; font-size:18px; }
+ .hidden { display: none; }
+</style>
 </head>
-<body class="bg-[#0A0082] flex items-center justify-center h-screen">
-  <div class="bg-[#1A1A3D] p-8 rounded-2xl text-center w-80">
-    <h1 class="text-2xl font-bold text-yellow-400 mb-6">MyTrack</h1>
-    <button id="btnLogin" class="w-full bg-yellow-400 text-black font-bold px-8 py-3 rounded-xl">Login dengan Pi</button>
-    <p id="status" class="mt-4 text-sm text-gray-300"></p>
+<body>
+
+<div id="loading">Auto Login ke My Track...</div>
+
+<div id="dashboard" class="hidden">
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <img src="https://minepi.com/static/logo.png" alt="Pi Logo">
+      <span>My Track</span>
+    </div>
+    <div class="menu-icon">☰</div>
+  </header>
+
+  <!-- BODY -->
+  <div class="container">
+    <div class="card">
+      <div id="tanggal"></div>
+      <h2>Welcome Pioneer <span id="username">...</span> 👋</h2>
+      <p>to My Track App @2026</p>
+    </div>
+
+    <div class="card harga-grid">
+      <div class="harga-item">Pi/USDT<br><b id="piUsdt">Loading...</b></div>
+      <div class="harga-item">Pi/IDR<br><b id="piIdr">Loading...</b></div>
+      <div class="harga-item">USDT/IDR<br><b id="usdtIdr">Loading...</b></div>
+      <div class="harga-item">Update<br><b id="lastUpdate">-</b></div>
+    </div>
+
+    <div class="card">
+      <canvas id="chart"></canvas>
+    </div>
+
+    <div class="card">
+      <img src="https://i.imgur.com/8y0YwBw.png" alt="My Track Logo" style="width:120px; opacity:0.9;">
+      <p style="margin-top:10px;">Logo My Track</p>
+    </div>
   </div>
 
-  <script>
-    // INIT 1X DOANG, PALING ATAS
-    Pi.init({ 
-      version: "2.0", 
-      sandbox: true,  
-      clientId: "MU0h1YCvr5HMSJdt_iNaR7YPv0T4qV7MtUnv5uGUz48" // <-- GANTI PAKE CLIENT ID ASLI LU BRO
+  <!-- FOOTER -->
+  <footer>
+    Auto Login: <span id="footerUser">...</span> | My Track @2026
+  </footer>
+</div>
+
+<script>
+  Pi.init({ version: "2.0", sandbox: true }); // TESTNET
+  let user = "";
+  let chart;
+
+  // 1. AUTO LOGIN + ISI SEMUA DATA
+  window.onload = async function() {
+    try {
+      const auth = await Pi.authenticate(['username', 'payments']);
+      user = auth.user.username;
+
+      document.getElementById('username').innerText = user;
+      document.getElementById('footerUser').innerText = user;
+
+      setTanggal();
+      initChart();
+      getHarga(); // Ambil harga pertama kali
+      setInterval(getHarga, 15000); // Update harga + chart tiap 15 detik
+
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+
+    } catch (err) {
+      document.getElementById('loading').innerText = "Buka pakai Pi Browser ya bro.";
+    }
+  }
+
+  // 2. TANGGAL HARI INI
+  function setTanggal() {
+    const d = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('tanggal').innerText = d.toLocaleDateString('id-ID', options);
+  }
+
+  // 3. AMBIL HARGA DARI COINGECKO API
+  async function getHarga() {
+    try {
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network,tether&id=pi-network&vs_currencies=usd,id');
+      const data = await res.json();
+
+      const piUsd = data['pi-network']?.usd || 0.0; // Pi belum listing, jadi 0 dulu
+      const usdtIdr = data['tether']?.idr || 16500; // Ambil USDT/IDR beneran
+      const piIdr = piUsd * usdtIdr;
+
+      document.getElementById('piUsdt').innerText = `$${piUsd.toFixed(4)}`;
+      document.getElementById('usdtIdr').innerText = `Rp${usdtIdr.toLocaleString('id-ID')}`;
+      document.getElementById('piIdr').innerText = `Rp${piIdr.toLocaleString('id-ID')}`;
+      document.getElementById('lastUpdate').innerText = new Date().toLocaleTimeString('id-ID');
+
+      updateChart(piUsd); // Update chart 15 detik
+    } catch(e) {
+      document.getElementById('piUsdt').innerText = "Gagal Load";
+    }
+  }
+
+  // 4. CHART PI 15 DETIK
+  function initChart() {
+    const ctx = document.getElementById('chart').getContext('2d');
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: { labels: [], datasets: [{ label: 'Pi/USD', data: [], borderColor: '#fbbf24', tension: 0.3 }] },
+      options: { plugins:{legend:{display:false}}, scales:{x:{display:false}, y:{ticks:{color:'#fff'}}} }
     });
+  }
+  function updateChart(harga) {
+    const now = new Date().toLocaleTimeString('id-ID', {minute:'2-digit', second:'2-digit'});
+    if(chart.data.labels.length > 20) { chart.data.labels.shift(); chart.data.datasets[0].data.shift(); }
+    chart.data.labels.push(now);
+    chart.data.datasets[0].data.push(harga);
+    chart.update();
+  }
+</script>
 
-    document.getElementById('btnLogin').onclick = async () => {
-      const status = document.getElementById('status');
-      status.innerText = "Membuka Pi...";
-      
-      try {
-        // Minta izin login + bayar langsung
-        const auth = await Pi.authenticate(['username', 'payments']);
-        
-        // SIMPAN SESSION BIAR GAK LOOP
-        localStorage.setItem('pi_user', JSON.stringify(auth.user)); 
-        localStorage.setItem('pi_auth', 'true'); 
-
-        status.innerText = "Sukses. Masuk...";
-        // LANGSUNG LEMPAR
-        window.location.href = "menu.html"; 
-
-      } catch (err) {
-        status.innerText = "Gagal: " + err;
-        alert("Error: " + err);
-      }
-    };
-  </script>
 </body>
 </html>
