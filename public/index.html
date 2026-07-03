@@ -60,52 +60,21 @@
 </div>
 
 <script>
-  Pi.init({ version: "1.0" }); // V1
+  alert("1. SDK Kebaca"); // TES 1
+  
+  Pi.init({ version: "1.0" });
+  alert("2. Init Sukses"); // TES 2
 
-  const loginBtn = document.getElementById('loginBtn');
-
-  // KLIK TOMBOL DI FOOTER
-  loginBtn.onclick = async function() {
-    loginBtn.innerText = "Login...";
-    loginBtn.disabled = true;
+  window.onload = async function() {
+    alert("3. Window Load"); // TES 3
     try {
-      const auth = await Pi.authenticate(['username']); // HARUS ADA KLIK
-      const user = auth.user.username;
-      localStorage.setItem('pi_user', user); // SIMPEN
-      masukDashboard(user);
+      alert("4. Mau Auth"); // TES 4
+      const auth = await Pi.authenticate(['username']);
+      alert("5. Sukses: " + auth.user.username); // TES 5
     } catch (err) {
-      alert("Gagal Login: " + err);
-      loginBtn.innerText = "Masuk dengan Pi";
-      loginBtn.disabled = false;
+      alert("ERROR DI AUTH: " + JSON.stringify(err)); // INI KUNCI NYA
     }
   }
-
-  // CEK PAS BUKA APP
-  window.onload = function() {
-    const savedUser = localStorage.getItem('pi_user');
-    if(savedUser){
-      masukDashboard(savedUser); // UDAH PERNAH LOGIN = LANGSUNG MASUK
-    } else {
-      document.getElementById('loading').classList.add('hidden');
-      document.getElementById('dashboard').classList.remove('hidden');
-      document.getElementById('footerText').innerText = "Silakan Login";
-      loginBtn.classList.remove('hidden'); // TOMBOL NONGOL DI FOOTER
-    }
-  }
-
-  function masukDashboard(user){
-    document.getElementById('username').innerText = user;
-    document.getElementById('footerText').innerText = "Login: " + user;
-    loginBtn.classList.add('hidden'); // TOMBOL ILANG
-    document.getElementById('tanggal').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    document.getElementById('loading').classList.add('hidden');
-    document.getElementById('dashboard').classList.remove('hidden');
-    getHarga();
-    setInterval(getHarga, 15000);
-  }
-
-  let chart;
-  async function getHarga(){try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network,tether&vs_currencies=usd,id');const d=await r.json();const p=d['pi-network']?.usd||0;const u=d['tether']?.idr||16500;document.getElementById('piUsdt').innerText=`$${p.toFixed(4)}`;document.getElementById('usdtIdr').innerText=`Rp${u.toLocaleString('id-ID')}`;document.getElementById('piIdr').innerText=`Rp${(p*u).toLocaleString('id-ID')}`;document.getElementById('lastUpdate').innerText=new Date().toLocaleTimeString('id-ID');if(!chart){const c=document.getElementById('chart').getContext('2d');chart=new Chart(c,{type:'line',data:{labels:[],datasets:[{data:[],borderColor:'#fbbf24'}]},options:{plugins:{legend:{display:false}},scales:{x:{display:false},y:{ticks:{color:'#fff'}}}})}if(chart.data.labels.length>20){chart.data.labels.shift();chart.data.datasets[0].data.shift()}chart.data.labels.push(new Date().toLocaleTimeString('id-ID',{minute:'2-digit',second:'2-digit'}));chart.data.datasets[0].data.push(p);chart.update()}catch(e){}}
 </script>
 
 </body>
