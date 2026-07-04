@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Track - Market</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="page.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="head">
+    <img src="logo.png" class="logo-head" onclick="window.location.href='index.html'">
+    <div class="head-center">Market Pi</div>
+    <img src="https://minepi.com/static/media/pi-logo.1b6a0a9c.svg" class="pi-logo">
+  </div>
+  <div class="body">
+    <div class="card">
+      <div class="price-big" id="piUsdt">Pi/USDT: Loading...</div>
+      <div class="price-small" id="piIdr">Pi/IDR: Loading...</div>
+      <div class="price-small" id="change24h">24h: Loading...</div>
+    </div>
+    <div class="card"><canvas id="piChart"></canvas></div>
+  </div>
+  <div class="foot"><button class="foot-btn" onclick="window.location.href='index.html'">Kembali ke Feed</button></div>
+
+<script>
+async function getPiData() {
+  try {
+    const res = await fetch('https://api.coingecko.com/api/v3/coins/pi-network?localization=false&tickers=false&market_data=true&sparkline=true');
+    const data = await res.json();
+    const usdt = data.market_data.current_price.usdt;
+    const idr = data.market_data.current_price.idr;
+    const change = data.market_data.price_change_percentage_24h.toFixed(2);
+    document.getElementById("piUsdt").innerText = `Pi/USDT: $${usdt}`;
+    document.getElementById("piIdr").innerText = `Pi/IDR: Rp ${idr.toLocaleString('id-ID')}`;
+    document.getElementById("change24h").innerText = `24h: ${change}%`;
+    document.getElementById("change24h").style.color = change >= 0 ? 'green' : 'red';
+    new Chart(document.getElementById('piChart'), {
+      type: 'line', data: { labels: [], datasets: [{ label: 'Pi 7 Hari', data: data.market_data.sparkline_7d.price, borderColor: 'gold', borderWidth: 2, fill: false }] },
+      options: { responsive: true, plugins: { legend: { display: false }
+    });
+  } catch(e) { document.getElementById("piUsdt").innerText = `Pi/USDT: $0.58`; }
+}
+getPiData(); setInterval(getPiData, 60000);
+</script>
+</body>
+    </html>
