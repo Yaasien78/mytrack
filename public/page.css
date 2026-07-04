@@ -1,39 +1,74 @@
+/* RESET + BODY */
 body {
     margin: 0;
+    padding: 70px 0; /* Kasih jarak biar konten gak ketutup head & foot */
+    background: #F5F5F5;
     font-family: Arial, sans-serif;
-    background: #f5f5f5;
 }
 
-.app-head {
+/* HEAD DAN FOOT SAMA UKURAN */
+.app-head, .app-foot {
+    width: 100%; /* Selebar layar HP */
+    background: #003366; /* Biru metalik Pi */
+    padding: 10px 12px; /* Tinggi sama */
+    box-sizing: border-box; /* Biar rapi */
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: #003366; /* Biru 007 Metallic */
-    color: white; /* Tulisan jadi putih */
-    padding: 10px;
-    border-bottom: 3px solid #FFD700; /* Garis Emas */
-    position: relative;
-    font-weight: bold;
+    justify-content: space-between; /* Logo kiri, judul tengah, logo kanan */
 }
-.app-head h1 {
-    margin: 0;
-    font-size: 20px;
-    color: #FFD700; /* Market Pi tetap kuning emas */
+
+/* KHUS HEAD */
+.app-head {
+    border-bottom: 2px solid #FFD700; /* Garis emas bawah */
+    position: fixed; /* Nempel di atas */
+    top: 0;
+    left: 0;
+    z-index: 100;
 }
-.logo-head {
-    position: absolute;
-    left: 10px;
-    width: 40px;
-    height: 40px;
+
+/* KHUS FOOT */
+.app-foot {
+    position: fixed; /* Nempel di bawah */
+    bottom: 0;
+    left: 0;
+    border-top: 2px solid #FFD700; /* Garis emas atas */
+    justify-content: center; /* Tombol di tengah */
+}
+
+/* LOGO DI HEAD */
+.app-head img {
+    width: 38px;
+    height: 38px;
     border-radius: 8px;
     border: 2px solid #FFD700;
     cursor: pointer;
 }
-
-#login-info {
-    background: #003366;
-    color: white;
-    padding: 10px;
-    text-align: center;
-    font-weight: bold;
+.app-head img:last-child {
+    border-radius: 50%; /* Logo Pi bulat */
 }
+
+/* JUDUL DI TENGAH HEAD */
+.app-head h1 {
+    margin: 0;
+    font-size: 16px;
+    color: #FFD700;
+    flex-grow: 1;
+    text-align: center;
+}
+
+/* TOMBOL EMAS DI FOOT */
+.btn-primary {
+    background: #FFD700;
+    color: #003366;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    width: 95%; /* Hampir selebar foot */
+    height: 44px; /* Tinggi sama kayak head */
+}
+.btn-primary:active {
+    background: #FFC700;
+    }
