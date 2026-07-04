@@ -1,15 +1,16 @@
-export async function POST(req: Request) {
-  const { paymentId } = await req.json();
+export default async function handler(req, res) {
+  const API_KEY = process.env.PI_NETWORK_API_KEY;
+  const { paymentId } = req.body;
   
-  const API_KEY = process.env.PI_NETWORK_API_KEY; // <-- ini nama barunya
+  console.log("Approve:", paymentId);
 
-  const response = await fetch(`https://api.minepi.com/v2/payments/${paymentId}/approve`, {
+  const response = await fetch(`https://api.minepi.com/v1/payments/${paymentId}/approve`, { // INI GANTI v1
     method: 'POST',
-    headers: {
-      'Authorization': `Key ${API_KEY}`,
-      'Content-Type': 'application/json'
+    headers: { 
+      'Authorization': `Key ${API_KEY}`, 
+      'Content-Type': 'application/json' 
     }
   });
-
-  return Response.json(await response.json());
+  const data = await response.json();
+  res.status(200).json(data);
 }
