@@ -1,127 +1,77 @@
 <!DOCTYPE html>
-<html>
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script>
-    // 1. INIT SDK WAJIB PERTAMA
-    Pi.init({ version: "2.0", sandbox: true }); // sandbox true buat test
-</script>
+<html lang="id">
 <head>
-  <title>My Track - Feed</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-   .app-head {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #003366;
-    color: white;
-    padding: 10px;
-    border-bottom: 3px solid #FFD700;
-    position: relative;
-    font-weight: bold;
-}
-.app-head h1 {
-    margin: 0;
-    font-size: 20px;
-    color: #FFD700;
-}
-.logo-head {
-    position: absolute;
-    left: 10px;
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    border: 2px solid #FFD700;
-    cursor: pointer;
-}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Pi</title>
+    <link rel="stylesheet" href="page.css">
+    
+    <!-- 1. SDK PI WAJIB -->
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script>
+        // Ganti sandbox: false kalau udah rilis beneran
+        Pi.init({ version: "2.0", sandbox: true }); 
+    </script>
 </head>
 <body>
-  <div class="app-head" style="display:flex; align-items:center; justify-content:space-between; background:#003366; padding:8px 12px; border-bottom:3px solid #FFD700;">
-    <img src="/logo-mytrack.png" style="width:38px; height:38px; border-radius:8px; border:2px solid #FFD700;" onclick="window.location.href='upload.html'">
-    <h1 style="margin:0; font-size:16px; color:#FFD700; flex-grow:1; text-align:center;">Market Pi</h1>
-    <img src="/logo-pi.png" style="width:38px; height:38px; border-radius:50%; border:2px solid #FFD700;" onclick="window.location.href='market.html'">
-  </div>
-  <div class="app-foot">
-    <button id="btn-login-pi" class="btn-primary">Login dengan Pi</button>
-  </div>
-  <script>
-// FUNGSI TOMBOL LOGIN
-document.getElementById("btn-login-pi").onclick = function() {
-    Pi.authenticate(['username', 'payments'], 
-        // KALAU SUKSES
-        function(auth) {
-            alert("Login Berhasil! Halo " + auth.user.username);
-            // Simpan username
-            localStorage.setItem("pi_username", auth.user.username);
-            // Sembunyiin tombol
-            document.getElementById("btn-login-pi").innerText = "Halo " + auth.user.username;
-            document.getElementById("btn-login-pi").disabled = true;
-        }, 
-        // KALAU GAGAL
-        function(error) {
-            alert("Login Gagal: " + error);
+
+    <!-- 2. HEAD -->
+    <div class="app-head">
+        <img src="https://i.imgur.com/8Km9tLL.png" alt="Logo" onclick="window.location='index.html'">
+        <h1 id="judul-head">Market Pi</h1>
+        <img src="https://pi.app/static/media/pi-logo.123.png" alt="Pi Logo">
+    </div>
+
+    <!-- 3. ISI KONTEN -->
+    <div class="konten">
+        <h2>Selamat Datang di Market Pi 💛</h2>
+        <p>Jual Beli Barang Pakai Pi Coin</p>
+        <p>Login dulu untuk mulai</p>
+    </div>
+
+    <!-- 4. FOOT -->
+    <div class="app-foot">
+        <button id="btn-login-pi" class="btn-primary">Login dengan Pi</button>
+    </div>
+
+    <!-- 5. SCRIPT LOGIN -->
+    <script>
+        const btnLogin = document.getElementById("btn-login-pi");
+        const judulHead = document.getElementById("judul-head");
+
+        // CEK UDAH LOGIN APA BELUM
+        window.onload = function() {
+            const username = localStorage.getItem("pi_username");
+            if(username){
+                btnLogin.innerText = "Halo " + username;
+                btnLogin.disabled = true;
+                judulHead.innerText = "Halo, " + username;
+            }
         }
-    );
-}
 
-// CEK UDAH LOGIN APA BELUM PAS BUKA HALAMAN
-window.onload = function() {
-    const username = localStorage.getItem("pi_username");
-    if(username){
-        document.getElementById("btn-login-pi").innerText = "Halo " + username;
-        document.getElementById("btn-login-pi").disabled = true;
-    }
-}
-                    </script>
-    
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script>
-  
-Pi.init({ version: "2.0", sandbox: true, clientId: "MU0h1YCvr5HMSJdt_iNaR7YPv0T4qV7MtUnv5uGUz48" });
-let currentUser = localStorage.getItem("pi_user");
+        // KLIK TOMBOL LOGIN
+        btnLogin.onclick = function() {
+            btnLogin.innerText = "Loading...";
+            btnLogin.disabled = true;
 
-function loadFoot() {
-  const foot = document.getElementById("footArea");
-  if(currentUser) {
-    foot.innerHTML = `<div class="foot-user">Login sebagai: ${currentUser}</div>`;
-  } else {
-    foot.innerHTML = `<button class="foot-btn" onclick="login()">Login</button>`;
-  }
-}
+            Pi.authenticate(['username', 'payments'], 
+                // SUKSES
+                function(auth) {
+                    const username = auth.user.username;
+                    localStorage.setItem("pi_username", username);
+                    alert("Login Berhasil! Halo " + username);
+                    // Langsung lempar ke upload
+                    window.location.href = 'upload.html'; 
+                }, 
+                // GAGAL
+                function(error) {
+                    alert("Login Gagal: " + error);
+                    btnLogin.innerText = "Login dengan Pi";
+                    btnLogin.disabled = false;
+                }
+            );
+        }
+    </script>
 
-async function login() {
-  try {
-    const auth = await Pi.authenticate(['username', 'payments'], function(auth) {
-    document.getElementById('login-info').innerHTML = "Login sebagai: @" + auth.user.username;
-    document.getElementById('login-info').style.background = "#003366";
-    document.getElementById('login-info').style.color = "white";
-    document.getElementById('login-info').style.padding = "10px";
-    document.getElementById('login-info').style.textAlign = "center";
-    document.getElementById('login-info').style.fontWeight = "bold";
-});
-    currentUser = auth.user.username;
-    localStorage.setItem("pi_user", currentUser);
-    loadFoot();
-  } catch(e) { alert("Login gagal: " + e) }
-}
-
-function loadPosts() {
-  const posts = JSON.parse(localStorage.getItem("mytrack_posts") || "[]");
-  const feed = document.getElementById("feed");
-  feed.innerHTML = posts.map(p => `<div class="post"><b style="color:gold">${p.user}</b><p>${p.caption}</p>${p.media}</div>`).join('');
-}
-
-async function getPiPrice() {
-  try {
-    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usdt');
-    const data = await res.json();
-    document.getElementById("piPrice").innerText = `Pi/USDT: $${data['pi-network'].usdt}`;
-  } catch(e) { document.getElementById("piPrice").innerText = `Pi/USDT: $0.58`; }
-}
-
-loadFoot(); loadPosts(); getPiPrice(); setInterval(getPiPrice, 30000);
-</script>
-  <div id="login-info"></div>
 </body>
-</html>
+  </html>
