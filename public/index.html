@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>
+    // 1. INIT SDK WAJIB PERTAMA
+    Pi.init({ version: "2.0", sandbox: true }); // sandbox true buat test
+</script>
 <head>
   <title>My Track - Feed</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -37,9 +42,42 @@
     <h1 style="margin:0; font-size:16px; color:#FFD700; flex-grow:1; text-align:center;">Market Pi</h1>
     <img src="/logo-pi.png" style="width:38px; height:38px; border-radius:50%; border:2px solid #FFD700;" onclick="window.location.href='market.html'">
   </div>
+  <div class="app-foot">
+    <button id="btn-login-pi" class="btn-primary">Login dengan Pi</button>
+  </div>
+  <script>
+// FUNGSI TOMBOL LOGIN
+document.getElementById("btn-login-pi").onclick = function() {
+    Pi.authenticate(['username', 'payments'], 
+        // KALAU SUKSES
+        function(auth) {
+            alert("Login Berhasil! Halo " + auth.user.username);
+            // Simpan username
+            localStorage.setItem("pi_username", auth.user.username);
+            // Sembunyiin tombol
+            document.getElementById("btn-login-pi").innerText = "Halo " + auth.user.username;
+            document.getElementById("btn-login-pi").disabled = true;
+        }, 
+        // KALAU GAGAL
+        function(error) {
+            alert("Login Gagal: " + error);
+        }
+    );
+}
+
+// CEK UDAH LOGIN APA BELUM PAS BUKA HALAMAN
+window.onload = function() {
+    const username = localStorage.getItem("pi_username");
+    if(username){
+        document.getElementById("btn-login-pi").innerText = "Halo " + username;
+        document.getElementById("btn-login-pi").disabled = true;
+    }
+}
+                    </script>
     
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script>
+  
 Pi.init({ version: "2.0", sandbox: true, clientId: "MU0h1YCvr5HMSJdt_iNaR7YPv0T4qV7MtUnv5uGUz48" });
 let currentUser = localStorage.getItem("pi_user");
 
