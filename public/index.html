@@ -3,18 +3,150 @@
 <head>
   <title>My Track</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { margin:0; font-family: Arial; background: #fff; }
+    
+    /* HEAD - Biru 007 Metalik + Garis Emas 2px */
+    .head {
+      background: linear-gradient(145deg, #005f8a, #0077b6);
+      color: white; display: flex; justify-content: space-between;
+      align-items: center; padding: 10px 15px; border-bottom: 2px solid gold;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .head h2 { margin:0; cursor:pointer; }
+    .head-right { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+    .pi-logo { width: 25px; height: 25px; background: gold; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0077b6; font-weight: bold; }
+
+    /* BODY */
+    .body { padding: 5px; min-height: 70vh; }
+    
+    /* VIEW POST */
+    .post { border: 1px solid #ddd; margin: 10px 0; padding: 10px; border-radius: 8px; background: #fafafa; }
+    .post img, .post video { width: 100%; border-radius: 5px; margin-top: 5px; }
+
+    /* VIEW UPLOAD - Box Putih */
+    .upload-box {
+      background: white; border: 2px solid #ccc; border-radius: 8px;
+      margin: 5px; padding: 10px; position: relative;
+    }
+    .username-bar {
+      border: none; border-bottom: 2px solid #0077b6; width: 100%;
+      padding: 5px; font-size: 14px; outline: none; margin-bottom: 10px;
+    }
+    .content-area {
+      width: 100%; height: 200px; border: none; resize: none; outline: none;
+    }
+    .upload-btn {
+      position: absolute; bottom: 15px; right: 15px; font-size: 22px;
+      cursor: pointer; color: #0077b6;
+    }
+    #fileInput { display: none; }
+
+    /* FOOT - Biru Muda Metalik + Tulisan Emas */
+    .foot {
+      background: linear-gradient(145deg, #48cae4, #90e0ef);
+      padding: 15px; text-align: center; position: sticky; bottom: 0;
+    }
+    .foot-btn {
+      background: none; border: none; color: gold; font-weight: bold;
+      font-size: 18px; cursor: pointer; width: 100%;
+    }
+  </style>
 </head>
 <body>
-  <h1>My Track ⚡</h1>
-  
-  <p id="user">Belum Login</p>
-  
-  <button onclick="login()">Login</button>
-  <button onclick="bayar()">Bayar 0.01 Pi - Buka Premium 30 Hari</button>
-  
-  <p id="status">Status: Menunggu...</p>
 
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <script src="app.js"></script>
+  <div class="head">
+    <h2 onclick="showView('post')">My Track</h2>
+    <div class="head-right">
+      <span id="piPrice">Pi/USDT: 0.58</span>
+      <div class="pi-logo">π</div>
+    </div>
+  </div>
+
+  <div class="body" id="appBody">
+    <!-- ISI AKAN GANTI2 DISINI -->
+  </div>
+
+  <div class="foot">
+    <button class="foot-btn" id="footBtn" onclick="handleFoot()">Login</button>
+  </div>
+
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>
+Pi.init({ version: "2.0", sandbox: true, clientId: "GANTI_DENGAN_CLIENT_ID_KAMU" });
+let currentUser = localStorage.getItem("pi_user");
+let currentView = 'post';
+let uploadedFile = null;
+
+function showView(view) {
+  currentView = view;
+  const body = document.getElementById("appBody");
+  const footBtn = document.getElementById("footBtn");
+
+  if(view === 'post') {
+    body.innerHTML = `<h3>Feed Iklan</h3><div id="feed"></div>`;
+    footBtn.innerText = currentUser ? currentUser : "Login";
+  }
+  if(view === 'upload') {
+    body.innerHTML = `
+      <div class="upload-box">
+        <input class="username-bar" id="usernameBar" value="${currentUser}" readonly>
+        <textarea class="content-area" id="caption" placeholder="Tulis caption..."></textarea>
+        <label class="upload-btn" for="fileInput">📎</label>
+        <input type="file" id="fileInput" accept="image/*,video/*" onchange="previewFile(event)">
+        <div id="preview"></div>
+      </div>
+    `;
+    footBtn.innerText = "Send 0.01 π to Post";
+  }
+}
+
+async function handleFoot() {
+  if(!currentUser) { // LOGIN
+    try {
+      const auth = await Pi.authenticate(['username', 'payments']);
+      currentUser = auth.user.username;
+      localStorage.setItem("pi_user", currentUser);
+      showView('post');
+    } catch(e) { alert("Login gagal: " + e) }
+  } else { // BAYAR + POST
+    const caption = document.getElementById("caption").value;
+    if(!uploadedFile && caption.trim() === "") return alert("Silahkan upload in box");
+    
+    Pi.createPayment({amount: 0.01, memo: "Post MyTrack", metadata: {}}, {
+      onReadyForServerApproval: () => alert("Nunggu server..."), // Nanti kita isi API
+      onReadyForServerCompletion: () => {
+        addPost(caption, uploadedFile);
+        alert("Post Berhasil!");
+        showView('post');
+      },
+      onError: (e) => alert("Batal: " + e)
+    });
+  }
+}
+
+function previewFile(e) {
+  uploadedFile = e.target.files[0];
+  const preview = document.getElementById("preview");
+  if(uploadedFile.type.startsWith('image')) {
+    preview.innerHTML = `<img src="${URL.createObjectURL(uploadedFile)}" style="width:100px">`;
+  } else {
+    preview.innerHTML = `<video src="${URL.createObjectURL(uploadedFile)}" style="width:100px" controls></video>`;
+  }
+}
+
+function addPost(caption, file) {
+  const feed = document.getElementById("feed");
+  let media = "";
+  if(file) {
+    if(file.type.startsWith('image')) media = `<img src="${URL.createObjectURL(file)}">`;
+    else media = `<video src="${URL.createObjectURL(file)}" controls></video>`;
+  }
+  feed.innerHTML = `<div class="post"><b>${currentUser}</b><p>${caption}</p>${media}</div>` + feed.innerHTML;
+}
+
+// Auto login + load awal
+if(currentUser) showView('post'); else showView('post');
+</script>
 </body>
-</html>
+  </html>
