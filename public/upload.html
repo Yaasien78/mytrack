@@ -1,91 +1,234 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>My Track - Upload</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    .app-head {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #003366;
-    color: white;
-    padding: 10px;
-    border-bottom: 3px solid #FFD700;
-    position: relative;
-    font-weight: bold;
-}
-.app-head h1 {
-    margin: 0;
-    font-size: 20px;
-    color: #FFD700;
-}
-.logo-head {
-    position: absolute;
-    left: 10px;
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    border: 2px solid #FFD700;
-    cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Track - Upload</title>
+    
+    <!-- Pi SDK -->
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script>
+        Pi.init({ version: "2.0", sandbox: true });
+    </script>
+    
+    <style>
+        :root {
+            --blue: #0066cc;
+            --gold: #ffd700;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+        }
+
+        /* HEADER - Sama seperti index */
+        header {
+            background: linear-gradient(#0066cc, #004499);
+            color: white;
+            padding: 12px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-left {
+            font-weight: bold;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+        }
+
+        .price-center {
+            text-align: center;
+            flex: 1;
+        }
+
+        .pi-logo-right {
+            height: 45px;
+            cursor: pointer;
+        }
+
+        .username {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        /* BODY */
+        .upload-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .upload-box {
+            border: 2px solid var(--gold);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            background: white;
+            margin-bottom: 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--gold);
+            padding: 40px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            cursor: pointer;
+        }
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(#0066cc, #004499);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-top: 2px solid var(--gold);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .send-btn {
+            color: var(--gold);
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-  <div class="app-head">
-    <img src="/logo.png" class="logo-head" onclick="window.location.href='upload.html'">
-    <h1 id="header-title">Market Pi</h1>
-  </div>
 
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script>
-Pi.init({ version: "2.0", sandbox: true, clientId: "GANTI_DENGAN_CLIENT_ID_KAMU" });
-let currentUser = localStorage.getItem("pi_user");
-let uploadedFile = null; let uploadedMedia = "";
+    <!-- HEADER -->
+    <header>
+        <div class="header-container">
+            <!-- Kiri: My Track (kembali ke home) -->
+            <a href="index.html" class="logo-left">My Track</a>
+            
+            <!-- Tengah: Harga PI/USDT -->
+            <div class="price-center">
+                <p id="pi-price">PI/USDT = <span id="price-value">0.85</span></p>
+            </div>
+            
+            <!-- Kanan: Pi Network Logo -->
+            <img src="https://minepi.com/wp-content/uploads/2021/04/pi-logo.png" 
+                 alt="Pi Network" 
+                 class="pi-logo-right"
+                 onclick="window.location.href='market.html'">
+        </div>
+    </header>
 
-if(!currentUser) { alert("Login dulu bro"); window.location.href = 'index.html'; }
-document.getElementById("usernameBar").value = currentUser;
+    <!-- BODY UPLOAD -->
+    <div class="upload-container">
+        <h2 style="text-align:center; margin:20px 0; color:#0066cc;">Buat Postingan Baru</h2>
+        
+        <div class="upload-box">
+            <!-- Username / Login Status -->
+            <div id="userStatus" style="margin-bottom:15px; font-size:1.1rem;">
+                <!-- JS akan mengubah ini -->
+            </div>
 
-function previewFile(e) {
-  uploadedFile = e.target.files[0];
-  const reader = new FileReader();
-  reader.onload = function(event) {
-    uploadedMedia = event.target.result;
-    document.getElementById("preview").innerHTML = uploadedFile.type.startsWith('image') 
-      ? `<img src="${uploadedMedia}" style="width:100px; margin-top:5px; border:2px solid gold">`
-      : `<video src="${uploadedMedia}" style="width:100px; margin-top:5px; border:2px solid gold" controls></video>`;
-  }
-  reader.readAsDataURL(uploadedFile);
-}
+            <div class="upload-area" id="uploadArea">
+                <p>Klik atau tarik file di sini</p>
+                <input type="file" id="fileInput" style="display:none;" accept="image/*,video/*">
+                <p id="fileName" style="margin-top:10px; font-weight:bold; color:#0066cc;"></p>
+            </div>
+        </div>
+    </div>
 
-function handlePost() {
-  const caption = document.getElementById("caption").value;
-  if(!uploadedMedia && caption.trim() === "") return alert("Silahkan upload in box");
-  
-  Pi.createPayment({amount: 0.01, memo: "Post MyTrack", metadata: {}}, {
-    onReadyForServerCompletion: (payment) => {
-      let posts = JSON.parse(localStorage.getItem("mytrack_posts") || "[]");
-      let mediaTag = "";
-      if(uploadedMedia) mediaTag = uploadedFile.type.startsWith('image') 
-        ? `<img src="${uploadedMedia}">` : `<video src="${uploadedMedia}" controls></video>`;
-      posts.unshift({user: currentUser, caption: caption, media: mediaTag});
-      localStorage.setItem("mytrack_posts", JSON.stringify(posts));
-      alert("Post Berhasil!");
-      window.location.href = 'index.html';
-    },
-    onError: (e) => alert("Batal: " + e)
-  });
-}
+    <!-- FOOTER -->
+    <footer>
+        <span class="send-btn" onclick="sendPost()">Send 0.01 Pi to Post</span>
+    </footer>
 
-async function getPiPrice() {
-  try {
-    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usdt');
-    const data = await res.json();
-    document.getElementById("piPrice").innerText = `Pi/USDT: $${data['pi-network'].usdt}`;
-  } catch(e) { document.getElementById("piPrice").innerText = `Pi/USDT: $0.58`; }
-}
-getPiPrice(); setInterval(getPiPrice, 30000);
-</script>
-<div id="login-info"></div>
+    <script>
+        let selectedFile = null;
+        let isLoggedIn = true; // Ubah ke false untuk simulasi belum login
+
+        // Update harga (simulasi)
+        function updatePrice() {
+            const priceEl = document.getElementById('price-value');
+            let price = 0.85;
+            setInterval(() => {
+                price += (Math.random() * 0.02 - 0.01);
+                priceEl.textContent = price.toFixed(4);
+            }, 8000);
+        }
+
+        // Status Login di Header
+        function checkLoginStatus() {
+            const userDiv = document.getElementById('userStatus');
+            if (isLoggedIn) {
+                userDiv.innerHTML = `<span class="username">@username123</span>`;
+            } else {
+                userDiv.innerHTML = `<span onclick="alert('Silakan Login terlebih dahulu')" style="color:#ffd700; cursor:pointer;">Login</span>`;
+            }
+        }
+
+        // Upload File
+        document.getElementById('uploadArea').addEventListener('click', () => {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            selectedFile = e.target.files[0];
+            if (selectedFile) {
+                document.getElementById('fileName').textContent = "✅ " + selectedFile.name;
+            }
+        });
+
+        // Kirim Post (0.01 Pi)
+        function sendPost() {
+            if (!selectedFile) {
+                alert("❌ Silahkan upload file terlebih dahulu!");
+                return;
+            }
+
+            if (!isLoggedIn) {
+                alert("❌ Silakan Login terlebih dahulu!");
+                return;
+            }
+
+            // Simulasi Payment Pi
+            Pi.createPayment({
+                amount: 0.01,
+                memo: "Upload postingan My Track",
+                metadata: { type: "post_upload" }
+            }, {
+                onReadyForServerApproval: (paymentId) => {
+                    console.log("Payment ID:", paymentId);
+                },
+                onReadyForServerCompletion: (paymentId, txid) => {
+                    alert("✅ Pembayaran berhasil! Postingan akan diupload ke Beranda.");
+                    // Reset form
+                    selectedFile = null;
+                    document.getElementById('fileName').textContent = "";
+                    // Bisa redirect ke home otomatis
+                    // window.location.href = "index.html";
+                },
+                onCancel: () => alert("❌ Pembayaran dibatalkan."),
+                onError: () => alert("❌ Terjadi kesalahan pembayaran.")
+            });
+        }
+
+        // Inisialisasi
+        window.onload = () => {
+            updatePrice();
+            checkLoginStatus();
+        };
+    </script>
 </body>
-</html>
+      </html>
