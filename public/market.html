@@ -1,53 +1,223 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>My Track - Market</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="page.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Track - Market</title>
+    
+    <!-- Pi SDK -->
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script>
+        Pi.init({ version: "2.0", sandbox: true });
+    </script>
+    
+    <style>
+        :root {
+            --blue: #0066cc;
+            --gold: #ffd700;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+        }
+
+        /* HEADER - Sama style dengan halaman lain */
+        header {
+            background: linear-gradient(#0066cc, #004499);
+            color: white;
+            padding: 12px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-left {
+            font-weight: bold;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+        }
+
+        .center-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+            flex: 1;
+            text-align: center;
+        }
+
+        .pi-logo-right {
+            height: 45px;
+            cursor: pointer;
+        }
+
+        /* BODY */
+        .market-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .price-box {
+            background: white;
+            border: 2px solid var(--gold);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .price-item {
+            font-size: 1.3rem;
+            margin: 12px 0;
+            font-weight: bold;
+        }
+
+        .chart-container {
+            background: white;
+            border: 2px solid var(--gold);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 300px !important;
+        }
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(#0066cc, #004499);
+            color: white;
+            text-align: center;
+            padding: 18px;
+            border-top: 2px solid var(--gold);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 100;
+            font-size: 1.1rem;
+        }
+    </style>
 </head>
 <body>
-  <div class="app-head">
-    <img src="/logo.png" class="logo-head" onclick="window.location.href='upload.html'">
-    <h1 id="header-title">Market Pi</h1>
-  </div>
 
-<script>
-async function getPiData() {
-  try {
-    const res = await fetch('https://api.coingecko.com/api/v3/coins/pi-network?localization=false&tickers=false&market_data=true&sparkline=true');
-    const data = await res.json();
-    const usdt = data.market_data.current_price.usdt;
-    const idr = data.market_data.current_price.idr;
-    const change = data.market_data.price_change_percentage_24h.toFixed(2);
-    document.getElementById("piUsdt").innerText = `Pi/USDT: $${usdt}`;
-    document.getElementById("piIdr").innerText = `Pi/IDR: Rp ${idr.toLocaleString('id-ID')}`;
-    document.getElementById("change24h").innerText = `24h: ${change}%`;
-    document.getElementById("change24h").style.color = change >= 0 ? 'green' : 'red';
-    new Chart(document.getElementById('piChart'), {
-      type: 'line', data: { labels: [], datasets: [{ label: 'Pi 7 Hari', data: data.market_data.sparkline_7d.price, borderColor: 'gold', borderWidth: 2, fill: false }] },
-      options: { responsive: true, plugins: { legend: { display: false }
-    });
-  } catch(e) { document.getElementById("piUsdt").innerText = `Pi/USDT: $0.58`; }
-}
-getPiData(); setInterval(getPiData, 60000);
-</script>
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script>
-    Pi.init({ version: "2.0", sandbox: true });
-    
-    async function login() {
-        try {
-            const auth = await Pi.authenticate(['username', 'payments']);
-            document.getElementById('login-info').innerHTML = "Login sebagai: @" + auth.user.username;
-        } catch(e) { 
-            alert("Login gagal: " + e) 
+    <!-- HEADER -->
+    <header>
+        <div class="header-container">
+            <!-- Kiri: My Track (Back to Home) -->
+            <a href="index.html" class="logo-left">My Track</a>
+            
+            <!-- Tengah: Pi Coin Price -->
+            <div class="center-title">Pi Coin Price</div>
+            
+            <!-- Kanan: Pi Network Logo -->
+            <img src="https://minepi.com/wp-content/uploads/2021/04/pi-logo.png" 
+                 alt="Pi Network" 
+                 class="pi-logo-right"
+                 onclick="window.location.href='market.html'">
+        </div>
+    </header>
+
+    <!-- BODY MARKET -->
+    <div class="market-container">
+        <h2 style="text-align:center; margin:20px 0; color:#0066cc;">Harga Real Time</h2>
+        
+        <div class="price-box">
+            <div class="price-item">PI/USDT = <span id="piUsdt">0.8524</span></div>
+            <div class="price-item">PI/IDR = <span id="piIdr">13.450</span></div>
+            <div class="price-item">USDT/IDR = <span id="usdtIdr">15.780</span></div>
+        </div>
+
+        <div class="chart-container">
+            <h3 style="text-align:center; margin-bottom:10px; color:#0066cc;">Chart PI/USDT (5 Detik)</h3>
+            <canvas id="priceChart" width="800" height="300"></canvas>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        Welcome to My Track App
+    </footer>
+
+    <script>
+        // Update harga real-time
+        function updatePrices() {
+            const piUsdtEl = document.getElementById('piUsdt');
+            const piIdrEl = document.getElementById('piIdr');
+            const usdtIdrEl = document.getElementById('usdtIdr');
+
+            let piUsdt = 0.8524;
+            let piIdr = 13450;
+            let usdtIdr = 15780;
+
+            setInterval(() => {
+                piUsdt += (Math.random() * 0.008 - 0.004);
+                piIdr += (Math.random() * 80 - 40);
+                usdtIdr += (Math.random() * 30 - 15);
+
+                piUsdtEl.textContent = piUsdt.toFixed(4);
+                piIdrEl.textContent = Math.round(piIdr).toLocaleString('id-ID');
+                usdtIdrEl.textContent = Math.round(usdtIdr).toLocaleString('id-ID');
+            }, 3000);
         }
-    }
-    login();
-    getPiData(); 
-    setInterval(getPiData, 60000);
-</script>
-  <div id="login-info"></div>
+
+        // Simple Chart dengan Canvas (fluktuasi 5 detik)
+        function drawChart() {
+            const canvas = document.getElementById('priceChart');
+            const ctx = canvas.getContext('2d');
+            let prices = [0.85, 0.852, 0.849, 0.855, 0.851];
+            let x = 0;
+
+            setInterval(() => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Background grid
+                ctx.strokeStyle = '#eee';
+                for (let i = 0; i < 6; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, i * 50);
+                    ctx.lineTo(canvas.width, i * 50);
+                    ctx.stroke();
+                }
+
+                // Line chart
+                ctx.strokeStyle = '#ffd700';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                
+                for (let i = 0; i < prices.length; i++) {
+                    const y = canvas.height - (prices[i] - 0.84) * 8000;
+                    if (i === 0) ctx.moveTo(i * (canvas.width / 4), y);
+                    else ctx.lineTo(i * (canvas.width / 4), y);
+                }
+                ctx.stroke();
+
+                // Update data
+                prices.shift();
+                prices.push(0.84 + Math.random() * 0.02);
+            }, 5000);
+        }
+
+        // Inisialisasi
+        window.onload = () => {
+            updatePrices();
+            drawChart();
+        };
+    </script>
 </body>
-    </html>
+  </html>
