@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html>
-<head><title>My Track</title></head>
+<head>
+  <title>My Track</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 <body>
   <h1>My Track ⚡</h1>
-  <p id="user"></p>
-  <button onclick="login()">Login</button>
-  <button onclick="bayar()">Bayar 1 Pi Test</button>
-  <p id="status"></p>
   
+  <p id="user">Belum Login</p>
+  
+  <button onclick="login()">Login</button>
+  <button onclick="bayar()">Bayar 0.01 Pi - Buka Premium 30 Hari</button>
+  
+  <p id="status">Status: Menunggu...</p>
+
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script src="app.js"></script>
 </body>
