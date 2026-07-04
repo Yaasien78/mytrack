@@ -5,35 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body { margin:0; font-family: Arial; background: #fff; }
-   .head, .foot {
-      background: linear-gradient(145deg, #005f8a, #0077b6);
-      color: white; border-top: 2px solid gold; border-bottom: 2px solid gold; /* GARIS EMAS */
-      position: sticky; z-index: 10;
-    }
-   .head { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; top: 0; }
-   .foot { padding: 12px; text-align: center; bottom: 0; }
-   .logo-head { width: 45px; height: 45px; cursor:pointer; border-radius: 8px; border: 2px solid gold; } /* LOGO GARIS EMAS */
-   .head-center { font-size: 14px; font-weight: bold; color: gold; } /* TULISAN HARGA EMAS */
+   .head { background: linear-gradient(180deg, #0077b6 0%, #005f8a 100%); color: white; display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; position: sticky; top: 0; border-bottom: 2px solid gold; box-shadow: 0 2px 8px rgba(0,119,182,0.4); }
+   .foot { background: linear-gradient(0deg, #0077b6 0%, #005f8a 100%); padding: 12px; text-align: center; position: sticky; bottom: 0; border-top: 2px solid gold; box-shadow: 0 -2px 8px rgba(0,119,182,0.4); }
+   .logo-head { width: 45px; height: 45px; cursor:pointer; border-radius: 8px; border: 2px solid gold; }
+   .head-center { font-size: 14px; font-weight: bold; color: gold; }
    .pi-logo { width: 30px; height: 30px; cursor:pointer; }
    .body { padding: 5px; min-height: 70vh; }
-   .post { border: 2px solid gold; margin: 10px 0; padding: 10px; border-radius: 8px; background: #fafafa; } /* BOX FEED GARIS EMAS */
-   .post img,.post video { width: 100%; border-radius: 5px; margin-top: 5px; border: 2px solid gold; } /* MEDIA GARIS EMAS */
-   .foot-btn { background: none; border: none; color: gold; font-weight: bold; font-size: 18px; cursor: pointer; width: 100%; } /* TULISAN LOGIN EMAS */
-   .foot-user { color: gold; font-size: 12px; font-weight: bold; } /* USERNAME EMAS */
-   h3 { color: #0077b6; border-bottom: 2px solid gold; padding-bottom: 5px; } /* JUDUL GARIS EMAS */
+   .post { border: 2px solid gold; margin: 10px 0; padding: 10px; border-radius: 8px; background: #fafafa; }
+   .post img,.post video { width: 100%; border-radius: 5px; margin-top: 5px; border: 2px solid gold; }
+   .foot-btn { background: none; border: none; color: gold; font-weight: bold; font-size: 18px; cursor: pointer; width: 100%; }
+   .foot-user { color: gold; font-size: 12px; font-weight: bold; }
+   h3 { color: #0077b6; border-bottom: 2px solid gold; padding-bottom: 5px; display: inline-block; }
   </style>
 </head>
 <body>
   <div class="head">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAA..." class="logo-head" onclick="window.location.href='upload.html'">
+    <img src="logo.png" class="logo-head" onclick="window.location.href='upload.html'">
     <div class="head-center" id="piPrice">Pi/USDT: ...</div>
     <img src="https://minepi.com/static/media/pi-logo.1b6a0a9c.svg" class="pi-logo" onclick="window.location.href='market.html'">
   </div>
-
-  <div class="body" id="appBody">
-    <h3>Feed Iklan</h3><div id="feed"></div>
-  </div>
-
+  <div class="body"><h3>Feed Iklan</h3><div id="feed"></div></div>
   <div class="foot" id="footArea"></div>
 
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
@@ -62,23 +53,18 @@ async function login() {
 function loadPosts() {
   const posts = JSON.parse(localStorage.getItem("mytrack_posts") || "[]");
   const feed = document.getElementById("feed");
-  feed.innerHTML = posts.map(p => `
-    <div class="post"><b style="color:gold">${p.user}</b><p>${p.caption}</p>${p.media}</div>
-  `).join('');
+  feed.innerHTML = posts.map(p => `<div class="post"><b style="color:gold">${p.user}</b><p>${p.caption}</p>${p.media}</div>`).join('');
 }
 
 async function getPiPrice() {
   try {
     const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usdt');
     const data = await res.json();
-    document.getElementById("piPrice").innerText = `Pi/USDT: ${data['pi-network'].usdt}`;
-  } catch(e) { document.getElementById("piPrice").innerText = `Pi/USDT: 0.58`; }
+    document.getElementById("piPrice").innerText = `Pi/USDT: $${data['pi-network'].usdt}`;
+  } catch(e) { document.getElementById("piPrice").innerText = `Pi/USDT: $0.58`; }
 }
 
-loadFoot();
-loadPosts();
-getPiPrice();
-setInterval(getPiPrice, 30000);
+loadFoot(); loadPosts(); getPiPrice(); setInterval(getPiPrice, 30000);
 </script>
 </body>
 </html>
