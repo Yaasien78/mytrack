@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Track - Upload</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { margin:0; font-family: Arial; background: #fff; }
+   .head { background: linear-gradient(180deg, #0077b6 0%, #005f8a 100%); color: white; display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; position: sticky; top: 0; border-bottom: 2px solid gold; box-shadow: 0 2px 8px rgba(0,119,182,0.4); }
+   .foot { background: linear-gradient(0deg, #0077b6 0%, #005f8a 100%); padding: 12px; text-align: center; position: sticky; bottom: 0; border-top: 2px solid gold; box-shadow: 0 -2px 8px rgba(0,119,182,0.4); }
+   .logo-head { width: 45px; height: 45px; cursor:pointer; border-radius: 8px; border: 2px solid gold; }
+   .head-center { font-size: 14px; font-weight: bold; color: gold; }
+   .pi-logo { width: 30px; height: 30px; cursor:pointer; }
+   .body { padding: 5px; min-height: 70vh; }
+   .upload-box { background: white; border: 2px solid gold; border-radius: 8px; margin: 5px; padding: 10px; position: relative; }
+   .username-bar { border: none; border-bottom: 2px solid gold; width: 100%; padding: 5px; font-size: 14px; outline: none; margin-bottom: 10px; color: gold; font-weight: bold; }
+   .content-area { width: 100%; height: 200px; border: 2px solid gold; border-radius: 5px; resize: none; outline: none; padding: 5px; }
+   .upload-btn { position: absolute; bottom: 15px; right: 15px; font-size: 22px; cursor: pointer; color: gold; }
+   #fileInput { display: none; }
+   .foot-btn { background: none; border: none; color: gold; font-weight: bold; font-size: 18px; cursor: pointer; width: 100%; }
+  </style>
+</head>
+<body>
+  <div class="head">
+    <img src="logo.png" class="logo-head" onclick="window.location.href='index.html'">
+    <div class="head-center" id="piPrice">Pi/USDT: ...</div>
+    <img src="https://minepi.com/static/media/pi-logo.1b6a0a9c.svg" class="pi-logo" onclick="window.location.href='market.html'">
+  </div>
+  <div class="body">
+    <div class="upload-box">
+      <input class="username-bar" id="usernameBar" readonly>
+      <textarea class="content-area" id="caption" placeholder="Tulis caption..."></textarea>
+      <label class="upload-btn" for="fileInput">📎</label>
+      <input type="file" id="fileInput" accept="image/*,video/*" onchange="previewFile(event)">
+      <div id="preview"></div>
+    </div>
+  </div>
+  <div class="foot"><button class="foot-btn" onclick="handlePost()">Send 0.01 π to Post</button></div>
+
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>
+Pi.init({ version: "2.0", sandbox: true, clientId: "GANTI_DENGAN_CLIENT_ID_KAMU" });
+let currentUser = localStorage.getItem("pi_user");
+let uploadedFile = null; let uploadedMedia = "";
+
+if(!currentUser) { alert("Login dulu bro"); window.location.href = 'index.html'; }
+document.getElementById("usernameBar").value = currentUser;
+
+function previewFile(e) {
+  uploadedFile = e.target.files[0];
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    uploadedMedia = event.target.result;
+    document.getElementById("preview").innerHTML = uploadedFile.type.startsWith('image') 
+      ? `<img src="${uploadedMedia}" style="width:100px; margin-top:5px; border:2px solid gold">`
+      : `<video src="${uploadedMedia}" style="width:100px; margin-top:5px; border:2px solid gold" controls></video>`;
+  }
+  reader.readAsDataURL(uploadedFile);
+}
+
+function handlePost() {
+  const caption = document.getElementById("caption").value;
+  if(!uploadedMedia && caption.trim() === "") return alert("Silahkan upload in box");
+  
+  Pi.createPayment({amount: 0.01, memo: "Post MyTrack", metadata: {}}, {
+    onReadyForServerCompletion: (payment) => {
+      let posts = JSON.parse(localStorage.getItem("mytrack_posts") || "[]");
+      let mediaTag = "";
+      if(uploadedMedia) mediaTag = uploadedFile.type.startsWith('image') 
+        ? `<img src="${uploadedMedia}">` : `<video src="${uploadedMedia}" controls></video>`;
+      posts.unshift({user: currentUser, caption: caption, media: mediaTag});
+      localStorage.setItem("mytrack_posts", JSON.stringify(posts));
+      alert("Post Berhasil!");
+      window.location.href = 'index.html';
+    },
+    onError: (e) => alert("Batal: " + e)
+  });
+}
+
+async function getPiPrice() {
+  try {
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usdt');
+    const data = await res.json();
+    document.getElementById("piPrice").innerText = `Pi/USDT: $${data['pi-network'].usdt}`;
+  } catch(e) { document.getElementById("piPrice").innerText = `Pi/USDT: $0.58`; }
+}
+getPiPrice(); setInterval(getPiPrice, 30000);
+</script>
+</body>
+</html>
