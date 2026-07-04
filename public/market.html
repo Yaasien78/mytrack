@@ -7,20 +7,10 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="head">
-    <img src="logo.png" class="logo-head" onclick="window.location.href='index.html'">
-    <div class="head-center">Market Pi</div>
-    <img src="https://minepi.com/static/media/pi-logo.1b6a0a9c.svg" class="pi-logo">
+  <div class="app-head">
+    <img src="/logo.png" class="logo-head" onclick="window.location.href='upload.html'">
+    <h1 id="header-title">Market Pi</h1>
   </div>
-  <div class="body">
-    <div class="card">
-      <div class="price-big" id="piUsdt">Pi/USDT: Loading...</div>
-      <div class="price-small" id="piIdr">Pi/IDR: Loading...</div>
-      <div class="price-small" id="change24h">24h: Loading...</div>
-    </div>
-    <div class="card"><canvas id="piChart"></canvas></div>
-  </div>
-  <div class="foot"><button class="foot-btn" onclick="window.location.href='index.html'">Kembali ke Feed</button></div>
 
 <script>
 async function getPiData() {
@@ -42,5 +32,6 @@ async function getPiData() {
 }
 getPiData(); setInterval(getPiData, 60000);
 </script>
+  <div id="login-info"></div>
 </body>
     </html>
