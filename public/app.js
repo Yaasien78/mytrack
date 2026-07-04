@@ -19,22 +19,23 @@ async function bayar() {
     metadata: { product: "Test Item" }
   };
 
-  const callbacks = {
-    onReadyForServerApproval: function(paymentId) {
-      document.getElementById("status").innerText = "Menunggu persetujuan server...";
-      console.log("PaymentID:", paymentId);
-      // Nanti kirim ke server.js
-    },
-    onReadyForServerCompletion: function(paymentId, txid) {
-      document.getElementById("status").innerText = "Pembayaran Sukses! TxID: " + txid;
-    },
-    onCancel: function(paymentId) { alert("Pembayaran dibatalkan"); },
-    onError: function(error) { alert("Error: " + error); }
-  };
-
-  Pi.createPayment(paymentData, callbacks);
-}
-
-function onIncompletePaymentFound(payment) {
-  console.log("Ada pembayaran belum selesai:", payment);
-        }
+const callbacks = {
+  onReadyForServerApproval: async function(paymentId) {
+    document.getElementById("status").innerText = "Menunggu persetujuan server...";
+    await fetch("/api/approve", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ paymentId })
+    });
+  },
+  onReadyForServerCompletion: async function(paymentId, txid) {
+    await fetch("/api/complete", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ paymentId, txid })
+    });
+    document.getElementById("status").innerText = "Pembayaran Sukses! TxID: " + txid;
+  },
+  onCancel: function(paymentId) { alert("Pembayaran dibatalkan"); },
+  onError: function(error) { alert("Error: " + error); }
+};
