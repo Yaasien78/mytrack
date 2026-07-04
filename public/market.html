@@ -32,6 +32,22 @@ async function getPiData() {
 }
 getPiData(); setInterval(getPiData, 60000);
 </script>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>
+    Pi.init({ version: "2.0", sandbox: true });
+    
+    async function login() {
+        try {
+            const auth = await Pi.authenticate(['username', 'payments']);
+            document.getElementById('login-info').innerHTML = "Login sebagai: @" + auth.user.username;
+        } catch(e) { 
+            alert("Login gagal: " + e) 
+        }
+    }
+    login();
+    getPiData(); 
+    setInterval(getPiData, 60000);
+</script>
   <div id="login-info"></div>
 </body>
     </html>
