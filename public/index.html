@@ -43,24 +43,23 @@
     <script>
         let currentUser = null;
         async function updatePrice() {
-            try {
-                const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usdt');
-                document.getElementById('price-value').textContent = res.json()['pi-network'].usdt.toFixed(4);
-            } catch(e) { document.getElementById('price-value').textContent = "0.85"; }
+    const priceEl = document.getElementById('price-value');
+    try {
+        // Pake proxy biar gak ke-block CORS
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usdt');
+        const data = await res.json(); // <-- ini yg kemarin kurang await
+        
+        if(data && data['pi-network']) {
+            const usdt = data['pi-network'].usdt;
+            priceEl.textContent = usdt.toFixed(4);
+        } else {
+            priceEl.textContent = "0.0000";
         }
-        async function handleLogin() {
-            try {
-                const auth = await Pi.authenticate(['username'], ()=>{});
-                currentUser = auth.user.username;
-                document.getElementById('loginBtn').innerText = `@${currentUser}`;
-            } catch(err) { alert("Login dibatalkan"); }
+    } catch(e) { 
+        console.log("Gagal ambil harga:", e);
+        priceEl.textContent = "0.85"; // fallback
+    }
         }
-        function loadPosts() {
-            const feed = document.getElementById('feed-posts');
-            let posts = JSON.parse(localStorage.getItem('mytrack_posts')) || [];
-            feed.innerHTML = posts.map(p => `<div class="post-box"><div class="post-header">@${p.user} • ${p.time}</div><div class="post-content">${p.content}</div></div>`).join('') || '<p style="text-align:center;">Belum ada postingan</p>';
-        }
-        window.onload = () => { updatePrice(); setInterval(updatePrice, 30000); loadPosts(); document.getElementById('loginBtn').onclick = handleLogin; };
     </script>
 </body>
 </html>
