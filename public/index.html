@@ -3,75 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Market Pi</title>
-    <link rel="stylesheet" href="page.css">
+    <title>My Track - Beranda</title>
     
-    <!-- 1. SDK PI WAJIB -->
+    <!-- Pi SDK -->
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <script>
-        // Ganti sandbox: false kalau udah rilis beneran
-        Pi.init({ version: "2.0", sandbox: true }); 
+        Pi.init({ version: "2.0", sandbox: true });
     </script>
+    
+    <style>
+        :root {
+            --blue: #0066cc;     /* Biru metallic 007 */
+            --gold: #ffd700;     /* Emas */
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+        }
+
+        /* ================= HEADER ================= */
+        header {
+            background: linear-gradient(#0066cc, #004499); /* Metallic blue effect */
+            color: white;
+            padding: 12px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid var(--gold); /* Garis dalam emas */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-left {
+            font-weight: bold;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+        }
+
+        .price-center {
+            text-align: center;
+            flex: 1;
+        }
+
+        .price-center p {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .pi-logo-right {
+            height: 45px;
+            cursor: pointer;
+        }
+
+        /* ================= BODY / POSTS ================= */
+        .feed {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .post-box {
+            background: white;
+            border: 2px solid var(--gold);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .post-box:hover {
+            transform: scale(1.02);
+        }
+
+        .post-header {
+            background: #f8f8f8;
+            padding: 12px 15px;
+            border-bottom: 2px solid var(--gold);
+            font-weight: bold;
+            color: #0066cc;
+        }
+
+        .post-content {
+            padding: 15px;
+            min-height: 120px;
+        }
+
+        /* ================= FOOTER ================= */
+        footer {
+            background: linear-gradient(#0066cc, #004499);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-top: 2px solid var(--gold);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .login-btn {
+            color: var(--gold);
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Modal untuk detail post */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            border: 3px solid var(--gold);
+            border-radius: 12px;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- 2. HEAD -->
-    <div class="app-head">
-        <img src="https://i.imgur.com/8Km9tLL.png" alt="Logo" onclick="window.location='index.html'">
-        <h1 id="judul-head">Market Pi</h1>
-        <img src="https://pi.app/static/media/pi-logo.123.png" alt="Pi Logo">
+    <!-- HEADER -->
+    <header>
+        <div class="header-container">
+            <!-- Kiri: Logo My Track -->
+            <a href="upload.html" class="logo-left">My Track</a>
+            
+            <!-- Tengah: Harga PI/USDT -->
+            <div class="price-center">
+                <p id="pi-price">PI/USDT = <span id="price-value">0.85</span></p>
+            </div>
+            
+            <!-- Kanan: Logo Pi Network -->
+            <img src="https://minepi.com/wp-content/uploads/2021/04/pi-logo.png" 
+                 alt="Pi Network" 
+                 class="pi-logo-right"
+                 onclick="window.location.href='market.html'">
+        </div>
+    </header>
+
+    <!-- BODY - Feed Postingan -->
+    <div class="feed">
+        <h2 style="text-align:center; margin:15px 0; color:#0066cc;">Postingan Terbaru</h2>
+        
+        <!-- Post 1 -->
+        <div class="post-box" onclick="showPost(this)">
+            <div class="post-header">@username123 • 2 menit lalu</div>
+            <div class="post-content">
+                <p>Ini contoh postingan pertama di My Track. Apa kabar hari ini?</p>
+            </div>
+        </div>
+
+        <!-- Post 2 -->
+        <div class="post-box" onclick="showPost(this)">
+            <div class="post-header">@pihunter_id • 15 menit lalu</div>
+            <div class="post-content">
+                <p>Sedang mining Pi sambil nunggu Mainnet penuh 🔥</p>
+            </div>
+        </div>
+
+        <!-- Post 3 -->
+        <div class="post-box" onclick="showPost(this)">
+            <div class="post-header">@trackmaster • 1 jam lalu</div>
+            <div class="post-content">
+                <p>Siapa yang sudah punya app sendiri di Pi Network?</p>
+            </div>
+        </div>
     </div>
 
-    <!-- 3. ISI KONTEN -->
-    <div class="konten">
-        <h2>Selamat Datang di Market Pi 💛</h2>
-        <p>Jual Beli Barang Pakai Pi Coin</p>
-        <p>Login dulu untuk mulai</p>
+    <!-- FOOTER -->
+    <footer>
+        <a href="#" class="login-btn" onclick="alert('Fitur Login akan dibuat di halaman terpisah')">LOGIN</a>
+    </footer>
+
+    <!-- MODAL DETAIL POST -->
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <span onclick="closeModal()" style="float:right; font-size:28px; cursor:pointer;">&times;</span>
+            <div id="modalBody"></div>
+        </div>
     </div>
 
-    <!-- 4. FOOT -->
-    <div class="app-foot">
-        <button id="btn-login-pi" class="btn-primary">Login dengan Pi</button>
-    </div>
-
-    <!-- 5. SCRIPT LOGIN -->
     <script>
-        const btnLogin = document.getElementById("btn-login-pi");
-        const judulHead = document.getElementById("judul-head");
-
-        // CEK UDAH LOGIN APA BELUM
-        window.onload = function() {
-            const username = localStorage.getItem("pi_username");
-            if(username){
-                btnLogin.innerText = "Halo " + username;
-                btnLogin.disabled = true;
-                judulHead.innerText = "Halo, " + username;
-            }
+        // Update harga PI/USDT (contoh simulasi real-time)
+        function updatePrice() {
+            const priceEl = document.getElementById('price-value');
+            let price = 0.85;
+            setInterval(() => {
+                price += (Math.random() * 0.02 - 0.01);
+                priceEl.textContent = price.toFixed(4);
+            }, 8000);
         }
 
-        // KLIK TOMBOL LOGIN
-        btnLogin.onclick = function() {
-            btnLogin.innerText = "Loading...";
-            btnLogin.disabled = true;
-
-            Pi.authenticate(['username', 'payments'], 
-                // SUKSES
-                function(auth) {
-                    const username = auth.user.username;
-                    localStorage.setItem("pi_username", username);
-                    alert("Login Berhasil! Halo " + username);
-                    // Langsung lempar ke upload
-                    window.location.href = 'upload.html'; 
-                }, 
-                // GAGAL
-                function(error) {
-                    alert("Login Gagal: " + error);
-                    btnLogin.innerText = "Login dengan Pi";
-                    btnLogin.disabled = false;
-                }
-            );
+        // Tampilkan post di modal
+        function showPost(element) {
+            const header = element.querySelector('.post-header').innerText;
+            const content = element.querySelector('.post-content').innerHTML;
+            
+            document.getElementById('modalBody').innerHTML = `
+                <h3>${header}</h3>
+                <div style="margin-top:15px;">${content}</div>
+            `;
+            document.getElementById('postModal').style.display = 'flex';
         }
+
+        function closeModal() {
+            document.getElementById('postModal').style.display = 'none';
+        }
+
+        // Inisialisasi
+        window.onload = () => {
+            updatePrice();
+        };
     </script>
-
 </body>
-  </html>
+    </html>
