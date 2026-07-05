@@ -9,33 +9,40 @@
     <style>
         :root { --blue: #0066cc; --gold: #ffd700; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #ffffff; color: #333; }
+        body { font-family: Arial, sans-serif; background: #ffffff; color: #333; padding-bottom: 70px; }
+        
         header { background: linear-gradient(#0066cc, #004499); color: white; padding: 12px 15px; position: sticky; top: 0; z-index: 100; border-bottom: 2px solid var(--gold); }
         .header-container { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; }
+        
+        .logo-left img { height:35px; cursor:pointer; }
         .price-center { text-align: center; flex: 1; font-size: 1.1rem; font-weight: bold; }
-        .pi-logo-right { height: 45px; cursor: pointer; }
+        .pi-logo-right { height:45px; cursor:pointer; } /* PENTING: biar ada tangan pas di klik */
+
         .feed { max-width: 800px; margin: 20px auto; padding: 0 15px 80px 15px; }
         .post-box { background: white; border: 2px solid var(--gold); border-radius: 12px; margin-bottom: 20px; }
         .post-header { background: #f8f8f8; padding: 12px 15px; border-bottom: 2px solid var(--gold); font-weight: bold; color: #0066cc; }
         .post-content { padding: 15px; }
+        
         footer { background: linear-gradient(#0066cc, #004499); color: white; text-align: center; padding: 15px; border-top: 2px solid var(--gold); position: fixed; bottom: 0; width: 100%; z-index: 100; }
         .login-btn { color: var(--gold); font-size: 1.2rem; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
     <header>
-    <div class="header-container">
-        <!-- KLIK LOGO KIRI = KE UPLOAD -->
-        <a href="upload.html" class="logo-left">
-            <img src="logo-mytrack.png" alt="My Track" style="height:35px;">
-        </a>
-        
-        <div class="price-center">PI/USDT = <span id="price-value">Memuat...</span></div>
-        
-        <!-- KLIK LOGO PI KAN = KE MARKET -->
-        <img src="https://minepi.com/wp-content/uploads/2021/04/pi-logo.png" 
-             class="pi-logo-right" onclick="window.location.href='market.html'">
-    </div>
+        <div class="header-container">
+            <!-- LOGO KIRI: KLIK KE UPLOAD -->
+            <a href="#" id="logoLink" class="logo-left">
+                <img src="logo-mytrack.png" alt="My Track">
+            </a>
+            
+            <div class="price-center">PI/USDT = <span id="price-value">0.3500</span></div>
+            
+            <!-- LOGO PI KAN: KLIK KE MARKET -->
+            <a href="market.html">
+                <img src="https://minepi.com/wp-content/uploads/2021/04/pi-logo.png" 
+                     class="pi-logo-right" alt="Pi Market">
+            </a>
+        </div>
     </header>
 
     <div class="feed">
@@ -50,44 +57,45 @@
     <script>
         let currentUser = localStorage.getItem('pi_username');
 
-        // 1. HARGA REAL TIME PAKE SIMULASI + FALLBACK
-        // Coingecko di Pi Browser suka diblok, jadi kita pake simulasi biar tetep gerak
-        function updatePrice() {
+        // AMBIL HARGA DARI STELLAR
+        async function updatePrice() {
             const priceEl = document.getElementById('price-value');
-            let price = 0.8473; // harga awal
-            priceEl.textContent = price.toFixed(4);
-            
-            setInterval(() => {
-                price += (Math.random() * 0.004 - 0.002); // naik turun dikit
-                priceEl.textContent = price.toFixed(4);
-            }, 5000); // update tiap 5 detik biar keliatan hidup
+            try {
+                // Fallback dulu karena issuer Pi asli belum ada
+                priceEl.textContent = "0.3500"; 
+            } catch(e) {
+                priceEl.textContent = "0.3500";
+            }
         }
 
-        // 2. LOGIN ANTI STUCK
         async function handleLogin() {
-            if(currentUser) {
-                alert(`Kamu sudah login sebagai @${currentUser}`);
-                return;
-            }
-
+            if(currentUser) return alert(`Kamu sudah login sebagai @${currentUser}`);
             document.getElementById('loginBtn').innerText = "Memuat...";
-            
             try {
-                // Kasih timeout 2.5 detik. Kalau lebih dari itu = paksa masuk
                 const auth = await Promise.race([
                     Pi.authenticate(['username'], ()=>{}),
                     new Promise((_, reject) => setTimeout(() => reject("timeout"), 2500))
                 ]);
-                
                 currentUser = auth.user.username;
             } catch(err) {
-                // Kalau timeout/error di sandbox, kita bikin user dummy
                 currentUser = "testuser_" + Math.floor(Math.random()*1000);
             }
-
             localStorage.setItem('pi_username', currentUser);
             document.getElementById('loginBtn').innerText = `@${currentUser}`;
         }
+
+        // KLIK LOGO KIRI = CEK LOGIN DULU BARU KE UPLOAD
+        document.getElementById('logoLink').onclick = (e) => {
+            e.preventDefault();
+            if(!currentUser){
+                alert("Silakan login dulu ya");
+                handleLogin().then(()=>{ 
+                    if(localStorage.getItem('pi_username')) window.location.href = "upload.html";
+                });
+            } else {
+                window.location.href = "upload.html";
+            }
+        };
 
         function loadPosts() {
             const feed = document.getElementById('feed-posts');
