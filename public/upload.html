@@ -50,17 +50,20 @@
 
 /* LOGO PI KAN */
 .pi-logo-right { 
-    height:38px; 
-    width:38px;
-    min-width: 38px;    /* 1. Paksa jangan kepencet */
-    min-height: 38px;   /* 2. Paksa jangan gepeng */
-    aspect-ratio: 1 / 1; /* 3. Jaga biar 1:1 terus */
+    height:38px !important; 
+    width:38px !important;
+    min-width: 38px !important;    
+    min-height: 38px !important;
+    aspect-ratio: 1 / 1 !important;
+    box-sizing: border-box !important; /* Biar border gak nambahin ukuran */
+    padding: 0 !important; /* Buang padding bawaan */
+    margin: 0 !important;
     cursor:pointer; 
     background: var(--blue);     
-    border-radius: 50%; 
+    border-radius: 50% !important; 
     border: 3px solid var(--gold);
     box-shadow: 0 0 0 1px white;   
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     text-decoration: none;
@@ -70,7 +73,8 @@
     font-weight: bold; 
     color: white;                
     line-height: 1;
-}
+    display: block; /* Biar π nya gak dorong */
+    }
         :root { --blue: #0066cc; --gold: #ffd700; }
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family: Arial, sans-serif; background:#fff; padding-bottom: 70px; }
