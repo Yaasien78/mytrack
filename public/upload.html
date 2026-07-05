@@ -13,45 +13,35 @@ Pi.init({ version: "2.0", sandbox: true });
 let selectedFile = null;
 let username = localStorage.getItem("piUsername");
 
-// CEK LOGIN + TAMPILIN DI HEADER TENGAH
-function checkLogin() {
-    const status = document.getElementById("userStatus");
-    const headerUser = document.getElementById("headerTitle");
-
-    if (username) {
-        headerUser.innerText = `@${username}`;
-        status.innerHTML = `Kamu login sebagai <span style="color:white; font-weight:bold;">@${username}</span>`;
+window.onload = function() {
+    const headerTitle = document.getElementById('headerTitle');
+    const userStatus = document.getElementById('userStatus');
+    
+    if(username) {
+        headerTitle.innerText = `@${username}`;
+        userStatus.innerHTML = `Kamu login sebagai <b>@${username}</b>`;
     } else {
         alert("Silakan login dulu di beranda");
         window.location.href = "index.html";
     }
+
+    document.getElementById('uploadArea').onclick = () => document.getElementById('fileInput').click();
+    document.getElementById('fileInput').onchange = (e) => {
+        selectedFile = e.target.files[0];
+        if (selectedFile) document.getElementById('fileName').textContent = "✅ " + selectedFile.name;
+    };
 }
 
-// UPLOAD FILE
-document.getElementById('uploadArea').addEventListener('click', () => {
-    document.getElementById('fileInput').click();
-});
-
-document.getElementById('fileInput').addEventListener('change', (e) => {
-    selectedFile = e.target.files[0];
-    if (selectedFile) document.getElementById('fileName').textContent = "✅ " + selectedFile.name;
-});
-
-// KIRIM POST
 function sendPost() {
     if (!username) return alert("❌ Silakan Login terlebih dahulu!");
     if (!selectedFile) return alert("❌ Silahkan upload file terlebih dahulu!");
-
+    
     Pi.createPayment({ amount: 0.01, memo: "Upload My Track", metadata: {} }, {
         onReadyForServerCompletion: (paymentId) => {
             const reader = new FileReader();
             reader.onload = function(e) {
                 let posts = JSON.parse(localStorage.getItem('mytrack_posts') || '[]');
-                posts.unshift({ 
-                    user: username, 
-                    time: "Baru saja", 
-                    content: `<p>${selectedFile.name}</p><img src="${e.target.result}">` 
-                });
+                posts.unshift({ user: username, time: "Baru saja", content: `<p>${selectedFile.name}</p><img src="${e.target.result}">` });
                 localStorage.setItem('mytrack_posts', JSON.stringify(posts));
                 alert("✅ Pembayaran 0.01 Pi berhasil!");
                 window.location.href = "index.html";
@@ -62,8 +52,6 @@ function sendPost() {
         onError: () => alert("❌ Error Pembayaran")
     });
 }
-
-window.onload = checkLogin;
         </script>
     
     <style>
