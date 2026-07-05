@@ -9,17 +9,36 @@
     <script>Pi.init({ version: "2.0", sandbox: true });</script>
     
     <style>
-        .logo-left { 
+        /* HEADER UTAMA */
+.header {
+    background: var(--blue);
+    color: white;
+    padding: 10px 15px;
+    display: flex;          /* 1. Ini kunci biar sejajar */
+    justify-content: space-between; /* 2. Kiri Tengah Kanan */
+    align-items: center;    /* 3. Biar center vertikal */
+    border-bottom: 3px solid var(--gold);
+}
+
+.header-center {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--gold);
+}
+
+/* LOGO KIRI */
+.logo-left { 
     height:38px; 
     width:38px;
     cursor:pointer; 
     background: var(--blue); 
     border-radius: 50%; 
-    border: 3px solid var(--gold); /* Border emas tebel */
+    border: 3px solid var(--gold);
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
+    flex-shrink: 0; /* Biar gak gepeng */
 }
 .logo-left span { 
     font-size: 10px; 
@@ -28,18 +47,21 @@
     line-height: 1.1; 
     text-align: center;
 }
+
+/* LOGO PI KAN */
 .pi-logo-right { 
     height:38px; 
     width:38px;
     cursor:pointer; 
     background: var(--blue);     
     border-radius: 50%; 
-    border: 3px solid var(--gold); /* Border emas tebel */
-    box-shadow: 0 0 0 1px white;   /* Biar nongol */
+    border: 3px solid var(--gold);
+    box-shadow: 0 0 0 1px white;   
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
+    flex-shrink: 0; /* Biar gak gepeng */
 }
 .pi-logo-right span { 
     font-size: 24px; 
