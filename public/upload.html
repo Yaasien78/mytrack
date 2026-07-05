@@ -26,23 +26,29 @@
     color: var(--gold);
 }
 
-.logo-left, .pi-logo-right { 
-    height:38px !important; 
-    width:38px !important;
-    min-width: 38px !important;
-    min-height: 38px !important;
-    aspect-ratio: 1 / 1;
-    box-sizing: border-box;
-    cursor:pointer; 
+/* LOGO MY TRACK KIRI */
+        .logo-left { 
+    height:42px !important;        /* 1. Besarin dikit dari 38px */
+    width:42px !important;
     background: var(--blue); 
     border-radius: 50%; 
     border: 3px solid var(--gold);
-    box-shadow: 0 0 0 1px white;  /* INI SHADOW PUTIHNYA */
+    box-shadow: 0 0 0 2px white;   /* 2. Tebelin shadow putihnya */
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
     flex-shrink: 0;
+}
+
+.logo-left span { 
+    font-size: 9px !important;     /* 3. Kecilin fontnya */
+    font-weight: bold; 
+    color: white !important;       /* 4. Paksa warna putih */
+    line-height: 1.0 !important;   /* 5. Rapetin jarak baris */
+    text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
 /* LOGO PI KAN */
