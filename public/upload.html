@@ -6,139 +6,58 @@
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <style>
     body { margin: 0; font-family: Arial; background: #f0f2f5; }
-    
-    /* HEADER */
-    header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: #003399;
-        padding: 10px 20px;
-        color: white;
-    }
-   .logo-left,.pi-logo-right {
-        background: #003399;
-        color: white;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        border: 3px solid white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        text-decoration: none;
-        flex-shrink: 0;
-    }
-   .logo-left { font-size: 12px; }
-   .pi-logo-right { font-size: 28px; }
-    #headerTitle {
-        flex: 1;
-        text-align: center;
-        font-size: 1.8rem;
-        margin: 0;
-        cursor: pointer;
-    }
-
-    /* KONTEN */
+    header { display: flex; justify-content: space-between; align-items: center; background: #003399; padding: 8px 15px; color: white; border-bottom: 3px solid #FFD700; }
+   .logo-left,.pi-logo-right { background: #003399; color: white; width: 50px; height: 50px; border-radius: 50%; border: 2px solid #FFD700; display: flex; align-items: center; justify-content: center; font-weight: bold; text-decoration: none; flex-shrink: 0; }
+   .logo-left { font-size: 10px; }.pi-logo-right { font-size: 24px; color: #FFD700; }
+    #headerTitle { flex: 1; text-align: center; font-size: 1.5rem; font-weight: bold; margin: 0; cursor: pointer; }
     h2 { text-align: center; color: #003399; margin: 20px 0 10px 0; }
     #userStatus { text-align: center; padding: 0 20px 10px 20px; font-size: 1rem; }
-    
-    /* UPLOAD BOX */
-   .upload-container { padding: 10px 20px 20px 20px; }
-   .upload-area {
-        background: white;
-        border: 3px dashed #FFD700;
-        border-radius: 15px;
-        padding: 40px 20px;
-        text-align: center;
-        cursor: pointer;
-        transition: 0.3s;
-    }
+   .upload-container { padding: 10px 20px 80px 20px; }
+   .upload-area { background: white; border: 3px dashed #FFD700; border-radius: 15px; padding: 40px 20px; text-align: center; cursor: pointer; transition: 0.3s; }
    .upload-area:hover { background: #f0f8ff; border-color: #003399; }
     #fileName { margin-top: 10px; color: #003399; font-weight: bold; }
-
-    /* TOMBOL */
-   .send-btn {
-        background: linear-gradient(180deg, #0066cc, #003399);
-        color: white;
-        border: none;
-        width: 100%;
-        padding: 18px;
-        font-size: 1.2rem;
-        font-weight: bold;
-        cursor: pointer;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-    }
+   .send-btn { background: linear-gradient(180deg, #0066cc, #003399); color: white; border: none; width: 100%; padding: 18px; font-size: 1.2rem; font-weight: bold; cursor: pointer; position: fixed; bottom: 0; left: 0; border-top: 3px solid #FFD700; }
 </style>
-/* HEADER */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #003399;
-    padding: 8px 15px; /* dikecilin dikit */
-    color: white;
-    border-bottom: 3px solid #FFD700; /* garis kuning bawah */
-}
+</head>
+<body>
 
-.logo-left,.pi-logo-right {
-    background: #003399;
-    color: white;
-    width: 50px; /* DARI 60px JADI 50px */
-    height: 50px; /* DARI 60px JADI 50px */
-    border-radius: 50%;
-    border: 2px solid #FFD700; /* KUNING bukan putih */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    text-decoration: none;
-    flex-shrink: 0;
-}
-.logo-left { font-size: 10px; } /* DARI 12px JADI 10px */
-.pi-logo-right { font-size: 24px; color: #FFD700; } /* KUNING + DARI 28px JADI 24px */
+<header>
+    <a href="index.html" class="logo-left">My<br>Track</a>
+    <h1 id="headerTitle">Login</h1>
+    <div class="pi-logo-right">π</div>
+</header>
 
-#headerTitle {
-    flex: 1;
-    text-align: center;
-    font-size: 1.5rem; /* DARI 1.8rem JADI 1.5rem */
-    font-weight: bold;
-    margin: 0;
-    cursor: pointer;
-}
+<h2>Upload Postingan Baru</h2>
+<div id="userStatus">Mengecek login...</div>
+
+<div class="upload-container">
+    <div class="upload-area" id="uploadArea">
+        <p><b>Klik atau tarik file di sini untuk upload</b></p>
+        <p>Foto / Video</p>
+        <p id="fileName"></p>
+    </div>
+    <input type="file" id="fileInput" accept="image/*,video/*" style="display:none;">
+</div>
+
+<button class="send-btn" onclick="sendPost()">Send 0.01 Pi to Post</button>
 
 <script>
 Pi.init({ version: "2.0", sandbox: true });
-
 let selectedFile = null;
 let username = localStorage.getItem("piUsername");
-
 window.onload = function() {
     const headerTitle = document.getElementById('headerTitle');
     const userStatus = document.getElementById('userStatus');
-    
     if(username) {
         headerTitle.innerText = `@${username}`;
         userStatus.innerHTML = `Kamu login sebagai <b>@${username}</b>`;
-    } else {
-        alert("Silakan login dulu di beranda");
-        window.location.href = "index.html";
-    }
-
+    } else { alert("Silakan login dulu di beranda"); window.location.href = "index.html"; }
     document.getElementById('uploadArea').onclick = () => document.getElementById('fileInput').click();
-    document.getElementById('fileInput').onchange = (e) => {
-        selectedFile = e.target.files[0];
-        if (selectedFile) document.getElementById('fileName').textContent = "✅ " + selectedFile.name;
-    };
+    document.getElementById('fileInput').onchange = (e) => { selectedFile = e.target.files[0]; if (selectedFile) document.getElementById('fileName').textContent = "✅ " + selectedFile.name; };
 }
-
 function sendPost() {
     if (!username) return alert("❌ Silakan Login terlebih dahulu!");
     if (!selectedFile) return alert("❌ Silahkan upload file terlebih dahulu!");
-    
     Pi.createPayment({ amount: 0.01, memo: "Upload My Track", metadata: {} }, {
         onReadyForServerCompletion: (paymentId) => {
             const reader = new FileReader();
@@ -156,6 +75,5 @@ function sendPost() {
     });
 }
 </script>
-
 </body>
-</html>
+        </html>
