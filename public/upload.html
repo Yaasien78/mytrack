@@ -6,43 +6,39 @@
     <title>My Track - Upload</title>
     
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script>
 Pi.init({ version: "2.0", sandbox: true });
 
 let selectedFile = null;
+let username = localStorage.getItem("piUsername");
 
-// AMBIL USERNAME
-function getUsername() {
-    return localStorage.getItem('piUsername');
-}
+// CEK LOGIN + TAMPILIN DI HEADER TENGAH
+function checkLogin() {
+    const status = document.getElementById("userStatus");
+    const headerUser = document.getElementById("headerTitle");
 
-// JALAN PAS HALAMAN KELOAD
-window.onload = function() {
-    const username = getUsername();
-    const headerTitle = document.getElementById('headerTitle');
-
-    if(username) {
-        headerTitle.innerText = `@${username}`; // CUMA GANTI TEKS
-        headerTitle.onclick = () => window.location.href = 'profile.html';
+    if (username) {
+        headerUser.innerText = `@${username}`;
+        status.innerHTML = `Kamu login sebagai <span style="color:white; font-weight:bold;">@${username}</span>`;
     } else {
         alert("Silakan login dulu di beranda");
         window.location.href = "index.html";
     }
-
-    // UPLOAD FILE
-    document.getElementById('uploadArea').addEventListener('click', () => {
-        document.getElementById('fileInput').click();
-    });
-
-    document.getElementById('fileInput').addEventListener('change', (e) => {
-        selectedFile = e.target.files[0];
-        if (selectedFile) document.getElementById('fileName').textContent = "✅ " + selectedFile.name;
-    });
 }
+
+// UPLOAD FILE
+document.getElementById('uploadArea').addEventListener('click', () => {
+    document.getElementById('fileInput').click();
+});
+
+document.getElementById('fileInput').addEventListener('change', (e) => {
+    selectedFile = e.target.files[0];
+    if (selectedFile) document.getElementById('fileName').textContent = "✅ " + selectedFile.name;
+});
 
 // KIRIM POST
 function sendPost() {
-    const username = getUsername();
     if (!username) return alert("❌ Silakan Login terlebih dahulu!");
     if (!selectedFile) return alert("❌ Silahkan upload file terlebih dahulu!");
 
@@ -66,105 +62,45 @@ function sendPost() {
         onError: () => alert("❌ Error Pembayaran")
     });
 }
-</script>
+
+window.onload = checkLogin;
+        </script>
     
     <style>
-        /* HEADER UTAMA */
-.header {
-    background: var(--blue);
+        header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    background: #003399;
+    padding: 10px 20px;
     color: white;
-    padding: 10px 15px;
-    display: flex;          /* 1. Ini kunci biar sejajar */
-    justify-content: space-between; /* 2. Kiri Tengah Kanan */
-    align-items: center;    /* 3. Biar center vertikal */
-    border-bottom: 3px solid var(--gold);
 }
 
-.header-center {
-    font-size: 22px;
-    font-weight: bold;
-    color: var(--gold);
-}
-
-/* LOGO MY TRACK KIRI */
-        .logo-left { 
-    height:42px !important;        /* 1. Besarin dikit dari 38px */
-    width:42px !important;
-    background: var(--blue); 
-    border-radius: 50%; 
-    border: 3px solid var(--gold);
-    box-shadow: 0 0 0 2px white;   /* 2. Tebelin shadow putihnya */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    flex-shrink: 0;
-}
-
-.logo-left span { 
-    font-size: 9px !important;     /* 3. Kecilin fontnya */
-    font-weight: bold; 
-    color: white !important;       /* 4. Paksa warna putih */
-    line-height: 1.0 !important;   /* 5. Rapetin jarak baris */
-    text-align: center;
-    margin: 0;
-    padding: 0;
-}
-
-/* LOGO PI KAN */
-.pi-logo-right { 
-    height:38px !important; 
-    width:38px !important;
-    min-width: 38px !important;    
-    min-height: 38px !important;
-    aspect-ratio: 1 / 1 !important;
-    box-sizing: border-box !important; /* Biar border gak nambahin ukuran */
-    padding: 0 !important; /* Buang padding bawaan */
-    margin: 0 !important;
-    cursor:pointer; 
-    background: var(--blue);     
-    border-radius: 50% !important; 
-    border: 3px solid var(--gold);
-    box-shadow: 0 0 0 1px white;   
+.logo-left, .pi-logo-right {
+    background: #003399;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid white;
     display: flex !important;
     align-items: center;
     justify-content: center;
-    text-decoration: none;
+    font-weight: bold;
+    flex-shrink: 0; /* Biar gak gepeng */
 }
-.pi-logo-right span { 
-    font-size: 24px; 
-    font-weight: bold; 
-    color: white;                
-    line-height: 1;
-    display: block; /* Biar π nya gak dorong */
-    }
-        :root { --blue: #0066cc; --gold: #ffd700; }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: Arial, sans-serif; background:#fff; padding-bottom: 70px; }
-/* UDAH BENER SEBENERNYA BRO, #fff = PUTIH */
-        header {
-            background: linear-gradient(#0066cc, #004499);
-            color: white;
-            padding: 12px 15px;
-            border-bottom: 2px solid var(--gold);
-            position: sticky; top: 0; z-index: 100;
-        }
-      .header-container {
-            display: flex; align-items: center; justify-content: space-between;
-            max-width: 1200px; margin: 0 auto;
-        }
-      .logo-left img { height:35px; cursor:pointer; }
-      .user-center { text-align: center; flex: 1; font-size: 1.2rem; font-weight: bold; color: var(--gold); }
-      .pi-logo-right { height:45px; cursor:pointer; }
 
-      .upload-container { max-width:800px; margin:20px auto; padding:0 15px; }
-      .upload-box {
-            border:2px solid var(--gold); border-radius:12px; padding:20px; text-align:center;
-        }
-      .upload-area {
-            border:2px dashed var(--gold); padding:40px 20px; border-radius:10px; margin:15px 0; cursor:pointer;
-            background: white;
-        }
+.logo-left { font-size: 12px; }
+.pi-logo-right { font-size: 28px; }
+
+#headerTitle {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+        
         footer {
             background: linear-gradient(#0066cc, #004499);
             color:white; text-align:center; padding:15px;
@@ -270,68 +206,6 @@ function sendPost() {
             });
         }
 
-        <script>
-// FUNGSI CEK LOGIN GLOBAL
-function getUsername() {
-    return localStorage.getItem('piUsername') || localStorage.getItem('username') || localStorage.getItem('user');
-}
-
-function checkLogin() {
-    const username = getUsername();
-    if(!username) {
-        alert("❌ Silakan Login terlebih dahulu!");
-        window.location.href = 'login.html';
-    }
-    return username;
-}
-
-// KIRIM POST
-function sendPost() {
-    const username = getUsername(); // AMBIL USERNAME DULU
-    if (!username) return alert("❌ Silakan Login terlebih dahulu!");
-    if (!selectedFile) return alert("❌ Silakan upload file terlebih dahulu");
-
-    Pi.createPayment({ amount: 0.01, memo: "Upload My Track", metadata: {} },
-    {
-        onReadyForServerCompletion: (paymentId) => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                let posts = JSON.parse(localStorage.getItem('mytrack_posts') || '[]');
-                posts.unshift({
-                    user: username, // PAKAI USERNAME
-                    time: "Baru saja",
-                    content: `<p>${selectedFile.name}</p><img src="${e.target.result}">`
-                });
-                localStorage.setItem('mytrack_posts', JSON.stringify(posts));
-                alert("✅ Pembayaran 0.01 Pi berhasil!");
-                window.location.href = "index.html";
-            }
-            reader.readAsDataURL(selectedFile);
-        },
-        onCancel: () => alert("❌ Dibatalkan"),
-        onError: () => alert("❌ Error Pembayaran")
-    });
-}
-
-window.onload = checkLogin;
-</script>
-
-<script>
-// HEADER DINAMIS
-document.addEventListener('DOMContentLoaded', function() {
-    const headerTitle = document.getElementById('headerTitle');
-    const piUsername = getUsername();
-    
-    console.log('Username:', piUsername);
-    
-    if(piUsername) {
-        headerTitle.innerText = piUsername; // SUDAH LOGIN
-        headerTitle.onclick = () => window.location.href = 'profile.html';
-    } else {
-        headerTitle.innerText = 'Login'; // BELUM LOGIN
-        headerTitle.onclick = () => window.location.href = 'login.html';
-    }
-});
 </script>
 </script>
 </body>
