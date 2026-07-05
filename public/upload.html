@@ -49,28 +49,29 @@
     /* BOX UPLOAD DIBESARIN */
     .upload-container { 
     display: flex;
-    justify-content: center; /* center horizontal */
-    align-items: center; /* center vertikal */
-    min-height: calc(100vh - 120px - 60px); /* tinggi layar - header - footer */
-    padding: 0 10px;
+    justify-content: center;
+    align-items: center;
+    padding: 5px; /* SISAIN 5PX DARI SEMUA SISI */
+    min-height: calc(100vh - 120px - 60px - 10px); /* 120=header, 60=footer, 10=padding atas+bawah */
+    box-sizing: border-box;
     }
    .upload-area {
     background: white;
     border: 2px dashed var(--emas);
     border-radius: 15px;
-    padding: 0 20px; /* padding atas bawah dihapus */
-    width: 90%;
-    max-width: 400px;
-    min-height: 300px; /* PANJANGIN KE BAWAH */
+    width: 100%; /* FULL LEBAR */
+    height: 100%; /* FULL TINGGI */
     text-align: center;
     cursor: pointer;
     transition: 0.3s;
-    display: flex; /* biar isi di dalam box juga center */
+    display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: center; /* ISI DI TENGAH */
     align-items: center;
     gap: 10px;
-   }
+    box-sizing: border-box;
+    padding: 20px; /* padding dalam biar teks gak mepet border */
+    }
    .upload-area:hover { background: #f0f8ff; border-color: var(--biru); }
    .upload-icon { font-size: 48px; color: var(--emas); } /* ICON UPLOAD */
    .upload-text { font-size: 1.1rem; color: #666; font-weight: 500; }
