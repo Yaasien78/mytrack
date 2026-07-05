@@ -5,7 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Track - Beranda</title>
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-    <script>Pi.init({ version: "2.0", sandbox: true });</script>
+    <script>
+Pi.init({ version: "2.0", sandbox: true });
+
+window.onload = function() {
+    let headerMid = document.querySelector('.header-center'); 
+    
+    // Langsung set ke harga aja, mau login atau nggak
+    headerMid.innerHTML = `<span style="font-size:14px; color:white; font-weight:bold;">1 Pi = $0.11 | Rp2.039</span>`;
+    
+    // Jalanin harga biar update
+    getPiPrice(); 
+}
+    </script>
     <style>
         .header-container {
     display: flex !important;          /* 1. Kunci biar sejajar */
