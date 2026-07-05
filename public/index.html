@@ -68,9 +68,34 @@
         }
         .price-center { color: var(--gold); font-weight: bold; font-size: 14px; }
         .feed { padding: 15px; }
-        footer { background: linear-gradient(#0066cc, #004499); color: white; text-align: center; padding: 15px; }
-        .login-btn { color: var(--gold); font-size: 1.2rem; font-weight: bold; cursor: pointer; }
-    </style>
+        footer { 
+    background: linear-gradient(var(--blue), #004499); 
+    color: white; 
+    text-align: center; 
+    padding: 15px; 
+    position: fixed;      /* 1. Paksa nempel di bawah */
+    bottom: 0;            /* 2. Mentok bawah */
+    left: 0;
+    width: 100%;          /* 3. Lebar full */
+    border-top: 3px solid var(--gold); /* 4. Border emas atas */
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+.login-btn { 
+    color: var(--gold); 
+    font-size: 1.2rem; 
+    font-weight: bold; 
+    cursor: pointer;
+    letter-spacing: 2px; /* Biar lebih keren */
+}
+
+/* TAMBAHAN: Kasih jarak biar konten gak ketutup footer */
+.feed { 
+    padding: 15px; 
+    padding-bottom: 80px; /* 80px = tinggi footer + buffer */
+            }
+           </style>
 </head>
 <body>
     <header class="header">
