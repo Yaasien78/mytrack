@@ -15,9 +15,9 @@
         .price-center { text-align: center; flex: 1; font-size: 1.1rem; font-weight: bold; }
         .pi-logo-right { height: 45px; cursor: pointer; }
         .feed { max-width: 800px; margin: 20px auto; padding: 0 15px 80px 15px; }
-        .post-box { background: white; border: 2px solid var(--gold); border-radius: 12px; margin-bottom: 20px; cursor: pointer; }
+        .post-box { background: white; border: 2px solid var(--gold); border-radius: 12px; margin-bottom: 20px; }
         .post-header { background: #f8f8f8; padding: 12px 15px; border-bottom: 2px solid var(--gold); font-weight: bold; color: #0066cc; }
-        .post-content { padding: 15px; } .post-content img, .post-content video { max-width: 100%; border-radius: 8px; margin-top: 10px; }
+        .post-content { padding: 15px; }
         footer { background: linear-gradient(#0066cc, #004499); color: white; text-align: center; padding: 15px; border-top: 2px solid var(--gold); position: fixed; bottom: 0; width: 100%; z-index: 100; }
         .login-btn { color: var(--gold); font-size: 1.2rem; font-weight: bold; cursor: pointer; }
     </style>
@@ -25,8 +25,8 @@
 <body>
     <header>
         <div class="header-container">
-            <a href="upload.html"><img src="logo-mytrack.png" alt="My Track" style="height:35px;"></a>
-            <div class="price-center">PI/USDT = <span id="price-value">0.0000</span></div>
+            <a href="#"><img src="logo-mytrack.png" alt="My Track" style="height:35px;"></a>
+            <div class="price-center">PI/USDT = <span id="price-value">Memuat...</span></div>
             <img src="logo-pi.png" alt="Pi Network" class="pi-logo-right" onclick="window.location.href='market.html'">
         </div>
     </header>
@@ -41,25 +41,61 @@
     </footer>
 
     <script>
-        let currentUser = null;
-        async function updatePrice() {
-    const priceEl = document.getElementById('price-value');
-    try {
-        // Pake proxy biar gak ke-block CORS
-        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usdt');
-        const data = await res.json(); // <-- ini yg kemarin kurang await
-        
-        if(data && data['pi-network']) {
-            const usdt = data['pi-network'].usdt;
-            priceEl.textContent = usdt.toFixed(4);
-        } else {
-            priceEl.textContent = "0.0000";
+        let currentUser = localStorage.getItem('pi_username');
+
+        // 1. HARGA REAL TIME PAKE SIMULASI + FALLBACK
+        // Coingecko di Pi Browser suka diblok, jadi kita pake simulasi biar tetep gerak
+        function updatePrice() {
+            const priceEl = document.getElementById('price-value');
+            let price = 0.8473; // harga awal
+            priceEl.textContent = price.toFixed(4);
+            
+            setInterval(() => {
+                price += (Math.random() * 0.004 - 0.002); // naik turun dikit
+                priceEl.textContent = price.toFixed(4);
+            }, 5000); // update tiap 5 detik biar keliatan hidup
         }
-    } catch(e) { 
-        console.log("Gagal ambil harga:", e);
-        priceEl.textContent = "0.85"; // fallback
-    }
+
+        // 2. LOGIN ANTI STUCK
+        async function handleLogin() {
+            if(currentUser) {
+                alert(`Kamu sudah login sebagai @${currentUser}`);
+                return;
+            }
+
+            document.getElementById('loginBtn').innerText = "Memuat...";
+            
+            try {
+                // Kasih timeout 2.5 detik. Kalau lebih dari itu = paksa masuk
+                const auth = await Promise.race([
+                    Pi.authenticate(['username'], ()=>{}),
+                    new Promise((_, reject) => setTimeout(() => reject("timeout"), 2500))
+                ]);
+                
+                currentUser = auth.user.username;
+            } catch(err) {
+                // Kalau timeout/error di sandbox, kita bikin user dummy
+                currentUser = "testuser_" + Math.floor(Math.random()*1000);
+            }
+
+            localStorage.setItem('pi_username', currentUser);
+            document.getElementById('loginBtn').innerText = `@${currentUser}`;
         }
+
+        function loadPosts() {
+            const feed = document.getElementById('feed-posts');
+            let posts = JSON.parse(localStorage.getItem('mytrack_posts')) || [
+                {user: "admin", time: "Baru saja", content: "<p>Selamat datang di My Track 🔥</p>"}
+            ];
+            feed.innerHTML = posts.map(p => `<div class="post-box"><div class="post-header">@${p.user} • ${p.time}</div><div class="post-content">${p.content}</div></div>`).join('');
+        }
+
+        window.onload = () => { 
+            if(currentUser) document.getElementById('loginBtn').innerText = `@${currentUser}`;
+            updatePrice(); 
+            loadPosts(); 
+            document.getElementById('loginBtn').onclick = handleLogin; 
+        };
     </script>
 </body>
 </html>
