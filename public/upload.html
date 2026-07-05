@@ -216,5 +216,25 @@
 
         window.onload = checkLogin;
     </script>
+    
+document.addEventListener('DOMContentLoaded', function() {
+    const headerTitle = document.getElementById('headerTitle');
+    
+    // CEK 2 KEY BIAR AMAN
+    const piUsername = localStorage.getItem('piUsername') || localStorage.getItem('username') || localStorage.getItem('user');
+    
+    console.log('Username:', piUsername); // buat debug
+    
+    if(piUsername) {
+        // SUDAH LOGIN
+        headerTitle.innerText = piUsername; // Tampil Username Pi
+        headerTitle.onclick = () => window.location.href = 'profile.html';
+    } else {
+        // BELUM LOGIN
+        headerTitle.innerText = 'Login';
+        headerTitle.onclick = () => window.location.href = 'login.html';
+    }
+});
+</script>
 </body>
 </html>
