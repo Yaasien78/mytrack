@@ -160,8 +160,16 @@
         Welcome to My Track App
     </footer>
 <script>
-// 1. UPDATE HARGA DUMMY
-function updatePrices() {
+document.addEventListener('DOMContentLoaded', function() {
+
+    // 1. TANGGAL
+    function updateTanggal() {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('tanggal').innerText = new Date().toLocaleDateString('id-ID', options);
+    }
+    updateTanggal();
+
+    // 2. HARGA
     const piUsdtEl = document.getElementById('piUsdt');
     const piIdrEl = document.getElementById('piIdr');
     const usdtIdrEl = document.getElementById('usdtIdr');
@@ -169,6 +177,10 @@ function updatePrices() {
     let piUsdt = 0.8524;
     let piIdr = 13450;
     let usdtIdr = 15780;
+
+    piUsdtEl.textContent = piUsdt.toFixed(4);
+    piIdrEl.textContent = Math.round(piIdr).toLocaleString('id-ID');
+    usdtIdrEl.textContent = Math.round(usdtIdr).toLocaleString('id-ID');
 
     setInterval(() => {
         piUsdt += (Math.random() - 0.5) * 0.008;
@@ -179,48 +191,34 @@ function updatePrices() {
         piIdrEl.textContent = Math.round(piIdr).toLocaleString('id-ID');
         usdtIdrEl.textContent = Math.round(usdtIdr).toLocaleString('id-ID');
     }, 3000);
-}
 
-// 2. UPDATE TANGGAL
-function updateTanggal() {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('tanggal').innerText = new Date().toLocaleDateString('id-ID', options);
-}
-
-// 3. CHART SEDERHANA
-function drawChart() {
+    // 3. CHART
     const canvas = document.getElementById('priceChart');
     const ctx = canvas.getContext('2d');
-    const width = canvas.width = canvas.offsetWidth; // biar responsif
-    const height = canvas.height = 300;
-    
-    let chartData = [0.8524, 0.8530, 0.8520, 0.8550, 0.8540];
+    let chartData = [0.8524, 0.8530, 0.8520, 0.8550, 0.8540, 0.8528];
 
-    function render() {
-        ctx.clearRect(0, 0, width, height);
+    function drawChart() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.strokeStyle = '#0066cc';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 3;
         ctx.beginPath();
         chartData.forEach((val, i) => {
-            let x = (i / (chartData.length - 1)) * width;
-            let y = height - ((val - 0.85) * 5000); // auto scale
+            let x = i * (canvas.width / (chartData.length - 1));
+            let y = canvas.height - ((val - 0.85) * 4000);
             if(i === 0) ctx.moveTo(x, y);
             else ctx.lineTo(x, y);
         });
         ctx.stroke();
     }
-    render();
+    drawChart();
 
     setInterval(() => {
         chartData.shift();
         chartData.push(0.8524 + (Math.random() - 0.5) * 0.01);
-        render();
+        drawChart();
     }, 5000);
-}
 
-// JALANIN SEMUA
-updateTanggal();
-updatePrices();
-drawChart();
+});
 </script>
+</body>
   </html>
