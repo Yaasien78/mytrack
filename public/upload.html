@@ -6,7 +6,17 @@
     <title>My Track - Upload</title>
     
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-    <script>Pi.init({ version: "2.0", sandbox: true });</script>
+    <script> Pi.init({ version: "2.0", sandbox: true });
+
+window.onload = function() {
+    let username = localStorage.getItem('piUsername')
+    let headerMid = document.querySelector('.header-center');
+    if(username){
+        headerMid.innerText = username; // Kalau udah login
+    } else {
+        headerMid.innerText = "Tamu"; // Kalau belum login
+    }
+} </script>
     
     <style>
         /* HEADER UTAMA */
