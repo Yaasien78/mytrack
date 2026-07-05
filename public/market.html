@@ -142,17 +142,26 @@
     <!-- BODY MARKET -->
     <div class="market-container">
 <div id="tanggal" style="text-align: center; color: #0066cc; font-size: 16px; font-weight: bold; margin: 10px 0; background:white; padding:5px 0;">
-        
-        <div class="price-box">
-            <div class="price-item">PI/USDT = <span id="piUsdt">0.8524</span></div>
-            <div class="price-item">PI/IDR = <span id="piIdr">13.450</span></div>
-            <div class="price-item">USDT/IDR = <span id="usdtIdr">15.780</span></div>
-        </div>
+</div>
 
-        <div class="chart-container">
-            <h3 style="text-align:center; margin-bottom:10px; color:#0066cc;">Chart PI/USDT (5 Detik)</h3>
-            <canvas id="priceChart" width="800" height="300"></canvas>
-        </div>
+<!-- BOX HARGA -->
+<div style="display:flex; justify-content:space-around; padding:10px; gap:8px;">
+    <div class="price-box" style="background:#f0f8ff; border:2px solid #0066cc; border-radius:10px; padding:10px; text-align:center; width:30%;">
+        <div style="font-size:12px; color:#666;">PI/USDT</div>
+        <div id="piUsdt" style="font-size:18px; font-weight:bold; color:#0066cc;">0.8524</div>
+    </div>
+    <div class="price-box" style="background:#f0f8ff; border:2px solid #0066cc; border-radius:10px; padding:10px; text-align:center; width:30%;">
+        <div style="font-size:12px; color:#666;">PI/IDR</div>
+        <div id="piIdr" style="font-size:18px; font-weight:bold; color:#0066cc;">13,450</div>
+    </div>
+    <div class="price-box" style="background:#f0f8ff; border:2px solid #0066cc; border-radius:10px; padding:10px; text-align:center; width:30%;">
+        <div style="font-size:12px; color:#666;">USDT/IDR</div>
+        <div id="usdtIdr" style="font-size:18px; font-weight:bold; color:#0066cc;">15,780</div>
+    </div>
+</div>
+
+<!-- CHART -->
+<canvas id="priceChart" style="width:100%; height:300px; background:white; margin-top:10px; border-top:1px solid #ddd;"></canvas>
     </div>
 
     <!-- FOOTER -->
