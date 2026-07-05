@@ -121,7 +121,7 @@
 </head>
 <body>
     <!-- HEADER -- SAMAIN KAYAK INDEX -->
-    <header style="background:#0066cc; border-bottom:3px solid #ffd700; width:100%; padding:8px 0;">
+<header style="background:#0066cc; border-bottom:3px solid #ffd700; width:100%; padding:8px 0; position:sticky; top:0; z-index:1000;">
         <div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 15px; box-sizing:border-box;">
             
             <!-- KIRI -->
@@ -141,8 +141,7 @@
 
     <!-- BODY MARKET -->
     <div class="market-container">
-<div id="tanggal" style="text-align: center; color: #0066cc; font-size: 20px; font-weight: bold; margin: 10px 0;">
-</div>
+<div id="tanggal" style="text-align: center; color: #0066cc; font-size: 16px; font-weight: bold; margin: 10px 0; background:white; padding:5px 0;">
         
         <div class="price-box">
             <div class="price-item">PI/USDT = <span id="piUsdt">0.8524</span></div>
@@ -182,60 +181,43 @@
                 usdtIdrEl.textContent = Math.round(usdtIdr).toLocaleString('id-ID');
             }, 3000);
         }
+// UPDATE TANGGAL
+function updateTanggal() {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('tanggal').innerText = new Date().toLocaleDateString('id-ID', options);
+}
+updateTanggal();
 
-        // Simple Chart dengan Canvas (fluktuasi 5 detik)
-        function drawChart() {
-            const canvas = document.getElementById('priceChart');
-            const ctx = canvas.getContext('2d');
-            let prices = [0.85, 0.852, 0.849, 0.855, 0.851];
-            let x = 0;
+// UPDATE CHART BIAR GA DUMMY
+const ctx = document.getElementById('priceChart').getContext('2d');
+let chartData = [0.8524, 0.8530, 0.8520, 0.8550];
 
-            setInterval(() => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // Background grid
-                ctx.strokeStyle = '#eee';
-                for (let i = 0; i < 6; i++) {
-                    ctx.beginPath();
-                    ctx.moveTo(0, i * 50);
-                    ctx.lineTo(canvas.width, i * 50);
-                    ctx.stroke();
-                }
+function drawChart() {
+    ctx.clearRect(0, 0, 800, 300);
+    ctx.strokeStyle = '#0066cc';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    chartData.forEach((val, i) => {
+        let x = i * 200;
+        let y = 300 - (val * 300);
+        if(i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+}
+drawChart();
 
-                // Line chart
-                ctx.strokeStyle = '#ffd700';
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                
-                for (let i = 0; i < prices.length; i++) {
-                    const y = canvas.height - (prices[i] - 0.84) * 8000;
-                    if (i === 0) ctx.moveTo(i * (canvas.width / 4), y);
-                    else ctx.lineTo(i * (canvas.width / 4), y);
-                }
-                ctx.stroke();
-
-                // Update data
-                prices.shift();
-                prices.push(0.84 + Math.random() * 0.02);
-            }, 5000);
-        }
-
+setInterval(() => {
+    chartData.shift();
+    chartData.push(0.8524 + (Math.random() - 0.5) * 0.01);
+    drawChart();
+}, 5000); // update 5 detik sekali
+        
         // Inisialisasi
         window.onload = () => {
             updatePrices();
             drawChart();
         };
-    </script>
-    <script>
-function updateTanggalMarket() {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const hariIni = new Date().toLocaleDateString('id-ID', options);
-    document.getElementById('tanggal-market').innerHTML = hariIni;
-}
-updateTanggalMarket();
-
-// biar update tiap ganti hari
-setInterval(updateTanggalMarket, 60000); 
     </script>
 </body>
   </html>
