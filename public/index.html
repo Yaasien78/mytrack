@@ -14,10 +14,24 @@
         header { background: linear-gradient(#0066cc, #004499); color: white; padding: 10px 12px; position: sticky; top: 0; z-index: 100; border-bottom: 2px solid var(--gold); }
         .header-container { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; }
         
-        .logo-left img { height:38px; cursor:pointer; border-radius:50%; border:2px solid var(--gold); }
+        .logo-left img { height:38px; width:38px; cursor:pointer; border-radius:50%; border:2px solid var(--gold); }
         .price-center { text-align: center; flex: 1; font-size: 1.05rem; font-weight: bold; }
         .price-center span { color: var(--gold); font-size: 1.2rem; }
-        .pi-logo-right { height:40px; cursor:pointer; } /* LOGO PI YG BENER */
+
+        /* LOGO PI: LINGKARAN PUTIH + SIMBOL PI PUTIH */
+        .pi-logo-right { 
+            height:38px; 
+            width:38px;
+            cursor:pointer; 
+            background: white; 
+            border-radius: 50%; 
+            border: 2px solid var(--blue); 
+            padding: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pi-logo-right svg { width: 100%; height: 100%; } /* Simbol di dalam SVG udah putih */
 
         .feed { max-width: 800px; margin: 20px auto; padding: 0 15px 80px 15px; }
         .post-box { background: white; border: 2px solid var(--gold); border-radius: 12px; margin-bottom: 20px; }
@@ -38,10 +52,12 @@
             
             <div class="price-center">PI/USDT = <span id="price-value">0.11988</span></div>
             
-            <!-- LOGO PI KAN: PAKE LOGO LOKAL BIAR GAK ERROR -->
-            <a href="market.html">
-                <img src="https://cdn.worldvectorlogo.com/logos/pi-network.svg" 
-                     class="pi-logo-right" alt="Pi">
+            <!-- LOGO PI KAN: KLIK KE MARKET -->
+            <a href="market.html" class="pi-logo-right">
+                <svg viewBox="0 0 100 100">
+                    <!-- Simbol Pi π warna putih tebal -->
+                    <path d="M10 20 L10 80 M90 20 L90 80 M15 25 L85 25 M50 25 L50 75" stroke="white" stroke-width="12" stroke-linecap="round"/>
+                </svg>
             </a>
         </div>
     </header>
@@ -58,7 +74,6 @@
     <script>
         let currentUser = localStorage.getItem('pi_username');
 
-        // HARGA REAL TIME: 0.11988
         function updatePrice() {
             document.getElementById('price-value').textContent = "0.11988";
         }
