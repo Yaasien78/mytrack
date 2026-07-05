@@ -7,22 +7,27 @@
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <script>Pi.init({ version: "2.0", sandbox: true });</script>
     <style>
-        .logo-left { 
-    height:38px; 
-    width:38px;
-    min-width: 38px;
-    min-height: 38px;
+        .logo-left, .pi-logo-right { 
+    height:38px !important; 
+    width:38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
     aspect-ratio: 1 / 1;
     box-sizing: border-box;
     cursor:pointer; 
     background: var(--blue); 
     border-radius: 50%; 
-    border: 3px solid var(--gold); /* Border emas */
-    box-shadow: 0 0 0 1px white;   /* Tambah shadow putih biar nongol */
+    border: 3px solid var(--gold);
+    box-shadow: 0 0 0 1px white;
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
+    position: static !important; /* 3. Pastiin gak absolute */
+    flex-shrink: 0;
+}
+.pi-logo-right { 
+    background: var(--blue);     
 }
 .logo-left span { 
     font-size: 10px; 
@@ -31,34 +36,30 @@
     line-height: 1.1; 
     text-align: center;
 }
-
-        /* LOGO PI: LINGKARAN BIRU + SIMBOL PI PUTIH + BORDER PUTIH */
-.pi-logo-right { 
-    height:38px; 
-    width:38px;
-    cursor:pointer; 
-    background: var(--blue);     
-    border-radius: 50%; 
-    border: 3px solid var(--gold);  /* 2px -> 3px biar tebel */
-    box-shadow: 0 0 0 1px white;    /* Tambah glow putih tipis biar nongol */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-}
 .pi-logo-right span { 
     font-size: 24px; 
     font-weight: bold; 
-    color: white;                /* 3. Simbol π warna putih */
+    color: white;                
     line-height: 1;
-}
-        
+        }
+ 
         footer { background: linear-gradient(#0066cc, #004499); color: white; text-align: center; padding: 15px; border-top: 2px solid var(--gold); position: fixed; bottom: 0; width: 100%; z-index: 100; }
         .login-btn { color: var(--gold); font-size: 1.2rem; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
     <header>
+        .header {
+    background: var(--blue);
+    color: white;
+    padding: 10px 15px;
+    display: flex;          
+    justify-content: space-between;
+    align-items: center;    
+    border-bottom: 3px solid var(--gold);
+    position: relative; /* 1. Biar anaknya gak kabur */
+    z-index: 10; /* 2. Pastiin di atas konten */
+}
         <div class="header-container">
             <!-- LOGO KIRI: KLIK KE UPLOAD -->
             <a href="#" id="logoLink" class="logo-left">
