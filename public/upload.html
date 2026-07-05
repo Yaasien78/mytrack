@@ -9,6 +9,44 @@
     <script>Pi.init({ version: "2.0", sandbox: true });</script>
     
     <style>
+        .logo-left { 
+    height:38px; 
+    width:38px;
+    cursor:pointer; 
+    background: var(--blue); 
+    border-radius: 50%; 
+    border: 3px solid var(--gold); /* Border emas tebel */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+.logo-left span { 
+    font-size: 10px; 
+    font-weight: bold; 
+    color: white; 
+    line-height: 1.1; 
+    text-align: center;
+}
+.pi-logo-right { 
+    height:38px; 
+    width:38px;
+    cursor:pointer; 
+    background: var(--blue);     
+    border-radius: 50%; 
+    border: 3px solid var(--gold); /* Border emas tebel */
+    box-shadow: 0 0 0 1px white;   /* Biar nongol */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+.pi-logo-right span { 
+    font-size: 24px; 
+    font-weight: bold; 
+    color: white;                
+    line-height: 1;
+}
         :root { --blue: #0066cc; --gold: #ffd700; }
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family: Arial, sans-serif; background:#fff; padding-bottom: 70px; }
