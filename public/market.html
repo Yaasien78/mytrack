@@ -141,7 +141,8 @@
 
     <!-- BODY MARKET -->
     <div class="market-container">
-        <h2 id="tanggal-hari-ini" style="color: #0066cc; font-size: 24px; text-align: center; margin: 20px 0; font-weight: bold;"></h2>
+<div id="tanggal" style="text-align: center; color: #0066cc; font-size: 20px; font-weight: bold; margin: 10px 0;">
+</div>
         
         <div class="price-box">
             <div class="price-item">PI/USDT = <span id="piUsdt">0.8524</span></div>
@@ -224,6 +225,17 @@
             updatePrices();
             drawChart();
         };
+    </script>
+    <script>
+function updateTanggalMarket() {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const hariIni = new Date().toLocaleDateString('id-ID', options);
+    document.getElementById('tanggal-market').innerHTML = hariIni;
+}
+updateTanggalMarket();
+
+// biar update tiap ganti hari
+setInterval(updateTanggalMarket, 60000); 
     </script>
 </body>
   </html>
