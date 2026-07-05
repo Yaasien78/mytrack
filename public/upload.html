@@ -73,28 +73,42 @@
         left: 0;
     }
 </style>
-</head>
-<body>
+/* HEADER */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #003399;
+    padding: 8px 15px; /* dikecilin dikit */
+    color: white;
+    border-bottom: 3px solid #FFD700; /* garis kuning bawah */
+}
 
-<header>
-    <a href="index.html" class="logo-left">My<br>Track</a>
-    <h1 id="headerTitle">Login</h1>
-    <div class="pi-logo-right">π</div>
-</header>
+.logo-left,.pi-logo-right {
+    background: #003399;
+    color: white;
+    width: 50px; /* DARI 60px JADI 50px */
+    height: 50px; /* DARI 60px JADI 50px */
+    border-radius: 50%;
+    border: 2px solid #FFD700; /* KUNING bukan putih */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+.logo-left { font-size: 10px; } /* DARI 12px JADI 10px */
+.pi-logo-right { font-size: 24px; color: #FFD700; } /* KUNING + DARI 28px JADI 24px */
 
-<h2>Upload Postingan Baru</h2>
-<div id="userStatus">Mengecek login...</div>
-
-<div class="upload-container">
-    <div class="upload-area" id="uploadArea">
-        <p><b>Klik atau tarik file di sini untuk upload</b></p>
-        <p>Foto / Video</p>
-        <p id="fileName"></p>
-    </div>
-    <input type="file" id="fileInput" accept="image/*,video/*" style="display:none;">
-</div>
-
-<button class="send-btn" onclick="sendPost()">Send 0.01 Pi to Post</button>
+#headerTitle {
+    flex: 1;
+    text-align: center;
+    font-size: 1.5rem; /* DARI 1.8rem JADI 1.5rem */
+    font-weight: bold;
+    margin: 0;
+    cursor: pointer;
+}
 
 <script>
 Pi.init({ version: "2.0", sandbox: true });
