@@ -6,10 +6,10 @@
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <style>
     :root {
-        --emas: #D4AF37; /* EMAS */
+        --emas: #D4AF37;
         --biru: #0066cc;
     }
-    body { margin: 0; font-family: Arial, sans-serif; background: #f0f2f5; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #ffffff; }
     
     /* HEADER */
     header {
@@ -17,15 +17,15 @@
         justify-content: space-between;
         align-items: center;
         background: var(--biru);
-        padding: 6px 12px;
+        padding: 5px 10px;
         color: white;
         border-bottom: 2px solid var(--emas);
     }
    .logo-left,.pi-logo-right {
         background: var(--biru);
         color: white;
-        width: 45px;
-        height: 45px;
+        width: 42px; /* 42px SAMA DENGAN LAINNYA */
+        height: 42px; /* 42px SAMA DENGAN LAINNYA */
         border-radius: 50%;
         border: 2px solid var(--emas);
         box-shadow: 0 0 0 2px white, 0 0 0 4px var(--emas);
@@ -36,26 +36,37 @@
         text-decoration: none;
         flex-shrink: 0;
     }
-   .logo-left { font-size: 9px; line-height: 1.1; }
-   .pi-logo-right { font-size: 22px; }
+   .logo-left { font-size: 8px; line-height: 1.1; }
+   .pi-logo-right { font-size: 20px; }
     #headerTitle { 
         flex: 1; 
         text-align: center; 
-        font-size: 18px; /* 18px SESUAI PERINTAH */
+        font-size: 18px;
         font-weight: bold; 
         margin: 0; 
     }
 
-    /* KONTEN BERSIH */
-   .upload-container { padding: 20px 15px 90px 15px; }
+    /* JUDUL */
+    h2 { 
+        text-align: center; 
+        color: var(--biru); 
+        margin: 25px 0; 
+        font-size: 1.8rem; 
+        font-weight: bold;
+    }
+
+    /* BOX UPLOAD */
+   .upload-container { padding: 0 15px 90px 15px; }
    .upload-area {
         background: white;
         border: 2px dashed var(--emas);
         border-radius: 12px;
-        padding: 80px 20px;
+        padding: 60px 20px;
         text-align: center;
         cursor: pointer;
         transition: 0.3s;
+        margin: 0 auto;
+        max-width: 500px;
     }
    .upload-area:hover { background: #f0f8ff; border-color: var(--biru); }
     #fileName { margin-top: 15px; color: var(--biru); font-weight: bold; font-size: 1rem; }
@@ -85,6 +96,8 @@
     <h1 id="headerTitle">@Yaasien</h1>
     <a href="market.html" class="pi-logo-right">π</a>
 </header>
+
+<h2>Postingan Terbaru</h2>
 
 <div class="upload-container">
     <div class="upload-area" id="uploadArea">
