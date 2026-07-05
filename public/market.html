@@ -146,18 +146,19 @@
 
 <!-- BOX HARGA -->
 <div style="display:flex; justify-content:space-around; padding:10px; gap:8px;">
-    <div class="price-box" style="background:#f0f8ff; border:2px solid #0066cc; border-radius:10px; padding:10px; text-align:center; width:30%;">
-        <div style="font-size:12px; color:#666;">PI/USDT</div>
-        <div id="piUsdt" style="font-size:18px; font-weight:bold; color:#0066cc;">0.8524</div>
+    <div class="price-box" style="background:#f0f8ff; border:2px solid #0066cc; border-radius:10px; padding:12px; text-align:center; width:30%;">
+        <div style="font-size:13px; color:#000; font-weight:800;">PI/USDT</div>
+        <div id="piUsdt" style="font-size:20px; font-weight:800; color:#0066cc;">0.8524</div>
     </div>
-    <div class="price-box" style="background:#f0f8ff; border:2px solid #0066cc; border-radius:10px; padding:10px; text-align:center; width:30%;">
-        <div style="font-size:12px; color:#666;">PI/IDR</div>
-        <div id="piIdr" style="font-size:18px; font-weight:bold; color:#0066cc;">13,450</div>
+    <div class="price-box" style="background:#f0f8ff; border:2px solid #0066cc; border-radius:10px; padding:12px; text-align:center; width:30%;">
+        <div style="font-size:13px; color:#000; font-weight:800;">PI/IDR</div>
+        <div id="piIdr" style="font-size:20px; font-weight:800; color:#0066cc;">13,450</div>
     </div>
-    <div class="price-box" style="background:#f0f8ff; border:2px solid #0066cc; border-radius:10px; padding:10px; text-align:center; width:30%;">
-        <div style="font-size:12px; color:#666;">USDT/IDR</div>
-        <div id="usdtIdr" style="font-size:18px; font-weight:bold; color:#0066cc;">15,780</div>
+    <div class="price-box" style="background:#f0f8ff; border:2px solid #0066cc; border-radius:10px; padding:12px; text-align:center; width:30%;">
+        <div style="font-size:13px; color:#000; font-weight:800;">USDT/IDR</div>
+        <div id="usdtIdr" style="font-size:20px; font-weight:800; color:#0066cc;">15,780</div>
     </div>
+</div>
 </div>
 
 <!-- CHART -->
@@ -201,32 +202,58 @@ document.addEventListener('DOMContentLoaded', function() {
         usdtIdrEl.textContent = Math.round(usdtIdr).toLocaleString('id-ID');
     }, 3000);
 
-    // 3. CHART
-    const canvas = document.getElementById('priceChart');
-    const ctx = canvas.getContext('2d');
-    let chartData = [0.8524, 0.8530, 0.8520, 0.8550, 0.8540, 0.8528];
+    // CHART DENGAN 2 GARIS: HARGA + SUPPLY
+const canvas = document.getElementById('priceChart');
+const ctx = canvas.getContext('2d');
+let priceData = [0.8524, 0.8530, 0.8520, 0.8550, 0.8540, 0.8528, 0.8535];
+let supplyData = [85, 86, 84, 87, 86, 85, 86]; // data dummy supply dalam miliar
 
-    function drawChart() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.strokeStyle = '#0066cc';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        chartData.forEach((val, i) => {
-            let x = i * (canvas.width / (chartData.length - 1));
-            let y = canvas.height - ((val - 0.85) * 4000);
-            if(i === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-        });
-        ctx.stroke();
-    }
+function drawChart() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // GARIS 1: HARGA PI/USDT - WARNA BIRU
+    ctx.strokeStyle = '#0066cc';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    priceData.forEach((val, i) => {
+        let x = i * (canvas.width / (priceData.length - 1));
+        let y = canvas.height - ((val - 0.85) * 4000); // scale harga
+        if(i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // GARIS 2: SUPPLY - WARNA HIJAU
+    ctx.strokeStyle = '#00aa44';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    supplyData.forEach((val, i) => {
+        let x = i * (canvas.width / (supplyData.length - 1));
+        let y = canvas.height - (val * 3); // scale supply
+        if(i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // LEGENDA
+    ctx.font = '12px Arial';
+    ctx.fillStyle = '#0066cc';
+    ctx.fillText('Harga PI/USDT', 10, 20);
+    ctx.fillStyle = '#00aa44';
+    ctx.fillText('Supply Miliar', 10, 40);
+}
+drawChart();
+
+// UPDATE DATA SETIAP 5 DETIK
+setInterval(() => {
+    priceData.shift();
+    priceData.push(0.8524 + (Math.random() - 0.5) * 0.01);
+    
+    supplyData.shift();
+    supplyData.push(85 + (Math.random() - 0.5) * 3);
+    
     drawChart();
-
-    setInterval(() => {
-        chartData.shift();
-        chartData.push(0.8524 + (Math.random() - 0.5) * 0.01);
-        drawChart();
-    }, 5000);
-
+}, 5000);
 });
 </script>
 </body>
