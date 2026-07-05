@@ -4,25 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Track - Upload</title>
-    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script>
 Pi.init({ version: "2.0", sandbox: true });
 
-let username = localStorage.getItem('piUsername');
 let selectedFile = null;
 
+// AMBIL USERNAME
+function getUsername() {
+    return localStorage.getItem('piUsername');
+}
+
+// JALAN PAS HALAMAN KELOAD
 window.onload = function() {
-    let headerMid = document.getElementById('headerTitle'); // PENTING: pakai ID
-    
-    if(username){
-        headerMid.innerText = username; // Kalau udah login
+    const username = getUsername();
+    const headerTitle = document.getElementById('headerTitle');
+
+    if(username) {
+        headerTitle.innerText = `@${username}`; // CUMA GANTI TEKS
+        headerTitle.onclick = () => window.location.href = 'profile.html';
     } else {
-        headerMid.innerText = "Tamu"; // Kalau belum login
         alert("Silakan login dulu di beranda");
         window.location.href = "index.html";
     }
+
+    // UPLOAD FILE
+    document.getElementById('uploadArea').addEventListener('click', () => {
+        document.getElementById('fileInput').click();
+    });
+
+    document.getElementById('fileInput').addEventListener('change', (e) => {
+        selectedFile = e.target.files[0];
+        if (selectedFile) document.getElementById('fileName').textContent = "✅ " + selectedFile.name;
+    });
 }
-    </script>
+
+// KIRIM POST
+function sendPost() {
+    const username = getUsername();
+    if (!username) return alert("❌ Silakan Login terlebih dahulu!");
+    if (!selectedFile) return alert("❌ Silahkan upload file terlebih dahulu!");
+
+    Pi.createPayment({ amount: 0.01, memo: "Upload My Track", metadata: {} }, {
+        onReadyForServerCompletion: (paymentId) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                let posts = JSON.parse(localStorage.getItem('mytrack_posts') || '[]');
+                posts.unshift({ 
+                    user: username, 
+                    time: "Baru saja", 
+                    content: `<p>${selectedFile.name}</p><img src="${e.target.result}">` 
+                });
+                localStorage.setItem('mytrack_posts', JSON.stringify(posts));
+                alert("✅ Pembayaran 0.01 Pi berhasil!");
+                window.location.href = "index.html";
+            }
+            reader.readAsDataURL(selectedFile);
+        },
+        onCancel: () => alert("❌ Dibatalkan"),
+        onError: () => alert("❌ Error Pembayaran")
+    });
+}
+</script>
     
     <style>
         /* HEADER UTAMA */
