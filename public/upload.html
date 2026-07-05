@@ -4,19 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Track - Upload</title>
-    
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-    <script> Pi.init({ version: "2.0", sandbox: true });
+<script>
+Pi.init({ version: "2.0", sandbox: true });
+
+let username = localStorage.getItem('piUsername');
+let selectedFile = null;
 
 window.onload = function() {
-    let username = localStorage.getItem('piUsername')
-    let headerMid = document.querySelector('.header-center');
+    let headerMid = document.getElementById('headerTitle'); // PENTING: pakai ID
+    
     if(username){
         headerMid.innerText = username; // Kalau udah login
     } else {
         headerMid.innerText = "Tamu"; // Kalau belum login
+        alert("Silakan login dulu di beranda");
+        window.location.href = "index.html";
     }
-} </script>
+}
+    </script>
     
     <style>
         /* HEADER UTAMA */
@@ -132,25 +138,21 @@ window.onload = function() {
 
     <!-- HEADER DENGAN NAVIGASI -->
 <!-- HEADER -->
-<header style="background:#0066cc; padding:12px 15px; display:flex; align-items:center; justify-content:space-between; border-bottom:3px solid #ffd700;">
+<header>
     
     <!-- LOGO KIRI -->
-    <a href="index.html" style="text-decoration:none;">
-        <div style="background:#0066cc !important; border:3px solid #ffd700 !important; border-radius:50%; width:50px; height:50px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:white !important; cursor:pointer; box-shadow:0 0 0 2px white;">
-            My<br>Track
-        </div>
-    </a>
+<a href="index.html" class="logo-left" style="text-decoration:none;">
+    <div>My<br>Track</div>
+</a>
 
-    <!-- JUDUL TENGAH -->
-    <h1 id="headerTitle" style="color:white; font-size:18px; font-weight:800; margin:0; text-align:center;">Login</h1>
+<!-- JUDUL TENGAH -->
+<h1 id="headerTitle">Login</h1>
 
-    <!-- LOGO KANAN -->
-    <a href="market.html" style="text-decoration:none;">
-        <div style="background:#0066cc !important; border:3px solid #ffd700 !important; border-radius:50%; width:50px; height:50px; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; color:white !important; cursor:pointer; box-shadow:0 0 0 2px white;">
-            π
-        </div>
-    </a>
-
+<!-- LOGO KAN -->
+<a href="market.html" class="pi-logo-right" style="text-decoration:none;">
+    <div>π</div>
+</a>
+    
 </header>
 
     <div class="upload-container">
@@ -172,12 +174,12 @@ window.onload = function() {
 
     <script>
         let selectedFile = null;
-        let username = localStorage.getItem("pi_username"); 
+        let username = localStorage.getItem("piUsername"); 
 
         // CEK LOGIN + TAMPILIN DI HEADER TENGAH
         function checkLogin() {
             const status = document.getElementById("userStatus");
-            const headerUser = document.getElementById("header-username");
+            const headerUser = document.getElementById("headerTitle");
 
             if (username) {
                 headerUser.innerText = `@${username}`;
