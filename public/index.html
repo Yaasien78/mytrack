@@ -7,74 +7,80 @@
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <script>Pi.init({ version: "2.0", sandbox: true });</script>
     <style>
+        :root {
+            --blue: #0066cc;
+            --gold: #ffcc00;
+        }
+
+        body { margin: 0; font-family: Arial; background: #f0f2f5; }
+
+        .header { 
+            background: var(--blue);
+            color: white; 
+            padding: 10px 15px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            border-bottom: 3px solid var(--gold); 
+            position: relative; 
+            z-index: 10; 
+        }
+        
         .logo-left, .pi-logo-right { 
-    he.logo-left, .pi-logo-right { 
-    height:38px !important; 
-    width:38px !important;
-    min-width: 38px !important;
-    min-height: 38px !important;
-    aspect-ratio: 1 / 1;
-    box-sizing: border-box;
-    cursor:pointer; 
-    background: var(--blue); /* FIX: hapus 1 tanda - */
-    border-radius: 50%; 
-    border: 3px solid var(--gold);
-    box-shadow: 0 0 0 1px white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    position: static !important;
-    flex-shrink: 0;
-}
-.pi-logo-right { 
-    background: var(--blue); /* FIX: hapus 1 tanda - */
-}
-.logo-left span { 
-    font-size: 10px; 
-    font-weight: bold; 
-    color: white; 
-    line-height: 1.1; 
-    text-align: center;
-}
-.pi-logo-right span { 
-    font-size: 24px; 
-    font-weight: bold; 
-    color: white;                
-    line-height: 1;
-}
- 
-        footer { background: linear-gradient(#0066cc, #004499); color: white; text-align: center; padding: 15px; border-top: 2px solid var(--gold); position: fixed; bottom: 0; width: 100%; z-index: 100; }
+            height:38px !important; 
+            width:38px !important;
+            min-width: 38px !important;
+            min-height: 38px !important;
+            aspect-ratio: 1 / 1;
+            box-sizing: border-box;
+            cursor:pointer; 
+            background: var(--blue); 
+            border-radius: 50%; 
+            border: 3px solid var(--gold);
+            box-shadow: 0 0 0 1px white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        .pi-logo-right { 
+            background: var(--blue);
+        }
+        .logo-left span { 
+            font-size: 10px; 
+            font-weight: bold; 
+            color: white; 
+            line-height: 1.1; 
+            text-align: center;
+        }
+        .pi-logo-right span { 
+            font-size: 24px; 
+            font-weight: bold; 
+            color: white;                
+            line-height: 1;
+        }
+        .price-center { color: var(--gold); font-weight: bold; font-size: 14px; }
+        .feed { padding: 15px; }
+        footer { background: linear-gradient(#0066cc, #004499); color: white; text-align: center; padding: 15px; }
         .login-btn { color: var(--gold); font-size: 1.2rem; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-    <header>
-        .header {
-    background: var(--blue);
-    color: white;
-    padding: 10px 15px;
-    display: flex;          
-    justify-content: space-between;
-    align-items: center;    
-    border-bottom: 3px solid var(--gold);
-    position: relative; /* 1. Biar anaknya gak kabur */
-    z-index: 10; /* 2. Pastiin di atas konten */
-}
+    <header class="header">
         <div class="header-container">
-    <!-- LOGO KIRI: KLIK KE UPLOAD -->
-    <a href="upload.html" class="logo-left">
-        <span>My<br>Track</span>
-    </a>
+            <!-- LOGO KIRI: KLIK KE UPLOAD -->
+            <a href="upload.html" class="logo-left">
+                <span>My<br>Track</span>
+            </a>
 
-    <div class="price-center">PI/USDT = <span id="price-value">0.11988</span></div>
+            <div class="price-center">PI/USDT = <span id="price-value">0.11988</span></div>
 
-    <!-- LOGO PI KAN: KLIK KE MARKET -->
-    <a href="market.html" class="pi-logo-right">
-        <span>π</span>
-    </a>
+            <!-- LOGO PI KAN: KLIK KE MARKET -->
+            <a href="market.html" class="pi-logo-right">
+                <span>π</span>
+            </a>
         </div>
-            
     </header>
 
     <div class="feed">
@@ -87,55 +93,7 @@
     </footer>
 
     <script>
-        let currentUser = localStorage.getItem('pi_username');
-
-        function updatePrice() {
-            document.getElementById('price-value').textContent = "0.11988";
-        }
-
-        async function handleLogin() {
-            if(currentUser) return alert(`Kamu sudah login sebagai @${currentUser}`);
-            document.getElementById('loginBtn').innerText = "Memuat...";
-            try {
-                const auth = await Promise.race([
-                    Pi.authenticate(['username'], ()=>{}),
-                    new Promise((_, reject) => setTimeout(() => reject("timeout"), 2500))
-                ]);
-                currentUser = auth.user.username;
-            } catch(err) {
-                currentUser = "testuser_" + Math.floor(Math.random()*1000);
-            }
-            localStorage.setItem('pi_username', currentUser);
-            document.getElementById('loginBtn').innerText = `@${currentUser}`;
-        }
-
-        // KLIK LOGO KIRI = CEK LOGIN DULU BARU KE UPLOAD
-        document.getElementById('logoLink').onclick = (e) => {
-            e.preventDefault();
-            if(!currentUser){
-                alert("Silakan login dulu ya");
-                handleLogin().then(()=>{ 
-                    if(localStorage.getItem('pi_username')) window.location.href = "upload.html";
-                });
-            } else {
-                window.location.href = "upload.html";
-            }
-        };
-
-        function loadPosts() {
-            const feed = document.getElementById('feed-posts');
-            let posts = JSON.parse(localStorage.getItem('mytrack_posts')) || [
-                {user: "admin", time: "Baru saja", content: "<p>Selamat datang di My Track 🔥</p>"}
-            ];
-            feed.innerHTML = posts.map(p => `<div class="post-box"><div class="post-header">@${p.user} • ${p.time}</div><div class="post-content">${p.content}</div></div>`).join('');
-        }
-
-        window.onload = () => { 
-            if(currentUser) document.getElementById('loginBtn').innerText = `@${currentUser}`;
-            updatePrice(); 
-            loadPosts(); 
-            document.getElementById('loginBtn').onclick = handleLogin; 
-        };
+        // script kamu taruh sini
     </script>
 </body>
 </html>
