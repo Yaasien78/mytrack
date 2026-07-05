@@ -66,7 +66,14 @@
             color: white;                
             line-height: 1;
         }
-        .price-center { color:white; font-weight: bold; font-size: 20px; }
+    
+.price-center { 
+    color:white; 
+    font-weight: bold; 
+    font-size: 16px; 
+    text-align: center;
+    line-height: 1.2;
+}
         .feed { padding: 15px; }
         footer { 
     background: linear-gradient(var(--blue), #004499); 
@@ -101,20 +108,21 @@
     <header style="background:#0066cc; border-bottom:3px solid #ffd700; width:100%; padding:8px 0;">
     <div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 15px; box-sizing:border-box;">
         
-        <!-- KIRI -->
+        <!-- 1. KIRI - KLIK KE INDEX -->
         <a href="index.html" style="height:42px; width:42px; background:#0066cc; border-radius:50%; border:3px solid #ffd700; box-shadow:0 0 0 2px white; display:flex; align-items:center; justify-content:center; text-decoration:none; flex-shrink:0;">
             <span style="font-size:9px; font-weight:bold; color:white; line-height:1.0; text-align:center;">My<br>Track</span>
         </a>
 
-        <!-- TENGAH - INI YG KAMU UBAH -->
-        <div id="harga-header" style="color:white; font-weight:bold; font-size:16px; text-align:center; flex:1; min-width:0; padding:0 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-            PI/USDT = 0.11988
-        </div>
+        <!-- 2. TENGAH - 2 BARIS -->
+<div id="harga-header" style="color:white; font-weight:bold; font-size:14px; text-align:center; flex:1; line-height:1.3;">
+    <div>PI/USDT</div>
+    <div>= 0.9876</div>
+</div>
 
-        <!-- KAN -->
-        <div style="height:42px; width:42px; background:#0066cc; border-radius:50%; border:3px solid #ffd700; box-shadow:0 0 0 2px white; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <!-- 3. KAN - KLIK KE MARKET -->
+        <a href="market.html" style="height:42px; width:42px; background:#0066cc; border-radius:50%; border:3px solid #ffd700; box-shadow:0 0 0 2px white; display:flex; align-items:center; justify-content:center; text-decoration:none; flex-shrink:0;">
             <span style="font-size:24px; font-weight:bold; color:white;">π</span>
-        </div>
+        </a>
 
     </div>
     </header>
