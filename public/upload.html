@@ -11,185 +11,129 @@
     <style>
         :root { --blue: #0066cc; --gold: #ffd700; }
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: Arial, sans-serif; background:#fff; }
+        body { font-family: Arial, sans-serif; background:#fff; padding-bottom: 70px; }
 
-        /* HEADER */
         header {
             background: linear-gradient(#0066cc, #004499);
             color: white;
             padding: 12px 15px;
             border-bottom: 2px solid var(--gold);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: sticky; top: 0; z-index: 100;
         }
-        .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            max-width: 1200px;
-            margin: 0 auto;
+      .header-container {
+            display: flex; align-items: center; justify-content: space-between;
+            max-width: 1200px; margin: 0 auto;
         }
-        .pi-logo { height: 45px; cursor: pointer; }
-        .center-username { 
-            font-size: 1.35rem; 
-            font-weight: bold; 
-            color: var(--gold); 
-            text-align: center;
-            flex: 1;
-        }
-        .mytrack-logo { 
-            font-weight: bold; 
-            font-size: 1.4rem; 
-            cursor: pointer; 
-            color: white; 
-            text-decoration: none; 
-        }
+      .logo-left img { height:35px; cursor:pointer; }
+      .user-center { text-align: center; flex: 1; font-size: 1.2rem; font-weight: bold; color: var(--gold); }
+      .pi-logo-right { height:45px; cursor:pointer; }
 
-        /* BODY */
-        .upload-container {
-            max-width: 700px;
-            margin: 30px auto;
-            padding: 0 15px;
+      .upload-container { max-width:800px; margin:20px auto; padding:0 15px; }
+      .upload-box {
+            border:2px solid var(--gold); border-radius:12px; padding:20px; text-align:center;
         }
-        .upload-box {
-            border: 2px solid var(--gold);
-            border-radius: 15px;
-            padding: 30px 20px;
-            text-align: center;
-            background: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      .upload-area {
+            border:2px dashed var(--gold); padding:40px 20px; border-radius:10px; margin:15px 0; cursor:pointer;
+            background: #fffdf5;
         }
-        .upload-area {
-            border: 3px dashed var(--gold);
-            padding: 50px 20px;
-            border-radius: 12px;
-            margin: 20px 0;
-            cursor: pointer;
-            background: #f9f9f9;
-        }
-
-        /* FOOTER */
         footer {
             background: linear-gradient(#0066cc, #004499);
-            color: white;
-            text-align: center;
-            padding: 18px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            border-top: 2px solid var(--gold);
-            font-size: 1.25rem;
-            z-index: 100;
+            color:white; text-align:center; padding:15px;
+            position:fixed; bottom:0; width:100%; border-top:2px solid var(--gold);
         }
-        .footer-text {
-            color: var(--gold);
-            font-weight: bold;
-            cursor: pointer;
-        }
+      .send-btn { color:var(--gold); font-size:1.2rem; font-weight:bold; cursor:pointer; }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
     <header>
         <div class="header-container">
-            <!-- Kiri: Logo Pi Network -->
+            <!-- 1. KLIK KIRI = KE HOME/INDEX -->
+            <a href="index.html" class="logo-left">
+                <img src="logo-mytrack.png" alt="My Track">
+            </a>
+            
+            <!-- 2. TENGAH: USERNAME -->
+            <div class="user-center" id="header-username">@Guest</div>
+            
+            <!-- 3. KLIK KAN = KE MARKET -->
             <img src="https://minepi.com/wp-content/uploads/2021/04/pi-logo.png" 
-                 class="pi-logo" 
-                 onclick="window.location.href='market.html'">
-
-            <!-- Tengah: @username -->
-            <div id="centerUsername" class="center-username">
-                <!-- JS akan isi -->
-            </div>
-
-            <!-- Kanan: Logo My Track -->
-            <a href="index.html" class="mytrack-logo">My Track</a>
+                 class="pi-logo-right" onclick="window.location.href='market.html'">
         </div>
     </header>
 
-    <!-- BODY -->
     <div class="upload-container">
+        <h2 style="text-align:center; margin:20px 0; color:#0066cc;">Upload Postingan Baru</h2>
         <div class="upload-box">
-            <h2 style="color:#0066cc; margin-bottom:20px;">Upload Postingan</h2>
+            <div id="userStatus" style="margin:10px 0; font-size:1.1rem;"></div>
             
             <div class="upload-area" id="uploadArea">
-                <h3>📤 Upload di Sini</h3>
-                <p>Klik atau tarik file gambar/video</p>
+                <p>Klik atau tarik file di sini untuk upload</p>
                 <input type="file" id="fileInput" style="display:none;" accept="image/*,video/*">
-                <p id="fileName" style="margin-top:15px; font-weight:bold; color:#0066cc;"></p>
+                <p id="fileName" style="margin-top:10px; font-weight:bold; color:#0066cc;"></p>
             </div>
         </div>
     </div>
 
-    <!-- FOOTER -->
     <footer>
-        <span id="footerAction" class="footer-text" onclick="handleFooterClick()">
-            <!-- JS akan ubah teks -->
-        </span>
+        <span class="send-btn" onclick="sendPost()">Send 0.01 Pi to Post</span>
     </footer>
 
     <script>
         let selectedFile = null;
-        let username = localStorage.getItem("piUsername");
+        let username = localStorage.getItem("pi_username"); 
 
-        function updateUI() {
-            const usernameEl = document.getElementById("centerUsername");
-            const footerEl = document.getElementById("footerAction");
+        // CEK LOGIN + TAMPILIN DI HEADER TENGAH
+        function checkLogin() {
+            const status = document.getElementById("userStatus");
+            const headerUser = document.getElementById("header-username");
 
             if (username) {
-                usernameEl.textContent = `@${username}`;
-                footerEl.textContent = "Send 0.01 Pi to Post";
+                headerUser.innerText = `@${username}`;
+                status.innerHTML = `Kamu login sebagai <span style="color:#ffd700; font-weight:bold;">@${username}</span>`;
             } else {
-                usernameEl.innerHTML = `<span onclick="doLogin()" style="color:#ffd700; text-decoration:underline; cursor:pointer;">Login</span>`;
-                footerEl.textContent = "Login";
+                alert("Silakan login dulu di beranda");
+                window.location.href = "index.html";
             }
         }
 
-        function doLogin() {
-            const input = prompt("Masukkan Username Pi Network kamu:");
-            if (input && input.trim() !== "") {
-                username = input.trim();
-                localStorage.setItem("piUsername", username);
-                updateUI();
-                alert("✅ Login berhasil!");
-            }
-        }
-
-        // Upload Area
+        // UPLOAD FILE
         document.getElementById('uploadArea').addEventListener('click', () => {
             document.getElementById('fileInput').click();
         });
 
         document.getElementById('fileInput').addEventListener('change', (e) => {
             selectedFile = e.target.files[0];
-            if (selectedFile) {
-                document.getElementById('fileName').textContent = "✅ " + selectedFile.name;
-            }
+            if (selectedFile) document.getElementById('fileName').textContent = "✅ " + selectedFile.name;
         });
 
-        // Footer Action
-        function handleFooterClick() {
-            if (!username) {
-                doLogin();
-                return;
-            }
+        // KIRIM POST
+        function sendPost() {
+            if (!username) return alert("❌ Silakan Login terlebih dahulu!");
+            if (!selectedFile) return alert("❌ Silahkan upload file terlebih dahulu!");
 
-            if (!selectedFile) {
-                alert("❌ Silahkan upload file terlebih dahulu!");
-                return;
-            }
-
-            // Simulasi Payment
-            alert("✅ Pembayaran 0.01 Pi berhasil!\nPostingan kamu akan muncul di Beranda.");
-            // Reset
-            selectedFile = null;
-            document.getElementById('fileName').textContent = "";
+            Pi.createPayment({ amount: 0.01, memo: "Upload My Track", metadata: {} }, {
+                onReadyForServerCompletion: (paymentId) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        let posts = JSON.parse(localStorage.getItem('mytrack_posts')) || [];
+                        posts.unshift({ 
+                            user: username, 
+                            time: "Baru saja", 
+                            content: `<p>${selectedFile.name}</p><img src="${e.target.result}">` 
+                        });
+                        localStorage.setItem('mytrack_posts', JSON.stringify(posts));
+                        alert("✅ Pembayaran 0.01 Pi berhasil!");
+                        window.location.href = "index.html";
+                    }
+                    reader.readAsDataURL(selectedFile);
+                },
+                onCancel: () => alert("❌ Dibatalkan"),
+                onError: () => alert("❌ Error Pembayaran")
+            });
         }
 
-        // Inisialisasi
-        window.onload = updateUI;
+        window.onload = checkLogin;
     </script>
 </body>
 </html>
