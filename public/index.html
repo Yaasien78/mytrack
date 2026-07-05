@@ -7,6 +7,12 @@
     <script src="https://sdk.minepi.com/pi-sdk.js"></script>
     <script>Pi.init({ version: "2.0", sandbox: true });</script>
     <style>
+        .header-container {
+    display: flex !important;          /* 1. Kunci biar sejajar */
+    justify-content: space-between;    /* 2. Kiri - Tengah - Kanan */
+    align-items: center;               /* 3. Center vertikal */
+    width: 100%;                       /* 4. Isi full header */
+        }
         :root {
             --blue: #0066cc;
             --gold: #ffcc00;
