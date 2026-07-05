@@ -47,23 +47,30 @@
     }
 
     /* BOX UPLOAD DIBESARIN */
-   .upload-container { padding: 20px 15px 90px 15px; }
-   .upload-area {
-        background: white;
-        border: 2px dashed var(--emas);
-        border-radius: 15px;
-        padding: 100px 20px; /* DIBESARIN TINGGINYA */
-        text-align: center;
-        cursor: pointer;
-        transition: 0.3s;
-        margin: 0 auto;
-        max-width: 500px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
+    .upload-container { 
+    display: flex;
+    justify-content: center; /* center horizontal */
+    align-items: center; /* center vertikal */
+    min-height: calc(100vh - 120px - 60px); /* tinggi layar - header - footer */
+    padding: 0 10px;
     }
+   .upload-area {
+    background: white;
+    border: 2px dashed var(--emas);
+    border-radius: 15px;
+    padding: 0 20px; /* padding atas bawah dihapus */
+    width: 90%;
+    max-width: 400px;
+    min-height: 300px; /* PANJANGIN KE BAWAH */
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex; /* biar isi di dalam box juga center */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+   }
    .upload-area:hover { background: #f0f8ff; border-color: var(--biru); }
    .upload-icon { font-size: 48px; color: var(--emas); } /* ICON UPLOAD */
    .upload-text { font-size: 1.1rem; color: #666; font-weight: 500; }
