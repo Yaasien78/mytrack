@@ -214,27 +214,69 @@
             });
         }
 
-        window.onload = checkLogin;
-    </script>
-    
+        <script>
+// FUNGSI CEK LOGIN GLOBAL
+function getUsername() {
+    return localStorage.getItem('piUsername') || localStorage.getItem('username') || localStorage.getItem('user');
+}
+
+function checkLogin() {
+    const username = getUsername();
+    if(!username) {
+        alert("❌ Silakan Login terlebih dahulu!");
+        window.location.href = 'login.html';
+    }
+    return username;
+}
+
+// KIRIM POST
+function sendPost() {
+    const username = getUsername(); // AMBIL USERNAME DULU
+    if (!username) return alert("❌ Silakan Login terlebih dahulu!");
+    if (!selectedFile) return alert("❌ Silakan upload file terlebih dahulu");
+
+    Pi.createPayment({ amount: 0.01, memo: "Upload My Track", metadata: {} },
+    {
+        onReadyForServerCompletion: (paymentId) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                let posts = JSON.parse(localStorage.getItem('mytrack_posts') || '[]');
+                posts.unshift({
+                    user: username, // PAKAI USERNAME
+                    time: "Baru saja",
+                    content: `<p>${selectedFile.name}</p><img src="${e.target.result}">`
+                });
+                localStorage.setItem('mytrack_posts', JSON.stringify(posts));
+                alert("✅ Pembayaran 0.01 Pi berhasil!");
+                window.location.href = "index.html";
+            }
+            reader.readAsDataURL(selectedFile);
+        },
+        onCancel: () => alert("❌ Dibatalkan"),
+        onError: () => alert("❌ Error Pembayaran")
+    });
+}
+
+window.onload = checkLogin;
+</script>
+
+<script>
+// HEADER DINAMIS
 document.addEventListener('DOMContentLoaded', function() {
     const headerTitle = document.getElementById('headerTitle');
+    const piUsername = getUsername();
     
-    // CEK 2 KEY BIAR AMAN
-    const piUsername = localStorage.getItem('piUsername') || localStorage.getItem('username') || localStorage.getItem('user');
-    
-    console.log('Username:', piUsername); // buat debug
+    console.log('Username:', piUsername);
     
     if(piUsername) {
-        // SUDAH LOGIN
-        headerTitle.innerText = piUsername; // Tampil Username Pi
+        headerTitle.innerText = piUsername; // SUDAH LOGIN
         headerTitle.onclick = () => window.location.href = 'profile.html';
     } else {
-        // BELUM LOGIN
-        headerTitle.innerText = 'Login';
+        headerTitle.innerText = 'Login'; // BELUM LOGIN
         headerTitle.onclick = () => window.location.href = 'login.html';
     }
 });
+</script>
 </script>
 </body>
 </html>
