@@ -84,6 +84,44 @@
             margin-bottom: 20px;
             text-align: center;
         }
+        .price-container { 
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px 10px;
+}
+.price-row {
+    display: flex;
+    border: 2px solid var(--emas); /* BORDER EMAS 2PX */
+    border-radius: 12px;
+    overflow: hidden; /* Biar sudutnya rapi */
+    width: 100%;
+}
+.price-col-left {
+    background: white;
+    padding: 14px 15px;
+    width: 50%;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+.price-col-right {
+    background: var(--biru); /* KOLOM KANAN BIRU */
+    padding: 14px 15px;
+    width: 50%;
+    font-size: 18px;
+    font-weight: bold;
+    color: white; /* ANGKA WARNA PUTIH */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* WARNA TEKS KIRI */
+.label-pi-usdt { color: var(--biru); }   /* BIRU */
+.label-pi-idr { color: green; }          /* HIJAU */
+.label-usdt-idr { color: #FFC107; }      /* KUNING */
 
         .price-item {
             font-size: 1.3rem;
@@ -144,21 +182,20 @@
 <div id="tanggal" style="text-align: center; color: #0066cc; font-size: 20px; font-weight: bold; margin: 10px 0; background:white; padding:5px 0;">
 </div>
 
-<!-- BOX HARGA -->
-<div style="display:flex; justify-content:space-around; padding:10px; gap:8px;">
-    <div class="price-box" style="background:#f0f8ff; border:2px solid #0066cc; border-radius:10px; padding:12px; text-align:center; width:30%;">
-        <div style="font-size:13px; color:#000; font-weight:800;">PI/USDT</div>
-        <div id="piUsdt" style="font-size:20px; font-weight:800; color:#0066cc;">0.8524</div>
+<!-- BOX HARGA BARU -->
+<div class="price-container">
+    <div class="price-row">
+        <div class="price-col-left label-pi-usdt">Harga Pi/USDT</div>
+        <div class="price-col-right" id="piUsdt">0.8524</div>
     </div>
-    <div class="price-box" style="background:#f0f8ff; border:2px solid #0066cc; border-radius:10px; padding:12px; text-align:center; width:30%;">
-        <div style="font-size:13px; color:#000; font-weight:800;">PI/IDR</div>
-        <div id="piIdr" style="font-size:20px; font-weight:800; color:#0066cc;">13,450</div>
+    <div class="price-row">
+        <div class="price-col-left label-pi-idr">Harga Pi/IDR</div>
+        <div class="price-col-right" id="piIdr">13450</div>
     </div>
-    <div class="price-box" style="background:#f0f8ff; border:2px solid #0066cc; border-radius:10px; padding:12px; text-align:center; width:30%;">
-        <div style="font-size:13px; color:#000; font-weight:800;">USDT/IDR</div>
-        <div id="usdtIdr" style="font-size:20px; font-weight:800; color:#0066cc;">15,780</div>
+    <div class="price-row">
+        <div class="price-col-left label-usdt-idr">Harga USDT/IDR</div>
+        <div class="price-col-right" id="usdtIdr">15780</div>
     </div>
-</div>
 </div>
 
 <!-- CHART -->
