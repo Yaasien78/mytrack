@@ -25,44 +25,63 @@
         }
 
         /* HEADER - Sama style dengan halaman lain */
-        header {
-            background: linear-gradient(#0066cc, #004499);
-            color: white;
-            padding: 12px 15px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 2px solid var(--gold);
-        }
+        <header class="header">
+    <div class="header-container">
+        <!-- LOGO KIRI: BALIK KE BERANDA -->
+        <a href="index.html" class="logo-left">
+            <span>My<br>Track</span>
+        </a>
+
+        <div class="price-center">Pi Coin Price</div>
+
+        <!-- LOGO PI KAN: GA USAH KLIK -->
+        <div class="pi-logo-right">
+            <span>π</span>
+        </div>
+    </div>
+</header>
 
         .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 15px;
+}
 
-        .logo-left {
-            font-weight: bold;
-            font-size: 1.4rem;
-            cursor: pointer;
-            color: white;
-            text-decoration: none;
-        }
+.logo-left, .pi-logo-right { 
+    height:42px !important; 
+    width:42px !important;
+    min-width: 42px !important;
+    aspect-ratio: 1 / 1;
+    background: var(--blue); 
+    border-radius: 50%; 
+    border: 3px solid var(--gold);
+    box-shadow: 0 0 0 2px white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    flex-shrink: 0;
+}
 
-        .center-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: white;
-            flex: 1;
-            text-align: center;
-        }
-
-        .pi-logo-right {
-            height: 45px;
-            cursor: pointer;
-        }
+.logo-left span { 
+    font-size: 9px !important; 
+    font-weight: bold; 
+    color: white !important;
+    line-height: 1.0 !important;
+    text-align: center;
+}
+.pi-logo-right span { 
+    font-size: 24px !important; 
+    font-weight: bold; 
+    color: white !important;
+}
+.price-center { 
+    color: var(--gold); 
+    font-weight: bold; 
+    font-size: 14px; 
+    }
 
         /* BODY */
         .market-container {
