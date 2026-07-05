@@ -1,12 +1,101 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Track - Upload</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload - My Track</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<style>
+    body { margin: 0; font-family: Arial; background: #f0f2f5; }
     
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    /* HEADER */
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #003399;
+        padding: 10px 20px;
+        color: white;
+    }
+   .logo-left,.pi-logo-right {
+        background: #003399;
+        color: white;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 3px solid white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        text-decoration: none;
+        flex-shrink: 0;
+    }
+   .logo-left { font-size: 12px; }
+   .pi-logo-right { font-size: 28px; }
+    #headerTitle {
+        flex: 1;
+        text-align: center;
+        font-size: 1.8rem;
+        margin: 0;
+        cursor: pointer;
+    }
+
+    /* KONTEN */
+    h2 { text-align: center; color: #003399; margin: 20px 0 10px 0; }
+    #userStatus { text-align: center; padding: 0 20px 10px 20px; font-size: 1rem; }
+    
+    /* UPLOAD BOX */
+   .upload-container { padding: 10px 20px 20px 20px; }
+   .upload-area {
+        background: white;
+        border: 3px dashed #FFD700;
+        border-radius: 15px;
+        padding: 40px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+   .upload-area:hover { background: #f0f8ff; border-color: #003399; }
+    #fileName { margin-top: 10px; color: #003399; font-weight: bold; }
+
+    /* TOMBOL */
+   .send-btn {
+        background: linear-gradient(180deg, #0066cc, #003399);
+        color: white;
+        border: none;
+        width: 100%;
+        padding: 18px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        cursor: pointer;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="logo-left">My<br>Track</a>
+    <h1 id="headerTitle">Login</h1>
+    <div class="pi-logo-right">π</div>
+</header>
+
+<h2>Upload Postingan Baru</h2>
+<div id="userStatus">Mengecek login...</div>
+
+<div class="upload-container">
+    <div class="upload-area" id="uploadArea">
+        <p><b>Klik atau tarik file di sini untuk upload</b></p>
+        <p>Foto / Video</p>
+        <p id="fileName"></p>
+    </div>
+    <input type="file" id="fileInput" accept="image/*,video/*" style="display:none;">
+</div>
+
+<button class="send-btn" onclick="sendPost()">Send 0.01 Pi to Post</button>
+
 <script>
 Pi.init({ version: "2.0", sandbox: true });
 
@@ -41,160 +130,18 @@ function sendPost() {
             const reader = new FileReader();
             reader.onload = function(e) {
                 let posts = JSON.parse(localStorage.getItem('mytrack_posts') || '[]');
-                posts.unshift({ user: username, time: "Baru saja", content: `<p>${selectedFile.name}</p><img src="${e.target.result}">` });
+                posts.unshift({ user: username, time: "Baru saja", content: `<p>${selectedFile.name}</p><img src="${e.target.result}" style="width:100%; border-radius:10px;">` });
                 localStorage.setItem('mytrack_posts', JSON.stringify(posts));
-                alert("✅ Pembayaran 0.01 Pi berhasil!");
+                alert("✅ Pembayaran 0.01 Pi berhasil! Postingan diupload");
                 window.location.href = "index.html";
             }
             reader.readAsDataURL(selectedFile);
         },
         onCancel: () => alert("❌ Dibatalkan"),
-        onError: () => alert("❌ Error Pembayaran")
+        onError: (err) => alert("❌ Error Pembayaran: " + err)
     });
 }
-        </script>
-    
-    <style>
-        header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    background: #003399;
-    padding: 10px 20px;
-    color: white;
-}
-
-.logo-left, .pi-logo-right {
-    background: #003399;
-    color: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 3px solid white;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    flex-shrink: 0; /* Biar gak gepeng */
-}
-
-.logo-left { font-size: 12px; }
-.pi-logo-right { font-size: 28px; }
-
-#headerTitle {
-    flex-grow: 1;
-    text-align: center;
-    font-size: 1.8rem;
-    margin: 0;
-}
-
-        
-        footer {
-            background: linear-gradient(#0066cc, #004499);
-            color:white; text-align:center; padding:15px;
-            position:fixed; bottom:0; width:100%; border-top:2px solid var(--gold);
-        }
-    .send-btn { color:white; font-size:1.2rem; font-weight:bold; cursor:pointer; }
-.upload-container, .upload-area { 
-    background: white !important; 
-    border: 1px solid #ddd;
-    }
-        .header-center { color: white !important; }
-    </style>
-</head>
-<body>
-
-    <!-- HEADER DENGAN NAVIGASI -->
-<!-- HEADER -->
-<header>
-    
-    <!-- LOGO KIRI -->
-<a href="index.html" class="logo-left" style="text-decoration:none;">
-    <div>My<br>Track</div>
-</a>
-
-<!-- JUDUL TENGAH -->
-<h1 id="headerTitle">Login</h1>
-
-<!-- LOGO KAN -->
-<a href="market.html" class="pi-logo-right" style="text-decoration:none;">
-    <div>π</div>
-</a>
-    
-</header>
-
-    <div class="upload-container">
-        <h2 style="text-align:center; margin:20px 0; color:#0066cc;">Upload Postingan Baru</h2>
-        <div class="upload-box">
-            <div id="userStatus" style="margin:10px 0; font-size:1.1rem;"></div>
-            
-            <div class="upload-area" id="uploadArea">
-                <p>Klik atau tarik file di sini untuk upload</p>
-                <input type="file" id="fileInput" style="display:none;" accept="image/*,video/*">
-                <p id="fileName" style="margin-top:10px; font-weight:bold; color:#0066cc;"></p>
-            </div>
-        </div>
-    </div>
-
-    <footer>
-        <span class="send-btn" onclick="sendPost()">Send 0.01 Pi to Post</span>
-    </footer>
-
-    <script>
-        let selectedFile = null;
-        let username = localStorage.getItem("piUsername"); 
-
-        // CEK LOGIN + TAMPILIN DI HEADER TENGAH
-        function checkLogin() {
-            const status = document.getElementById("userStatus");
-            const headerUser = document.getElementById("headerTitle");
-
-            if (username) {
-                headerUser.innerText = `@${username}`;
-                status.innerHTML = `Kamu login sebagai <span style="color:white; font-weight:bold;">@${username}</span>`;
-            } else {
-                alert("Silakan login dulu di beranda");
-                window.location.href = "index.html";
-            }
-        }
-
-        // UPLOAD FILE
-        document.getElementById('uploadArea').addEventListener('click', () => {
-            document.getElementById('fileInput').click();
-        });
-
-        document.getElementById('fileInput').addEventListener('change', (e) => {
-            selectedFile = e.target.files[0];
-            if (selectedFile) document.getElementById('fileName').textContent = "✅ " + selectedFile.name;
-        });
-
-        // KIRIM POST
-        function sendPost() {
-            if (!username) return alert("❌ Silakan Login terlebih dahulu!");
-            if (!selectedFile) return alert("❌ Silahkan upload file terlebih dahulu!");
-
-            Pi.createPayment({ amount: 0.01, memo: "Upload My Track", metadata: {} }, {
-                onReadyForServerCompletion: (paymentId) => {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        let posts = JSON.parse(localStorage.getItem('mytrack_posts')) || [];
-                        posts.unshift({ 
-                            user: username, 
-                            time: "Baru saja", 
-                            content: `<p>${selectedFile.name}</p><img src="${e.target.result}">` 
-                        });
-                        localStorage.setItem('mytrack_posts', JSON.stringify(posts));
-                        alert("✅ Pembayaran 0.01 Pi berhasil!");
-                        window.location.href = "index.html";
-                    }
-                    reader.readAsDataURL(selectedFile);
-                },
-                onCancel: () => alert("❌ Dibatalkan"),
-                onError: () => alert("❌ Error Pembayaran")
-            });
-        }
-
 </script>
-</script>
+
 </body>
 </html>
