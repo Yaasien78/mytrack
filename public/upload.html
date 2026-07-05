@@ -26,26 +26,23 @@
     color: var(--gold);
 }
 
-/* LOGO KIRI */
-.logo-left { 
-    height:40px; 
-    width:40px;
+.logo-left, .pi-logo-right { 
+    height:38px !important; 
+    width:38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    aspect-ratio: 1 / 1;
+    box-sizing: border-box;
     cursor:pointer; 
     background: var(--blue); 
     border-radius: 50%; 
     border: 3px solid var(--gold);
+    box-shadow: 0 0 0 1px white;  /* INI SHADOW PUTIHNYA */
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    flex-shrink: 0; /* Biar gak gepeng */
-}
-.logo-left span { 
-    font-size: 10px; 
-    font-weight: bold; 
-    color: white; 
-    line-height: 1.1; 
-    text-align: center;
+    flex-shrink: 0;
 }
 
 /* LOGO PI KAN */
