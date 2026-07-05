@@ -28,8 +28,8 @@
 
 /* LOGO KIRI */
 .logo-left { 
-    height:38px; 
-    width:38px;
+    height:40px; 
+    width:40px;
     cursor:pointer; 
     background: var(--blue); 
     border-radius: 50%; 
@@ -52,6 +52,9 @@
 .pi-logo-right { 
     height:38px; 
     width:38px;
+    min-width: 38px;    /* 1. Paksa jangan kepencet */
+    min-height: 38px;   /* 2. Paksa jangan gepeng */
+    aspect-ratio: 1 / 1; /* 3. Jaga biar 1:1 terus */
     cursor:pointer; 
     background: var(--blue);     
     border-radius: 50%; 
@@ -61,7 +64,6 @@
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    flex-shrink: 0; /* Biar gak gepeng */
 }
 .pi-logo-right span { 
     font-size: 24px; 
