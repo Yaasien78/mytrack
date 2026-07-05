@@ -162,8 +162,7 @@
 </div>
 
 <!-- CHART -->
-<canvas id="priceChart" style="width:100%; height:300px; background:white; margin-top:10px; border-top:1px solid #ddd;"></canvas>
-    </div>
+<canvas id="priceChart" style="width:100%; height:160px; background:white; margin-top:10px; border-top:1px solid #ddd;"></canvas>
 
     <!-- FOOTER -->
 <footer style="background:linear-gradient(#0066cc, #004499); color:white; text-align:center; padding:15px 0; font-size:18px; font-weight:800; border-top:3px solid #ffd700; letter-spacing:0.5px;">
@@ -205,53 +204,54 @@ document.addEventListener('DOMContentLoaded', function() {
     // CHART DENGAN 2 GARIS: HARGA + SUPPLY
 const canvas = document.getElementById('priceChart');
 const ctx = canvas.getContext('2d');
-let priceData = [0.8524, 0.8530, 0.8520, 0.8550, 0.8540, 0.8528, 0.8535];
-let supplyData = [85, 86, 84, 87, 86, 85, 86]; // data dummy supply dalam miliar
+canvas.width = canvas.offsetWidth;
+canvas.height = 160;
+
+let harga = 0.8529; // Harga sekarang
+let demand = 75; // Demand dalam %
 
 function drawChart() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // GARIS 1: HARGA PI/USDT - WARNA BIRU
+    // GARIS VERTIKAL = HARGA
+    let xHarga = (harga - 0.85) * 2000; // posisi berdasarkan harga
     ctx.strokeStyle = '#0066cc';
     ctx.lineWidth = 3;
     ctx.beginPath();
-    priceData.forEach((val, i) => {
-        let x = i * (canvas.width / (priceData.length - 1));
-        let y = canvas.height - ((val - 0.85) * 4000); // scale harga
-        if(i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-    });
+    ctx.moveTo(xHarga, 0);
+    ctx.lineTo(xHarga, canvas.height);
     ctx.stroke();
-
-    // GARIS 2: SUPPLY - WARNA HIJAU
-    ctx.strokeStyle = '#00aa44';
+    
+    // GARIS HORIZONTAL = DEMAND
+    let yDemand = canvas.height - (demand * 1.6); // posisi berdasarkan demand
+    ctx.strokeStyle = '#ff6600';
     ctx.lineWidth = 2;
+    ctx.setLineDash([5, 5]); // garis putus-putus
     ctx.beginPath();
-    supplyData.forEach((val, i) => {
-        let x = i * (canvas.width / (supplyData.length - 1));
-        let y = canvas.height - (val * 3); // scale supply
-        if(i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-    });
+    ctx.moveTo(0, yDemand);
+    ctx.lineTo(canvas.width, yDemand);
     ctx.stroke();
+    ctx.setLineDash([]);
 
-    // LEGENDA
-    ctx.font = '12px Arial';
+    // TULISAN LEGENDA
+    ctx.font = '11px Arial';
     ctx.fillStyle = '#0066cc';
-    ctx.fillText('Harga PI/USDT', 10, 20);
-    ctx.fillStyle = '#00aa44';
-    ctx.fillText('Supply Miliar', 10, 40);
+    ctx.fillText('Harga PI/USDT', xHarga + 5, 15);
+    ctx.fillStyle = '#ff6600';
+    ctx.fillText('Demand ' + demand + '%', 10, yDemand - 5);
+    
+    // SKALA
+    ctx.fillStyle = '#666';
+    ctx.font = '10px Arial';
+    ctx.fillText('0.85', 5, canvas.height - 5);
+    ctx.fillText('0.86', canvas.width - 35, canvas.height - 5);
 }
 drawChart();
 
-// UPDATE DATA SETIAP 5 DETIK
+// UPDATE SETIAP 5 DETIK
 setInterval(() => {
-    priceData.shift();
-    priceData.push(0.8524 + (Math.random() - 0.5) * 0.01);
-    
-    supplyData.shift();
-    supplyData.push(85 + (Math.random() - 0.5) * 3);
-    
+    harga = 0.8529 + (Math.random() - 0.5) * 0.005;
+    demand = 70 + Math.random() * 20;
     drawChart();
 }, 5000);
 });
