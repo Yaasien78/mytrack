@@ -125,7 +125,6 @@ footer {
 }
 
 footer span { color: #fff; font-weight: bold; font-size: 18px; }
-
 .btn-footer {
   width: 50px; height: 50px;
   border-radius: 50%;
@@ -135,54 +134,67 @@ footer span { color: #fff; font-weight: bold; font-size: 18px; }
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
   box-shadow: 0 0 10px rgba(0, 87, 217, 0.4); /* Glow biru tipis */
-    }
+}
 
-.btn-theme { 
+.btn-theme {
   color: #fff; /* Palet tetap putih */
   font-size: 26px;
-} 
-.btn-ai { 
+}
+
+.btn-ai {
   color: #0057d9; /* Plus biru sama ky latar footer */
-  font-weight: 900; 
-  font-size: 32px; 
-        }
+  font-weight: 900;
+  font-size: 32px;
+} /* <-- INI TADI KURANG */
+
+.feed { /* atau body kalau belum ada class feed */
+  padding-bottom: 90px; /* Tinggi footer + buffer */
+  padding-top: 20px;
+} /* <-- INI TADI KURANG */
 
 .avatar-container {
   position: relative;
   width: 90%;
-  max-width: 350px;
+  max-width: 380px;
   height: 90vw;
-  max-height: 350px;
-  margin: 30px auto;
+  max-height: 380px;
+  margin: 60px auto; /* 60px atas, auto kiri kanan = tengah */
+  display: block;
 }
+
 .energy-sphere {
   width: 100%; height: 100%;
   border-radius: 50%;
-  /* Efek 3D Kaca Cermin */
-  background: radial-gradient(circle at 30% 30%, 
-    #a0f0ff 0%,      /* Highlight putih biru di kiri atas */
-    #00e5ff 25%,     /* Biru muda */
-    #0077ff 70%,     /* Biru tua */
-    #004aad 100%     /* Biru paling gelap di pinggir */
+
+  /* EFEK 3D KACA - KY DI FOTO */
+  background: radial-gradient(circle at 35% 30%,
+    #7ae7ff 0%,      /* Sorotan paling terang */
+    #00c8ff 40%,     /* Biru muda */
+    #0077ff 75%,     /* Biru */
+    #0057d9 100%     /* Biru tua pinggir */
   );
-  /* Glow + Bayangan biar nimbul */
+
+  /* GLOW LEMBUT + BAYANGAN */
   box-shadow: 
-    0 0 60px 20px rgba(0, 200, 255, 0.4), /* Glow luar */
-    inset 0 0 30px rgba(255, 255, 255, 0.2), /* Refleksi dalam */
-    inset 0 -10px 30px rgba(0, 0, 0, 0.3); /* Bayangan bawah */
-  animation: pulse 2s infinite ease-in-out;
-    }
-        .shine {
-  position: absolute;
-  top: 15%;
-  left: 25%;
-  width: 30%;
-  height: 25%;
-  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-  border-radius: 50%;
-  filter: blur(8px);
-  pointer-events: none; /* Biar bisa klik bolanya */
-    }
+    0 0 50px 15px rgba(0, 200, 255, 0.25), /* Aura luar */
+    inset 0 0 40px rgba(255, 255, 255, 0.15); /* Refleksi dalam */
+} /* <-- INI TADI KURANG */
+
+header { /* Biar diem di atas */
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+}
+
+footer { /* Biar diem di bawah */
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 1000;
+}
+
+body {
+  padding-top: 70px; /* Se-tinggi header biar konten gak ketutup */
+        }
     </style>
 </head>
 <body>
@@ -209,14 +221,10 @@ footer span { color: #fff; font-weight: bold; font-size: 18px; }
 
     </div>
     </header>
-
-    <div class="avatar-container">
+<!-- Avatar Bola Energi -->
+<div class="avatar-container">
   <div class="energy-sphere"></div>
-  <div class="shine"></div> <!-- TAMBAH INI -->
-  <div class="particle" style="top:20%; left:30%;"></div>
-  <div class="particle" style="top:50%; left:70%;"></div>
-    </div>
-
+</div>
 <!-- Tombol Floating -->
 
     <footer>
