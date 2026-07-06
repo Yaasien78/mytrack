@@ -26,7 +26,6 @@
 
         /* HEADER - Sama style dengan halaman lain */
         
-
         .header-container {
     display: flex !important;
     justify-content: space-between;
@@ -90,42 +89,40 @@
     --white: #ffffff;
 }
 
+
 .price-container {
     width: 90%;
     margin: 15px auto;
+    border: 2px solid var(--gold); /* CUMA INI GARISNYA */
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .price-row {
-    display: flex; /* BIKIN KIRI KAN */
-    border: 2px solid var(--gold); /* GARIS GOLD 2PX */
-    border-radius: 10px;
-    margin-bottom: 12px;
-    overflow: hidden; /* BIAR SUDUTNYA RAPET */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
 }
 
 .price-col-left {
-    width: 60%; /* 60% BUAT KATA */
-    background: var(--white);
+    width: 60%;
+    background: white;
     padding: 12px;
     font-weight: bold;
     font-size: 16px;
-    display: flex;
-    align-items: center;
 }
 
 .price-col-right {
-    width: 40%; /* 40% BUAT ANGKA */
-    background: var(--blue); /* BIRU */
-    color: var(--white);
+    width: 40%;
+    background: var(--blue);
+    color: white;
     padding: 12px;
     font-weight: bold;
     font-size: 18px;
     text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
+
+.label-pi-usdt { color: var(--blue); }
+.label-pi-idr { color: green; }
+.label-usdt-idr { color: orange; }
 
 /* WARNA TEKS KIRI */
 .label-pi-usdt { color: #333; }
