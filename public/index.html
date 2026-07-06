@@ -129,15 +129,23 @@ footer span { color: #fff; font-weight: bold; font-size: 18px; }
 .btn-footer {
   width: 50px; height: 50px;
   border-radius: 50%;
-  background: #fff;
-  border: 3px solid #00c8ff;
+  background: #fff; /* Latar tetap putih */
+  border: 3px solid #fff; /* Border putih biar nyatu ky di foto */
   font-size: 28px;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-}
+  box-shadow: 0 0 10px rgba(0, 87, 217, 0.4); /* Glow biru tipis */
+    }
 
-.btn-theme { color: #00c8ff; }
-.btn-ai { color: #00c8ff; font-weight: 900; font-size: 32px; }
+.btn-theme { 
+  color: #fff; /* Palet tetap putih */
+  font-size: 26px;
+} 
+.btn-ai { 
+  color: #0057d9; /* Plus biru sama ky latar footer */
+  font-weight: 900; 
+  font-size: 32px; 
+        }
 
 .avatar-container {
   position: relative;
