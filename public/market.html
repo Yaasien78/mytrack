@@ -155,45 +155,42 @@ document.addEventListener('DOMContentLoaded', function() {
     // 1. TANGGAL OTOMATIS
     function updateTanggal() {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const tanggal = new Date().toLocaleDateString('id-ID', options);
-        document.getElementById('tanggal').innerText = tanggal;
+        const tgl = document.getElementById('tanggal');
+        if(tgl) tgl.innerText = new Date().toLocaleDateString('id-ID', options);
     }
     updateTanggal();
 
-    // 2. AMBIL HARGA LIVE DARI COINGECKO
+    // 2. HARGA LIVE COINGECKO
     async function updateHarga() {
         try {
-            const url = 'https://api.coingecko.com/api/v3/simple/price?ids=pi-network,tether&vs_currencies=usdt,idr';
-            const res = await fetch(url);
+            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network,tether&vs_currencies=idr');
             const data = await res.json();
 
-            // DATA PI
-            const piData = data['pi-network'] || {};
-            const piUsdt = piData.usdt || 0;
-            const piIdr = piData.idr || 0;
+            const piIdr = data['pi-network']?.idr || 0;
+            const usdtIdr = data['tether']?.idr || 0;
+            
+            // HITUNG PI/USDT MANUAL
+            const piUsdt = (piIdr > 0 && usdtIdr > 0) ? (piIdr / usdtIdr) : 0;
 
-            // DATA USDT
-            const usdtData = data['tether'] || {};
-            const usdtIdr = usdtData.idr || 0;
+            // MASUKIN KE HTML
+            const elPiUsdt = document.getElementById('piUsdt');
+            const elPiIdr = document.getElementById('piIdr');
+            const elUsdtIdr = document.getElementById('usdtIdr');
 
-            // MASUKIN KE HTML + FORMAT ANGKA
-            document.getElementById('piUsdt').innerText = piUsdt > 0 ? piUsdt.toFixed(4) : '-';
-            document.getElementById('piIdr').innerText = piIdr > 0 ? piIdr.toLocaleString('id-ID') : '-';
-            document.getElementById('usdtIdr').innerText = usdtIdr > 0 ? usdtIdr.toLocaleString('id-ID') : '-';
+            if(elPiUsdt) elPiUsdt.innerText = piUsdt.toFixed(5);
+            if(elPiIdr) elPiIdr.innerText = piIdr.toLocaleString('id-ID');
+            if(elUsdtIdr) elUsdtIdr.innerText = usdtIdr.toLocaleString('id-ID');
 
         } catch (error) {
-            console.log('Gagal ambil data CoinGecko:', error);
-            document.getElementById('piUsdt').innerText = 'Error';
-            document.getElementById('piIdr').innerText = 'Error';
-            document.getElementById('usdtIdr').innerText = 'Error';
+            console.log('Error:', error);
         }
     }
 
-    updateHarga(); // jalanin pertama kali
-    setInterval(updateHarga, 60000); // update tiap 60 detik
+    updateHarga();
+    setInterval(updateHarga, 60000); // update 1 menit sekali
 
 });
-</script>
+    </script>
 </script>
 </body>
   </html>
