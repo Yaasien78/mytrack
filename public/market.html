@@ -10,85 +10,63 @@
     <script>
         Pi.init({ version: "2.0", sandbox: true });
     </script>
-    <style>
+  <style>
     :root {
         --blue: #0066cc;
         --gold: #ffd700;
         --white: #ffffff;
+        --green: green;
+        --orange: orange;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    /* HEADER */
-    .header-container {
-        display: flex !important;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        padding: 10px 15px;
-        background: var(--blue);
-        border-bottom: 3px solid var(--gold);
-        position: sticky; top: 0;
+    .price-container {
+        width: 92%;
+        margin: 0 auto 10px auto;
+        border: 2px solid var(--gold); /* BORDER GOLD 2PX */
+        border-radius: 10px;
+        overflow: hidden;
     }
-    .logo-left, .pi-logo-right {
-        height: 42px !important; width: 42px !important;
-        background: var(--blue); border-radius: 50%;
-        border: 3px solid var(--gold); display: flex;
-        align-items: center; justify-content: center;
-    }
-    .logo-left span { font-size: 9px !important; font-weight: bold; color: white !important; text-align: center; }
-    .pi-logo-right span { font-size: 24px !important; font-weight: bold; color: white !important; }
-body { 
-    font-family: Arial, sans-serif; 
-    background: #ffffff; 
-    color: #333; 
-    padding-bottom: 70px; /* TAMBAH INI BIAR GAK KETUTUP FOOTER */
-}
-    /* TANGGAL */
-    .date-title {
-    text-align: center; 
-    color: var(--blue); 
-    font-size: 20px; 
-    font-weight: bold; 
-    margin: 8px 0 5px 0; /* DARI 15px JADI 8px */
-}
-
-.price-container {
-    width: 92%; /* DARI 90% JADI 92% BIAR AGAK LEBAR */
-    margin: 0 auto 10px auto; /* DARI 20px JADI 10px */
-    border: 2px solid var(--gold);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.price-col-left, .price-col-right {
-    padding: 8px 12px; /* DARI 12px JADI 8px BIAR RAPAT */
-                     }
     .price-row {
         display: flex;
-        border-bottom: 2px solid var(--gold);
+        border-bottom: 2px solid var(--gold); /* GARIS GOLD 2PX */
     }
     .price-row:last-child { border-bottom: none; }
 
     .price-col-left {
-        width: 50%; background: white; padding: 10px;
-        font-weight: bold; font-size: 16px;
+        width: 60%; 
+        background: white; 
+        padding: 8px 12px;
+        font-weight: bold; 
+        font-size: 15px;
     }
     .price-col-right {
-        width: 50%; background: var(--blue); color: white; padding: 10px;
-        font-weight: bold; font-size: 16px; text-align: center;
+        width: 40%; 
+        background: var(--blue); 
+        color: white; /* ANGKA WARNA PUTIH */
+        padding: 8px 12px;
+        font-weight: bold; 
+        font-size: 16px; 
+        text-align: center;
     }
-    .label-pi-usdt { color: var(--blue); }
-    .label-pi-idr { color: green; }
-    .label-usdt-idr { color: orange; }
 
-    /* FOOTER */
-    footer {
-        background: linear-gradient(#0066cc, #004499);
-        color: white; text-align: center; padding: 18px;
-        border-top: 2px solid var(--gold); position: fixed;
-        bottom: 0; width: 100%; font-size: 1.1rem;
+    /* HEADER BARIS 1 */
+    .header-left {
+        background: var(--blue) !important;
+        color: white !important; /* KATA CRYPTO WARNA PUTIH */
+        text-align: center;
+        font-size: 16px;
     }
+    .header-right {
+        background: white !important;
+        color: var(--blue) !important; /* KATA HARGA WARNA BIRU */
+        text-align: center;
+        font-size: 16px;
+    }
+
+    /* WARNA TEKS KIRI BARIS 2,3,4 */
+    .label-pi-usdt { color: var(--blue); }
+    .label-pi-idr { color: var(--green); }
+    .label-usdt-idr { color: var(--orange); }
         </style>
 </head>
 <body>
@@ -111,21 +89,32 @@ body {
         </div>
     </header>
 
-<!-- BOX HARGA BARU -->
+<!-- BOX HARGA BARU 4 BARIS -->
 <div id="tanggal" class="date-title"></div>
 
 <div class="price-container">
+    <!-- BARIS 1 HEADER -->
     <div class="price-row">
-        <div class="price-col-left label-pi-usdt">Harga Pi/USDT</div>
+        <div class="price-col-left header-left">Crypto</div>
+        <div class="price-col-right header-right">Harga</div>
+    </div>
+
+    <!-- BARIS 2 -->
+    <div class="price-row">
+        <div class="price-col-left label-pi-usdt">Pi/USDT</div>
         <div class="price-col-right" id="piUsdt">0.8524</div>
     </div>
+
+    <!-- BARIS 3 -->
     <div class="price-row">
-        <div class="price-col-left label-pi-idr">Harga Pi/IDR</div>
-        <div class="price-col-right" id="piIdr">13450</div>
+        <div class="price-col-left label-pi-idr">Pi/IDR</div>
+        <div class="price-col-right" id="piIdr">13,450</div>
     </div>
+
+    <!-- BARIS 4 -->
     <div class="price-row">
-        <div class="price-col-left label-usdt-idr">Harga USDT/IDR</div>
-        <div class="price-col-right" id="usdtIdr">15780</div>
+        <div class="price-col-left label-usdt-idr">USDT/IDR</div>
+        <div class="price-col-right" id="usdtIdr">15,780</div>
     </div>
 </div>
     <!-- FOOTER -->
