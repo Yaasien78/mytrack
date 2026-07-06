@@ -10,138 +10,79 @@
     <script>
         Pi.init({ version: "2.0", sandbox: true });
     </script>
-    
     <style>
-        :root {
-            --blue: #0066cc;
-            --gold: #ffd700;
-            --white: #ffffff;
-        }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            background: #ffffff;
-            color: #333;
-        }
-
-        /* HEADER - Sama style dengan halaman lain */
-        
-        .header-container {
-    display: flex !important;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 10px 15px;
-}
-
-.logo-left, .pi-logo-right { 
-    height:42px !important; 
-    width:42px !important;
-    min-width: 42px !important;
-    aspect-ratio: 1 / 1;
-    background: var(--blue); 
-    border-radius: 50%; 
-    border: 3px solid var(--gold);
-    box-shadow: 0 0 0 2px white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    flex-shrink: 0;
-}
-
-.logo-left span { 
-    font-size: 9px !important; 
-    font-weight: bold; 
-    color: white !important;
-    line-height: 1.0 !important;
-    text-align: center;
-}
-.pi-logo-right span { 
-    font-size: 24px !important; 
-    font-weight: bold; 
-    color: white !important;
-}
-       
-.price-container {
-    width: 90%;
-    margin: 15px auto;
-    border: 2px solid var(--gold); /* CUMA INI GARISNYA */
-    border-radius: 10px;
-    overflow: hidden;
-}
-.date-title {
-    text-align: center; 
-    color: var(--blue); 
-    font-size: 22px; 
-    font-weight: bold; 
-    margin: 10px 0; 
-        }
-.price-row {
-    display: flex;
-    border-bottom: 2px solid var(--gold); /* TAMBAH INI */
-}
-.price-row:last-child { /* TAMBAH INI JUGA */
-    border-bottom: none;
+    :root {
+        --blue: #0066cc;
+        --gold: #ffd700;
+        --white: #ffffff;
     }
 
-.price-col-left {
-    width: 60%;
-    background: white;
-    padding: 12px;
-    font-weight: bold;
-    font-size: 16px;
-}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #ffffff; color: #333; }
 
-.price-col-right {
-    width: 40%;
-    background: var(--blue);
-    color: white;
-    padding: 12px;
-    font-weight: bold;
-    font-size: 18px;
-    text-align: center;
-}
+    /* HEADER */
+    .header-container {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 10px 15px;
+        background: var(--blue);
+        border-bottom: 3px solid var(--gold);
+        position: sticky; top: 0;
+    }
+    .logo-left, .pi-logo-right {
+        height: 42px !important; width: 42px !important;
+        background: var(--blue); border-radius: 50%;
+        border: 3px solid var(--gold); display: flex;
+        align-items: center; justify-content: center;
+    }
+    .logo-left span { font-size: 9px !important; font-weight: bold; color: white !important; text-align: center; }
+    .pi-logo-right span { font-size: 24px !important; font-weight: bold; color: white !important; }
 
-.label-pi-usdt { color: var(--blue); }
-.label-pi-idr { color: green; }
-.label-usdt-idr { color: orange; }
+    /* TANGGAL */
+    .date-title {
+        text-align: center; 
+        color: var(--blue); 
+        font-size: 22px; 
+        font-weight: bold; 
+        margin: 15px 0 10px 0; 
+    }
 
+    /* BOX HARGA */
+    .price-container {
+        width: 90%;
+        margin: 0 auto 20px auto;
+        border: 2px solid var(--gold);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .price-row {
+        display: flex;
+        border-bottom: 2px solid var(--gold);
+    }
+    .price-row:last-child { border-bottom: none; }
 
-        .price-item {
-            font-size: 1.3rem;
-            margin: 12px 0;
-            font-weight: bold;
-        }
+    .price-col-left {
+        width: 60%; background: white; padding: 12px;
+        font-weight: bold; font-size: 16px;
+    }
+    .price-col-right {
+        width: 40%; background: var(--blue); color: white; padding: 12px;
+        font-weight: bold; font-size: 18px; text-align: center;
+    }
+    .label-pi-usdt { color: var(--blue); }
+    .label-pi-idr { color: green; }
+    .label-usdt-idr { color: orange; }
 
-        .chart-container {
-            background: white;
-            border: 2px solid var(--gold);
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 20px;
-        }
-
-        canvas {
-            width: 100% !important;
-            height: 300px !important;
-        }
-
-        /* FOOTER */
-        footer {
-            background: linear-gradient(#0066cc, #004499);
-            color: white;
-            text-align: center;
-            padding: 18px;
-            border-top: 2px solid var(--gold);
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            z-index: 100;
-            font-size: 1.1rem;
-        }
-    </style>
+    /* FOOTER */
+    footer {
+        background: linear-gradient(#0066cc, #004499);
+        color: white; text-align: center; padding: 18px;
+        border-top: 2px solid var(--gold); position: fixed;
+        bottom: 0; width: 100%; font-size: 1.1rem;
+    }
+        </style>
 </head>
 <body>
     <!-- HEADER -- SAMAIN KAYAK INDEX -->
@@ -163,8 +104,9 @@
         </div>
     </header>
 <!-- BOX HARGA BARU -->
-<div id="tanggal" class="date-title"></div> <!-- TAMBAH INI -->
-    <div class="price-container">
+<div id="tanggal" class="date-title"></div>
+
+<div class="price-container">
     <div class="price-row">
         <div class="price-col-left label-pi-usdt">Harga Pi/USDT</div>
         <div class="price-col-right" id="piUsdt">0.8524</div>
@@ -185,11 +127,12 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-    // 1. TANGGAL
+
     function updateTanggal() {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('tanggal').innerText = new Date().toLocaleDateString('id-ID', options);
-    }
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('tanggal').innerText = new Date().toLocaleDateString('id-ID', options);
+}
+updateTanggal();
 
 </script>
 </body>
