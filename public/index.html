@@ -242,6 +242,34 @@ body {
   filter: blur(8px); /* Biar lembut */
   pointer-events: none;
     }
+        /* CHAT AI TRACKER */
+.ai-chat {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 90%;
+  margin: 20px auto 0 auto;
+  animation: fadeIn 1s ease-in;
+}
+.ai-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, #0057d9, #00bfff);
+  color: white; font-weight: bold; font-size: 14px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ai-bubble {
+  background: #fff; color: #0057d9; padding: 12px 16px; border-radius: 18px;
+  border: 2px solid #00bfff; font-size: 15px; font-weight: 500; line-height: 1.6;
+  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.2); position: relative;
+}
+.ai-bubble::before {
+  content: ''; position: absolute; left: -10px; top: 15px;
+  border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-right: 10px solid #00bfff;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+    }
     </style>
 </head>
 <body>
@@ -269,9 +297,17 @@ body {
     </div>
     </header>
 <!-- Avatar Bola Energi -->
-<div class="avatar-container">
-  <div class="energy-sphere"></div>
+</div> <!-- penutup energy-sphere -->
+<div class="ai-chat">
+  <div class="ai-avatar">AI</div>
+  <div class="ai-bubble">
+    AI Tracker Aktif! <br>
+    Silahkan cek Harga Pi disini... <br><br>
+    Ada yang bisa di bantu... <br>
+    Silahkan klik tombol <b>+</b> untuk memulai percakapan.
+  </div>
 </div>
+    
 <!-- Tombol Floating -->
 
     <footer>
