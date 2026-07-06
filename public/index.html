@@ -114,6 +114,19 @@ window.onload = function() {
     padding: 15px; 
     padding-bottom: 80px; /* 80px = tinggi footer + buffer */
             }
+        /* Tombol Floating */
+.btn-ai { 
+  position: fixed; bottom: 80px; right: 20px; width: 60px; height: 60px; 
+  border-radius: 50%; background: #fff; border: none; 
+  font-size: 36px; font-weight: bold;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4); cursor: pointer; 
+  color: #000; z-index: 999; /* teks hitam di background putih */
+  display: flex; align-items: center; justify-content: center;
+  transition: 0.2s;
+}
+.btn-ai:active {
+  transform: scale(0.9); /* efek pencet */
+            }
            </style>
 </head>
 <body>
@@ -142,10 +155,19 @@ window.onload = function() {
     </header>
 
     <div class="feed">
-        <h2 style="text-align:center; margin:15px 0; color:#0066cc;">Postingan Terbaru</h2>
-        <div id="feed-posts"></div>
+    <!-- Avatar Bola Energi -->
+    <div class="avatar-container">
+      <div class="energy-sphere"></div>
+      <div class="particle" style="top:20%; left:30%;"></div>
+      <div class="particle" style="top:60%; left:70%; animation-delay:1s;"></div>
+      <div class="particle" style="top:40%; left:20%; animation-delay:2s;"></div>
     </div>
+    <p style="color:#888; text-align:center; margin-top:20px;">AI sedang melacak...</p>
+</div>
 
+<!-- Tombol Floating -->
+<button class="btn-theme" onclick="openThemePicker()">🎨</button>
+<button class="btn-ai" onclick="startAI()">+</button>
     <footer>
         <span id="loginBtn" class="login-btn">LOGIN</span>
     </footer>
@@ -218,6 +240,14 @@ async function getPiPrice() {
 // JALANIN PAS LOAD + UPDATE TIAP 30 DETIK
 getPiPrice();
 setInterval(getPiPrice, 30000);
-    </script>
+    
+    function openThemePicker() {
+  alert('Buka pilihan tema: Biru, Ungu, Emas, Hijau');
+}
+
+function startAI() {
+  alert('Mulai AI Tracking!');
+}
+        </script>
 </body>
 </html>
