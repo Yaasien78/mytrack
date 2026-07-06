@@ -18,6 +18,13 @@
         --green: green;
         --orange: orange;
     }
+      .date-title {
+    text-align: center; /* TENGAH */
+    color: var(--blue); /* WARNA BIRU */
+    font-size: 20px; 
+    font-weight: bold; 
+    margin: 10px 0 8px 0;
+      }
 
     .price-container {
         width: 92%;
@@ -70,6 +77,12 @@
         </style>
 </head>
 <body>
+    body { 
+    font-family: Arial, sans-serif; 
+    background: #ffffff; 
+    color: #333; 
+    padding-bottom: 70px; /* INI WAJIB ADA */
+}
     <!-- HEADER -- SAMAIN KAYAK INDEX -->
 <header style="background:#0066cc; border-bottom:3px solid #ffd700; width:100%; padding:8px 0; position:sticky; top:0; z-index:1000;">
         <div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 15px; box-sizing:border-box;">
@@ -118,9 +131,22 @@
     </div>
 </div>
     <!-- FOOTER -->
-<footer style="background:linear-gradient(#0066cc, #004499); color:white; text-align:center; padding:15px 0; font-size:18px; font-weight:800; border-top:3px solid #ffd700; letter-spacing:0.5px;">
+<footer> 
     Welcome to My Track App
 </footer>
+    footer {
+    background: linear-gradient(#0066cc, #004499);
+    color: white; 
+    text-align: center; 
+    padding: 18px;
+    border-top: 2px solid var(--gold); 
+    position: fixed; /* BALIKIN FIXED */
+    bottom: 0; 
+    left: 0;
+    width: 100%; 
+    font-size: 1.1rem;
+    z-index: 999;
+}
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
