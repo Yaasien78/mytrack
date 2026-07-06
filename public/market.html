@@ -82,10 +82,20 @@
     border-radius: 10px;
     overflow: hidden;
 }
-
+.date-title {
+    text-align: center; 
+    color: var(--blue); 
+    font-size: 22px; 
+    font-weight: bold; 
+    margin: 10px 0; 
+        }
 .price-row {
     display: flex;
+    border-bottom: 2px solid var(--gold); /* TAMBAH INI */
 }
+.price-row:last-child { /* TAMBAH INI JUGA */
+    border-bottom: none;
+    }
 
 .price-col-left {
     width: 60%;
@@ -163,9 +173,9 @@
             </div>
         </div>
     </header>
-
-    <!-- BOX HARGA BARU -->
-<div class="price-container">
+<!-- BOX HARGA BARU -->
+<div id="tanggal" class="date-title"></div> <!-- TAMBAH INI -->
+    <div class="price-container">
     <div class="price-row">
         <div class="price-col-left label-pi-usdt">Harga Pi/USDT</div>
         <div class="price-col-right" id="piUsdt">0.8524</div>
