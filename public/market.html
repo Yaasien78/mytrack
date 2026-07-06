@@ -10,6 +10,7 @@
     <script>
         Pi.init({ version: "2.0", sandbox: true });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
         --blue: #0066cc;
@@ -143,6 +144,33 @@ footer {
     box-sizing: border-box;
     margin-top: 30px;
                            }
+      .chart-box {
+    width: 95%;
+    max-width: 500px; /* SAMAIN SAMA TABEL DIATAS */
+    margin: 20px auto;
+    padding: 15px;
+    background: #0056b3; /* biru sama kayak header */
+    border-radius: 15px;
+    border: 2px solid #FFD700; /* kuning */
+    color: white;
+    text-align: center;
+    box-sizing: border-box;
+}
+.chart-box h3 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    color: #FFD700;
+}
+#piChart {
+    background: #004494;
+    border-radius: 10px;
+    padding: 5px;
+}
+.update-time {
+    font-size: 12px;
+    margin-top: 10px;
+    color: #ccc;
+    }
             </style>
 </head>
 <body>
@@ -193,6 +221,12 @@ footer {
         <div class="price-col-left label-usdt-idr">USDT/IDR</div>
         <div class="price-col-right" id="usdtIdr">15,780</div>
     </div>
+    <!-- BOX CHART -->
+<div class="chart-box">
+    <h3>Grafik Pi/USDT 24 Jam</h3>
+    <canvas id="piChart"></canvas>
+    <p class="update-time" id="lastUpdate">Update: --:--</p>
+</div>
 </div>
     <!-- FOOTER -->
 <footer> 
@@ -210,7 +244,33 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     updateTanggal();
 
-    // 2. HARGA LIVE COINGECKO
+    // 2. SETUP CHART
+    const ctx = document.getElementById('piChart').getContext('2d');
+    const piChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [], // jam
+            datasets: [{
+                label: 'Pi/USDT',
+                data: [], // harga
+                borderColor: '#FFD700',
+                backgroundColor: 'rgba(255, 215, 0, 0.2)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { color: 'white' } },
+                y: { ticks: { color: 'white' }
+            }
+        }
+    });
+
+    // 3. AMBIL DATA + UPDATE CHART
     async function updateHarga() {
         try {
             const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network,tether&vs_currencies=idr');
@@ -218,18 +278,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const piIdr = data['pi-network']?.idr || 0;
             const usdtIdr = data['tether']?.idr || 0;
+            const piUsdt = (piIdr > 0 && usdtIdr > 0)? (piIdr / usdtIdr) : 0;
+
+            // UPDATE ANGKA
+            document.getElementById('piUsdt').innerText = piUsdt.toFixed(5);
+            document.getElementById('piIdr').innerText = piIdr.toLocaleString('id-ID');
+            document.getElementById('usdtIdr').innerText = usdtIdr.toLocaleString('id-ID');
+
+            // UPDATE CHART
+            const now = new Date().toLocaleTimeString('id-ID');
+            piChart.data.labels.push(now);
+            piChart.data.datasets[0].data.push(piUsdt);
             
-            // HITUNG PI/USDT MANUAL
-            const piUsdt = (piIdr > 0 && usdtIdr > 0) ? (piIdr / usdtIdr) : 0;
+            // simpan max 24 data = 24 jam
+            if(piChart.data.labels.length > 24){
+                piChart.data.labels.shift();
+                piChart.data.datasets[0].data.shift();
+            }
+            piChart.update();
 
-            // MASUKIN KE HTML
-            const elPiUsdt = document.getElementById('piUsdt');
-            const elPiIdr = document.getElementById('piIdr');
-            const elUsdtIdr = document.getElementById('usdtIdr');
-
-            if(elPiUsdt) elPiUsdt.innerText = piUsdt.toFixed(5);
-            if(elPiIdr) elPiIdr.innerText = piIdr.toLocaleString('id-ID');
-            if(elUsdtIdr) elUsdtIdr.innerText = usdtIdr.toLocaleString('id-ID');
+            document.getElementById('lastUpdate').innerText = `Update: ${now}`;
 
         } catch (error) {
             console.log('Error:', error);
@@ -237,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     updateHarga();
-    setInterval(updateHarga, 60000); // update 1 menit sekali
+    setInterval(updateHarga, 60000); // update tiap 1 menit
 
 });
     </script>
