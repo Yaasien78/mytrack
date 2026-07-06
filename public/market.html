@@ -93,7 +93,45 @@
     .label-pi-usdt { color: var(--blue); }
     .label-pi-idr { color: var(--green); }
     .label-usdt-idr { color: var(--orange); }
-        </style>
+      
+        /* 1. BIAR FULL LAYAR */
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* 2. CONTAINER UTAMA CENTER */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff;
+}
+
+/* 3. HEADER BIRU FULL WIDTH */
+.header-blue {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 4. TABEL HARGA DI TENGAH */
+.price-table {
+    width: 95%;
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+/* 5. FOOTER FULL WIDTH & CENTER */
+.footer {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    margin-top: auto;
+    }
+            </style>
 </head>
 <body>
     
