@@ -18,7 +18,6 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #ffffff; color: #333; }
 
     /* HEADER */
     .header-container {
@@ -39,7 +38,12 @@
     }
     .logo-left span { font-size: 9px !important; font-weight: bold; color: white !important; text-align: center; }
     .pi-logo-right span { font-size: 24px !important; font-weight: bold; color: white !important; }
-
+body { 
+    font-family: Arial, sans-serif; 
+    background: #ffffff; 
+    color: #333; 
+    padding-bottom: 70px; /* TAMBAH INI BIAR GAK KETUTUP FOOTER */
+}
     /* TANGGAL */
     .date-title {
         text-align: center; 
@@ -103,6 +107,7 @@
             </div>
         </div>
     </header>
+
 <!-- BOX HARGA BARU -->
 <div id="tanggal" class="date-title"></div>
 
@@ -124,16 +129,26 @@
 <footer style="background:linear-gradient(#0066cc, #004499); color:white; text-align:center; padding:15px 0; font-size:18px; font-weight:800; border-top:3px solid #ffd700; letter-spacing:0.5px;">
     Welcome to My Track App
 </footer>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-
-
+    
+    // 1. TANGGAL
     function updateTanggal() {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('tanggal').innerText = new Date().toLocaleDateString('id-ID', options);
-}
-updateTanggal();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const tgl = document.getElementById('tanggal');
+        if(tgl){ // biar gak error kalau div nya belum ada
+            tgl.innerText = new Date().toLocaleDateString('id-ID', options);
+        }
+    }
+    updateTanggal();
 
+    // 2. DATA HARGA PALSU DULU BUAT TES
+    document.getElementById('piUsdt').innerText = '0.8524';
+    document.getElementById('piIdr').innerText = '13,450';
+    document.getElementById('usdtIdr').innerText = '15,780';
+
+});
 </script>
 </body>
   </html>
