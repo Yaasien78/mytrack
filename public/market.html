@@ -46,21 +46,24 @@ body {
 }
     /* TANGGAL */
     .date-title {
-        text-align: center; 
-        color: var(--blue); 
-        font-size: 22px; 
-        font-weight: bold; 
-        margin: 15px 0 10px 0; 
-    }
+    text-align: center; 
+    color: var(--blue); 
+    font-size: 20px; 
+    font-weight: bold; 
+    margin: 8px 0 5px 0; /* DARI 15px JADI 8px */
+}
 
-    /* BOX HARGA */
-    .price-container {
-        width: 90%;
-        margin: 0 auto 20px auto;
-        border: 2px solid var(--gold);
-        border-radius: 10px;
-        overflow: hidden;
-    }
+.price-container {
+    width: 92%; /* DARI 90% JADI 92% BIAR AGAK LEBAR */
+    margin: 0 auto 10px auto; /* DARI 20px JADI 10px */
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.price-col-left, .price-col-right {
+    padding: 8px 12px; /* DARI 12px JADI 8px BIAR RAPAT */
+                     }
     .price-row {
         display: flex;
         border-bottom: 2px solid var(--gold);
