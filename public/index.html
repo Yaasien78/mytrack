@@ -197,35 +197,36 @@ footer { /* Biar diem di bawah */
 body {
   padding-top: 70px; /* Se-tinggi header biar konten gak ketutup */
         }
-        /* EFEK SINAR PUTIH DENYUT DARI TENGAH */
+        /* EFEK SINAR PUTIH DENYUT DARI TENGAH - VERSI LEBIH LEBAR & JELAS */
 .energy-sphere::before {
   content: '';
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 20%;  /* Ukuran awal kecil di tengah */
-  height: 20%;
-  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%);
+  width: 30%;  /* DARI 20% -> 30% biar titik awal lebih gede */
+  height: 30%;
+  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.3) 40%, rgba(255,255,255,0) 80%); /* Putihnya 100% + transisi lebih lembut */
   border-radius: 50%;
-  transform: translate(-50%, -50%); /* Biar pas di tengah */
-  animation: pulse-light 3s infinite ease-out; /* 3 detik 1x denyut */
-  pointer-events: none; /* Biar bisa klik bolanya */
+  transform: translate(-50%, -50%);
+  animation: pulse-light 2.5s infinite ease-out; /* DARI 3s -> 2.5s biar lebih sering */
+  pointer-events: none;
+  filter: blur(2px); /* <-- INI KUNCINYA BIAR GLOW NYA LEBAR */
 }
 
 /* ANIMASI MEMBESAR DAN SIRNA */
 @keyframes pulse-light {
  0% {
     transform: translate(-50%, -50%) scale(1);
-    opacity: 0.8;
+    opacity: 1; /* DARI 0.8 -> 1 biar awalnya jelas banget */
   }
- 50% {
-    opacity: 0.4;
+ 30% {
+    opacity: 0.6;
   }
  100% {
-    transform: translate(-50%, -50%) scale(4.5); /* Membesar 4.5x keluar bola */
-    opacity: 0; /* Sirna */
+    transform: translate(-50%, -50%) scale(6); /* DARI 4.5 -> 6 biar meledaknya lebih lebar */
+    opacity: 0; 
   }
-    }
+      }
     </style>
 </head>
 <body>
