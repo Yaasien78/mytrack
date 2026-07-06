@@ -19,6 +19,11 @@ window.onload = function() {
 }
     </script>
     <style>
+        * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+        }
         .header-container {
     display: flex !important;          /* 1. Kunci biar sejajar */
     justify-content: space-between;    /* 2. Kiri - Tengah - Kanan */
@@ -86,9 +91,6 @@ window.onload = function() {
     text-align: center;
     line-height: 1.2;
 }
-        .feed { padding: 15px; }
-        
-
 .login-btn { 
     color: var(--gold); 
     font-size: 1.2rem; 
@@ -96,41 +98,49 @@ window.onload = function() {
     cursor: pointer;
     letter-spacing: 2px; /* Biar lebih keren */
 }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 /* TAMBAHAN: Kasih jarak biar konten gak ketutup footer */
-.feed { 
-    padding: 15px; 
-    padding-bottom: 80px; /* 80px = tinggi footer + buffer */
-            }
-        /* Tombol Floating */
-footer { 
-  position: fixed; bottom: 0; width: 100%;
+.feed {
+  padding: 15px;
+  padding-bottom: 90px; /* 90px = tinggi footer + buffer */
+}
+
+/* Tombol Floating */
+footer {
+  position: fixed; bottom: 0; left: 0; right: 0;
   background: linear-gradient(to right, #004aad, #0057d9);
   border-top: 3px solid #ffcc00;
-  padding: 10px 20px; 
-  display: flex; 
+  color: white;
+  padding: 10px 20px;
+  display: flex;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
   z-index: 1000;
 }
 
 footer span { color: #fff; font-weight: bold; font-size: 18px; }
-.feed { padding: 15px; padding-bottom: 90px; }
-.btn-footer { 
+
+.btn-footer {
   width: 50px; height: 50px;
-  border-radius: 50%; 
-  background: #fff; /* putih semua */
-  border: 2px solid #00c8ff; /* pinggiran biru */
-  font-size: 26px; 
-  cursor: pointer; 
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #00c8ff;
+  font-size: 28px;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  flex-shrink: 0;
 }
 
-.btn-theme { color: #00c8ff; } /* emoji biru */
-.btn-ai { color: #00c8ff; font-weight: 900; font-size: 32px; } /* plus biru */
-      
-        .avatar-container {
+.btn-theme { color: #00c8ff; }
+.btn-ai { color: #00c8ff; font-weight: 900; font-size: 32px; }
+
+.avatar-container {
+  position: relative;
   width: 90%;
   max-width: 350px;
   height: 90vw;
@@ -142,12 +152,13 @@ footer span { color: #fff; font-weight: bold; font-size: 18px; }
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #00e5ff, #0057d9);
   box-shadow: 0 0 40px #00c8ff;
-  animation: pulse 2s infinite;   
+  animation: pulse 2s infinite;
+}
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
+ 0%, 100% { transform: scale(1); }
  50% { transform: scale(1.05); }
-    }
-    .particle {
+}
+.particle {
   position: absolute;
   width: 8px; height: 8px;
   background: #00e5ff;
@@ -157,9 +168,8 @@ footer span { color: #fff; font-weight: bold; font-size: 18px; }
 }
 @keyframes float {
  0%, 100% { transform: translateY(0); opacity: 0.5; }
-  50% { transform: translateY(-20px); opacity: 1; }
-}
-.avatar-container { position: relative; } /* biar partikel ngikut bola */
+ 50% { transform: translateY(-20px); opacity: 1; }
+            }
     </style>
 </head>
 <body>
