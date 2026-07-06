@@ -162,10 +162,12 @@ footer span { color: #fff; font-weight: bold; font-size: 18px; }
   display: block;
 }
 
-.energy-sphere {
+    .energy-sphere {
+  position: relative; /* <-- TAMBAH INI */
+  overflow: visible;  /* <-- TAMBAH INI */
   width: 100%; height: 100%;
   border-radius: 50%;
-
+  
   /* EFEK 3D KACA - KY DI FOTO */
   background: radial-gradient(circle at 35% 30%,
     #7ae7ff 0%,      /* Sorotan paling terang */
@@ -195,6 +197,35 @@ footer { /* Biar diem di bawah */
 body {
   padding-top: 70px; /* Se-tinggi header biar konten gak ketutup */
         }
+        /* EFEK SINAR PUTIH DENYUT DARI TENGAH */
+.energy-sphere::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20%;  /* Ukuran awal kecil di tengah */
+  height: 20%;
+  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%); /* Biar pas di tengah */
+  animation: pulse-light 3s infinite ease-out; /* 3 detik 1x denyut */
+  pointer-events: none; /* Biar bisa klik bolanya */
+}
+
+/* ANIMASI MEMBESAR DAN SIRNA */
+@keyframes pulse-light {
+ 0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+  }
+ 50% {
+    opacity: 0.4;
+  }
+ 100% {
+    transform: translate(-50%, -50%) scale(4.5); /* Membesar 4.5x keluar bola */
+    opacity: 0; /* Sirna */
+  }
+    }
     </style>
 </head>
 <body>
