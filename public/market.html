@@ -257,15 +257,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 backgroundColor: 'rgba(255, 215, 0, 0.2)',
                 borderWidth: 2,
                 tension: 0.4,
-                fill: true
+                fill: true,
+                pointRadius: 0 // biar garisnya mulus
             }]
         },
         options: {
             responsive: true,
+            animation: false, // biar gak lag pas update cepat
             plugins: { legend: { display: false } },
             scales: {
-                x: { ticks: { color: 'white' } },
-                y: { ticks: { color: 'white' }
+                x: { 
+                    ticks: { color: 'white', maxTicksLimit: 6 } 
+                },
+                y: { 
+                    ticks: { color: 'white' }
+                }
             }
         }
     });
@@ -290,8 +296,8 @@ document.addEventListener('DOMContentLoaded', function() {
             piChart.data.labels.push(now);
             piChart.data.datasets[0].data.push(piUsdt);
             
-            // simpan max 24 data = 24 jam
-            if(piChart.data.labels.length > 24){
+            // simpan max 240 data = 240 x 15 detik = 1 jam
+            if(piChart.data.labels.length > 240){
                 piChart.data.labels.shift();
                 piChart.data.datasets[0].data.shift();
             }
@@ -305,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     updateHarga();
-    setInterval(updateHarga, 60000); // update tiap 1 menit
+    setInterval(updateHarga, 15000); // 15000ms = 15 DETIK
 
 });
     </script>
