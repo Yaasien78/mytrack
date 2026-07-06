@@ -270,6 +270,33 @@ body {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
     }
+
+        /* WRAPPER BOLA + CHAT */
+.ai-section {
+  position: relative; /* biar bola bisa numpang di dalamnya */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px; /* kasih tinggi biar bolanya keliatan */
+  margin-top: 20px;
+}
+
+/* BOLA VERSI BACKGROUND */
+.sphere-container-bg {
+  position: absolute; /* bikin dia melayang di belakang */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* pas di tengah */
+  z-index: 0; /* paling belakang */
+  opacity: 0.4; /* bikin transparan biar gak ganggu teks */
+}
+
+/* CHAT DI ATAS BOLA */
+.ai-chat {
+  position: relative; /* biar naik di atas bola */
+  z-index: 1; /* paling depan */
+  margin: 0 auto;
+}
     </style>
 </head>
 <body>
@@ -296,24 +323,25 @@ body {
 
     </div>
     </header>
-<!-- Avatar Bola Energi -->
-<div class="sphere-container">
-  <div class="water-container">
+<!-- WRAPPER BOLA + CHAT -->
+<div class="ai-section">
+
+  <!-- BOLA DI BELAKANG -->
+  <div class="sphere-container-bg">
     <div class="energy-sphere"></div>
   </div>
-</div>
 
-<!-- CHAT AI TRACKER -->
-<div class="ai-chat">
-  <div class="ai-avatar">AI</div>
-  <div class="ai-bubble">
-    AI Tracker Aktif! <br>
-    Silahkan cek Harga Pi disini... <br><br>
-    Ada yang bisa di bantu... <br>
-    Silahkan klik tombol <b>+</b> untuk memulai percakapan.
+  <!-- CHAT DI DEPAN -->
+  <div class="ai-chat">
+    <div class="ai-avatar">AI</div>
+    <div class="ai-bubble">
+      AI Tracker Aktif! <br>
+      Silahkan cek Harga Pi disini... <br><br>
+      Ada yang bisa di bantu... <br>
+      Silahkan klik tombol <b>+</b> untuk memulai percakapan.
+    </div>
   </div>
-</div>
-    
+
 <!-- Tombol Floating -->
 
     <footer>
