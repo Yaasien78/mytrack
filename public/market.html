@@ -84,45 +84,53 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        .price-container { 
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 15px 10px;
+        :root {
+    --blue: #0066cc;
+    --gold: #ffd700;
+    --white: #ffffff;
 }
+
+.price-container {
+    width: 90%;
+    margin: 15px auto;
+}
+
 .price-row {
-    display: flex;
-    border: 2px solid var(--emas); /* BORDER EMAS 2PX */
-    border-radius: 12px;
-    overflow: hidden; /* Biar sudutnya rapi */
-    width: 100%;
+    display: flex; /* BIKIN KIRI KAN */
+    border: 2px solid var(--gold); /* GARIS GOLD 2PX */
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden; /* BIAR SUDUTNYA RAPET */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
 .price-col-left {
-    background: white;
-    padding: 14px 15px;
-    width: 50%;
-    font-size: 16px;
+    width: 60%; /* 60% BUAT KATA */
+    background: var(--white);
+    padding: 12px;
     font-weight: bold;
+    font-size: 16px;
     display: flex;
     align-items: center;
 }
+
 .price-col-right {
-    background: var(--biru); /* KOLOM KANAN BIRU */
-    padding: 14px 15px;
-    width: 50%;
-    font-size: 18px;
+    width: 40%; /* 40% BUAT ANGKA */
+    background: var(--blue); /* BIRU */
+    color: var(--white);
+    padding: 12px;
     font-weight: bold;
-    color: white; /* ANGKA WARNA PUTIH */
+    font-size: 18px;
+    text-align: center;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 /* WARNA TEKS KIRI */
-.label-pi-usdt { color: var(--biru); }   /* BIRU */
-.label-pi-idr { color: green; }          /* HIJAU */
-.label-usdt-idr { color: #FFC107; }      /* KUNING */
-
+.label-pi-usdt { color: #333; }
+.label-pi-idr { color: green; }
+.label-usdt-idr { color: orange; }
         .price-item {
             font-size: 1.3rem;
             margin: 12px 0;
@@ -177,12 +185,7 @@
         </div>
     </header>
 
-    <!-- BODY MARKET -->
-    <div class="market-container">
-<div id="tanggal" class="date-title" style="text-align: center; color: #0066cc; font-size: 20px; font-weight: bold; margin-top: -15px; margin-bottom: 15px; background:white;">
-</div>
-
-<!-- BOX HARGA BARU -->
+    <!-- BOX HARGA BARU -->
 <div class="price-container">
     <div class="price-row">
         <div class="price-col-left label-pi-usdt">Harga Pi/USDT</div>
@@ -197,6 +200,7 @@
         <div class="price-col-right" id="usdtIdr">15780</div>
     </div>
 </div>
+    
 <!-- CHART -->
 <canvas id="priceChart" style="width:100%; height:160px; background:white; margin-top:10px; border-top:1px solid #ddd;"></canvas>
 
