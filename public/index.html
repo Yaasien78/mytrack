@@ -27,6 +27,7 @@ window.onload = function() {
  
 /* HEADER FINAL - SAMA KAYAK SS LAMA */
 .main-container {
+.main-container {
   position: fixed; top: 0; left: 0; width: 100%; height: 65px;
   background: #004aad; border-bottom: 3px solid #ffcc00;
   display: flex; justify-content: space-between; align-items: center;
@@ -34,32 +35,18 @@ window.onload = function() {
 }
 .circle {
   width: 50px; height: 50px; flex-shrink: 0; border-radius: 50%;
-  background: #004aad; border: 3px solid #ffcc00; color: white;
+  background: #004aad; border: 3px solid #ffcc00; color: white; /* AKTIF BIRU */
   display: flex; align-items: center; justify-content: center;
   font-weight: bold; text-align: center;
 }
 .circle:first-child { font-size: 11px; line-height: 1.2; }
 .circle:last-child { font-size: 28px; }
 #piPrice {
-  flex: 1; color: white; font-size: 14px; font-weight: bold;
-  text-align: center; line-height: 1.5; padding: 0 5px;
+  flex: 1; color: white; font-size: 15px; font-weight: bold;
+  text-align: center; line-height: 1.4; padding: 0 5px;
 }
-
-.main-container {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 65px; /* TINGGIIN DIKIT */
-  background: #004aad; /* BIRU POLOS KAYAK SS LAMA */
-  border-bottom: 3px solid #ffcc00; /* GARIS KUNING */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 12px;
-  box-sizing: border-box;
-  z-index: 1000;
-}
-      
+body { padding-top: 70px; padding-bottom: 70px; margin: 0; }
+     
 /* FOOTER BARU SEJAJAR */
 footer {
   position: fixed;
@@ -556,18 +543,19 @@ function startAI() {
   alert('Mulai AI Tracking!');
 }
     }
-        <script>
-async function getPiPrice(){
+        async function getPiPrice(){
   let el=document.getElementById('piPrice');
   try{
     let r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr');
     let d=await r.json();
-    el.innerHTML=`<div>Pi/USDT = $${d['pi-network'].usd}</div><div>Pi/IDR = Rp${d['pi-network'].idr.toLocaleString('id-ID')}</div>`;
+    let usd=d['pi-network'].usd;
+    let idr=d['pi-network'].idr.toLocaleString('id-ID');
+    el.innerHTML=`1 Pi = $${usd} | Rp${idr}`;
   }catch(e){
-    el.innerHTML=`<div>Pi/USDT = $314,159 GCV</div><div>Pi/IDR = Rp5,000,000,000 GCV</div>`;
+    el.innerHTML=`1 Pi = $314,159 GCV | Rp5,000,000,000 GCV`; /* FALLBACK */
   }
 }
-getPiPrice(); setInterval(getPiPrice,30000);
-</script>
+getPiPrice(); setInterval(getPiPrice,30000); // update tiap 30 detik
+    </scrip>
 </body>
 </html>
