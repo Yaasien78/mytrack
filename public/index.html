@@ -339,40 +339,64 @@ body {
   opacity: 0.8;
         }
 
-        /* FOOTER UTAMA */
+        /* FOOTER UTAMA - MENTOK KIRI KANAN */
 .footer {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  height: 60px;
-  background: #0057b7;
+  position: fixed; 
+  bottom: 0; 
+  left: 0; 
+  right: 0;
+  height: 60px; 
+  background: #0057b7; 
   border-top: 3px solid #FFD700;
-  display: flex;
-  justify-content: space-between; /* DULU space-around -> GANTI INI */
+  display: flex; 
+  justify-content: space-between; /* mentok kiri kanan */
   align-items: center;
-  z-index: 1000;
-  padding: 0 20px; /* TAMBAH PADDING KIRI KANAN */
-        }
+  z-index: 1000; 
+  padding: 0 16px; /* KECILIN DARI 25px JADI 16px BIAR SEJAJAR HEADER */
+}
 
-/* 1. AVATAR KIRI - PUTIH */
+/* 1. AVATAR KIRI PUTIH */
 .footer-avatar {
-  width: 44px; height: 44px; border-radius: 50%;
+  width: 44px; 
+  height: 44px; 
+  border-radius: 50%; 
   background: white;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 24px; cursor: pointer;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  font-size: 24px; 
+  cursor: pointer;
+  margin-left: 0; /* PASTIIN GAK ADA MARGIN */
 }
 
-.btn-footer.btn-plus {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: white; color: #0057b7;
-  border: none; font-size: 30px; font-weight: bold;
-  cursor: pointer; display: flex;
-  align-items: center; justify-content: center;
-}
-
+/* 2. LOGIN TENGAH - HAPUS GARIS */
 #loginBtn {
-  color: white; font-weight: bold; font-size: 16px;
-  cursor: pointer; text-decoration: underline; /* KASIH GARIS BAWAH */
+  color: white; 
+  font-weight: bold; 
+  font-size: 16px;
+  cursor: pointer; 
+  text-decoration: none; /* HAPUS GARIS BAWAH */
 }
+#loginBtn:hover {
+  opacity: 0.8; /* efek pas di hover aja */
+}
+
+/* 3. TOMBOL + KAN PUTIH */
+.btn-footer.btn-plus {
+  width: 44px; 
+  height: 44px; 
+  border-radius: 50%; 
+  background: white;
+  color: #0057b7; 
+  border: none; 
+  font-size: 30px; 
+  font-weight: bold;
+  cursor: pointer; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  margin-right: 0; /* PASTIIN GAK ADA MARGIN */
+      }
     </style>
 </head>
 <body>
