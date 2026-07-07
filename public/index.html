@@ -344,55 +344,35 @@ body {
   position: fixed;
   bottom: 0; left: 0; right: 0;
   height: 60px;
-  background: #0057b7; /* biru */
-  border-top: 3px solid #FFD700; /* garis kuning atas */
+  background: #0057b7;
+  border-top: 3px solid #FFD700;
   display: flex;
-  justify-content: space-around; /* 3 item sejajar */
+  justify-content: space-between; /* DULU space-around -> GANTI INI */
   align-items: center;
   z-index: 1000;
-  padding: 0 15px;
-}
+  padding: 0 20px; /* TAMBAH PADDING KIRI KANAN */
+        }
 
 /* 1. AVATAR KIRI - PUTIH */
 .footer-avatar {
-  width: 42px; 
-  height: 42px; 
-  border-radius: 50%;
-  background: white; /* DULU GRADASI -> GANTI JADI PUTIH */
-  display: flex; 
-  align-items: center; 
-  justify-content: center;
-  font-size: 22px; 
-  cursor: pointer; 
-  border: none; /* HAPUS BORDER */
+  width: 44px; height: 44px; border-radius: 50%;
+  background: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; cursor: pointer;
 }
 
-/* 2. LOGIN TENGAH - AKTIF BISA KLIK */
-#loginBtn {
-  color: white; 
-  font-weight: bold; 
-  font-size: 16px;
-  cursor: pointer; /* BIAR BISA DIKLIK */
-}
-#loginBtn:hover {
-  text-decoration: underline;
-}
-
-/* 3. TOMBOL + KANAN - PUTIH */
 .btn-footer.btn-plus {
-  width: 42px; 
-  height: 42px; 
-  border-radius: 50%;
-  background: white; /* DULU KUNING -> GANTI JADI PUTIH */
-  color: #0057b7; /* TULISAN + BIRU */
-  border: none;
-  font-size: 28px; 
-  font-weight: bold; 
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-       }
+  width: 44px; height: 44px; border-radius: 50%;
+  background: white; color: #0057b7;
+  border: none; font-size: 30px; font-weight: bold;
+  cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+}
+
+#loginBtn {
+  color: white; font-weight: bold; font-size: 16px;
+  cursor: pointer; text-decoration: underline; /* KASIH GARIS BAWAH */
+}
     </style>
 </head>
 <body>
@@ -440,9 +420,10 @@ body {
 
 <!-- Tombol Floating -->
     <footer class="footer">
-      <div class="footer-avatar" onclick="openThemePicker()">🎨</div>
-<span id="loginBtn">@Yaasien</span>
-<button class="btn-footer btn-plus" onclick="startAI()">+</button>  
+  <div class="footer-avatar" onclick="openThemePicker()">🎨</div>
+  <span id="loginBtn" onclick="loginPi()">@Yaasien</span> <!-- TAMBAH onclick + @ -->
+  <button class="btn-footer btn-plus" onclick="startAI()">+</button>
+    </footer> 
     <script>
 // CEK OTOMATIS PAS BUKA
 window.onload = () => {
@@ -595,6 +576,16 @@ window.addEventListener('load', function() {
 function startAI() {
   alert('Mulai AI Tracking!');
 }
+    function loginPi() {
+  if(window.Pi) {
+    Pi.authenticate(['username'], function(auth) {
+      document.getElementById('loginBtn').innerText = '@' + auth.user.username;
+      alert("Login Berhasil: " + auth.user.username);
+    });
+  } else {
+    alert("Buka di Pi Browser untuk Login");
+  }
+    }
         </script>
 </body>
 </html>
