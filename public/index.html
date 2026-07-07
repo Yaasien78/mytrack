@@ -297,6 +297,27 @@ body {
   z-index: 1; /* paling depan */
   margin: 0 auto;
 }
+   
+    .ai-avatar-sticky {
+  position: fixed;
+  bottom: 90px; /* di atas footer */
+  left: 15px;
+  width: 50px; height: 50px; border-radius: 50%;
+  background: linear-gradient(135deg, #0057d9, #00bfff);
+  color: white; font-weight: bold; font-size: 16px;
+  display: none; /* awalnya disembunyikan */
+  align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 191, 255, 0.4);
+  z-index: 999;
+  cursor: pointer;
+  animation: pulse 2s infinite;
+  transition: all 0.3s ease;
+}
+
+@keyframes pulse {
+ 0%, 100% { transform: scale(1); }
+ 50% { transform: scale(1.1); }
+    }
     </style>
 </head>
 <body>
@@ -419,8 +440,53 @@ async function getPiPrice() {
 getPiPrice();
 setInterval(getPiPrice, 30000);
     
-    function openThemePicker() {
-  alert('Buka pilihan tema: Biru, Ungu, Emas, Hijau');
+    let clickCount = 0; // penghitung klik
+let clickTimer = null; // timer buat reset klik
+
+function openThemePicker() {
+  clickCount++;
+  
+  // Reset klik setelah 1 detik gak diklik lagi
+  clearTimeout(clickTimer);
+  clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
+
+  const avatarSticky = document.querySelector('.ai-avatar-sticky');
+  const avatarChat = document.querySelector('.ai-avatar');
+
+  // KLIK 1 = MUNCULIN AVATAR
+  if (clickCount === 1) {
+    if (!avatarSticky) createAvatarSticky(); // bikin avatar kalau belum ada
+    avatarSticky.style.display = 'flex'; // tampilin
+  }
+
+  // KLIK 2 = MUNCULIN PILIHAN WARNA
+  if (clickCount === 2) {
+    const colors = ['#0057d9', '#8B5CF6', '#16a34a', '#f97316', '#dc2626', '#000000'];
+    let pilihan = 'Pilih warna Avatar AI:\n\n';
+    colors.forEach((c, i) => { pilihan += `${i+1}. ${c}\n`; });
+    
+    const pilih = prompt(pilihan + '\nKetik nomor 1-6');
+    if(pilih && colors[pilih-1]) {
+      avatarChat.style.background = colors[pilih-1];
+      avatarSticky.style.background = colors[pilih-1]; // ganti sticky juga
+    }
+    clickCount = 0; // reset
+  }
+
+  // KLIK 3 = HILANGIN AVATAR
+  if (clickCount === 3) {
+    if (avatarSticky) avatarSticky.style.display = 'none'; // sembunyiin
+    clickCount = 0; // reset
+  }
+}
+
+// FUNGSI BUAT BIKIN AVATAR STICKY OTOMATIS
+function createAvatarSticky() {
+  const avatar = document.createElement('div');
+  avatar.className = 'ai-avatar-sticky';
+  avatar.innerText = 'AI';
+  avatar.onclick = randomAvatarColor; // klik avatar = random warna
+  document.body.appendChild(avatar);
 }
 
 function startAI() {
