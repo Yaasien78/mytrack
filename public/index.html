@@ -379,7 +379,7 @@ body {
 
     <footer class="footer">
   <button class="btn-footer btn-theme" onclick="openThemePicker()">🎨</button>
-  <div class="footer-center" onclick="handleLogin()">Yaasien</div>
+  <div class="footer-center" id="loginBtn" onclick="handleLogin()">Yaasien</div>
   <button class="btn-footer btn-plus" onclick="toggleChat()">+</button>
     </footer>
 
@@ -387,46 +387,55 @@ body {
         // script kamu taruh sini
     </script>
     <script>
-    const loginBtn = document.getElementById('loginBtn');
+// CEK OTOMATIS PAS BUKA
+window.onload = () => {
+  const savedUser = localStorage.getItem('piUser');
+  if(savedUser) {
+    const user = JSON.parse(savedUser);
+    document.getElementById('loginBtn').innerText = "@" + user.username;
+  }
+}
 
-    loginBtn.addEventListener('click', async () => {
-        try {
-            // 1. Minta izin login ke Pi
-            const scopes = ['username', 'payments']; 
-            const authResult = await Pi.authenticate(scopes, onIncompletePaymentFound);
-            
-            // 2. Kalau sukses
-            console.log("Login Sukses:", authResult);
-            loginBtn.innerText = authResult.user.username; // Ganti LOGIN jadi username
-            loginBtn.style.color = 'white';
-            alert("Selamat datang @" + authResult.user.username);
+// FUNGSI LOGIN PAKAI PI SDK
+async function handleLogin() {
+  const loginBtn = document.getElementById('loginBtn');
+  const savedUser = localStorage.getItem('piUser');
 
-            // 3. Simpan data user biar gak login lagi
-            localStorage.setItem('piUser', JSON.stringify(authResult.user));
-
-        } catch (error) {
-            // 4. Kalau gagal / cancel
-            console.error("Login Gagal:", error);
-            alert("Login dibatalkan");
-        }
-    });
-
-    // Fungsi buat handle payment yg belum selesai
-    function onIncompletePaymentFound(payment) {
-        console.log("Ada payment belum selesai:", payment);
+  // KALAU UDAH LOGIN -> LOGOUT
+  if(savedUser) {
+    const user = JSON.parse(savedUser);
+    if(confirm("Logout dari @" + user.username + "?")) {
+      localStorage.removeItem('piUser');
+      loginBtn.innerText = "Yaasien";
     }
+    return;
+  }
 
-    // CEK OTOMATIS: Kalau udah pernah login, langsung ganti jadi username
-    window.onload = () => {
-        const savedUser = localStorage.getItem('piUser');
-        if(savedUser) {
-            const user = JSON.parse(savedUser);
-            loginBtn.innerText = user.username;
-            loginBtn.style.color = 'white';
-        }
-    }
+  // KALAU BELUM LOGIN -> LOGIN
+  try {
+    const scopes = ['username', 'payments'];
+    const authResult = await Pi.authenticate(scopes, onIncompletePaymentFound);
+    
+    console.log("Login Sukses:", authResult);
+    loginBtn.innerText = "@" + authResult.user.username;
+    alert("Selamat datang @" + authResult.user.username + " 🎉");
+    
+    // Simpan biar gak login lagi
+    localStorage.setItem('piUser', JSON.stringify(authResult.user));
+
+  } catch (error) {
+    console.error("Login Gagal:", error);
+    alert("Login dibatalkan");
+  }
+}
+
+// BUAT HANDLE PAYMENT
+function onIncompletePaymentFound(payment) {
+  console.log("Payment belum selesai:", payment);
+}
+</script>
             </script>
-    <script>
+    
 // AMBIL HARGA PI DARI COINGECKO - UPDATE TIAP 30 DETIK
 async function getPiPrice() {
     try {
