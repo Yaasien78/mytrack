@@ -17,18 +17,33 @@ body { padding-top: 70px; padding-bottom: 70px; background: #f5f5f5; font-family
   display: flex; justify-content: space-between; align-items: center;
   padding: 0 12px; z-index: 9999;
 }
-.circle {
-  width: 50px; height: 50px; border-radius: 50%;
-  background: #004aad; border: 3px solid #ffcc00; color: white;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: bold; flex-shrink: 0;
+  .circle {
+  width: 50px; 
+  height: 50px; 
+  border-radius: 50%;
+  background: #004aad; /* BIRU */
+  border: 3px solid #ffcc00; /* BORDER KUNING */
+  color: white; /* TULISAN PUTIH */
+  display: flex; 
+  align-items: center; 
+  justify-content: center; /* TENGAH VERTIKAL + HORIZONTAL */
+  font-weight: bold; 
+  flex-shrink: 0;
+  text-decoration: none; /* HILANG GARIS BAWAH */
 }
-.circle:first-child { font-size: 11px; line-height: 1.2; }
+
+/* KHUSUS LOGO KIRI "My Track" */
+.circle:first-child { 
+  font-size: 11px; 
+  line-height: 1.2; /* 2 BARIS */
+  text-align: center;
+}
+
+/* KHUSUS LOGO KANAN "π" */
 .circle:last-child { 
-  font-size: 32px; /* BIKIN AGAK GEDE */
-  line-height: 50px; /* SAMA TINGGI DENGAN LINGKARAN */
-  text-align: center; /* TENGAHIN HORIZONTAL */
-  }
+  font-size: 30px; /* GEDEIN BIAR SEIMBANG */
+  line-height: 50px; /* PAS TENGAH */
+}
 #piPrice { flex: 1; color: white; font-size: 15px; font-weight: bold; text-align: center; }
 
 /* CHAT AI */
@@ -157,5 +172,25 @@ function openThemePicker(){
 }
 function randomAvatarColor(){ const colors=['#0057d9','#BB5CF6','#16a34a','#f07316','#dc2626']; document.querySelector('.ai-avatar-sticky').style.background=colors[Math.floor(Math.random()*5)]; }
 </script>
+  <script>
+// AMBIL DATA LIVE DARI PI API
+async function updatePrice() {
+  try {
+    const res = await fetch('https://api.pi-blockchain.com/v1/price'); // GANTI KE API KAMU
+    const data = await res.json();
+    
+    const usd = parseFloat(data.usd).toFixed(6);
+    const idr = (usd * 17880).toFixed(2); // KURS DOLLAR KE RUPIAH
+    
+    document.getElementById('piPrice').innerHTML = `1 Pi = $${usd} | Rp${idr}`;
+  } catch (e) {
+    document.getElementById('piPrice').innerHTML = `1 Pi = $0.111576 | Rp1.997,22`; // FALLBACK DUMMY
+  }
+}
+
+// JALANKAN SAAT LOAD + UPDATE 30 DETIK SEKALI
+updatePrice();
+setInterval(updatePrice, 30000);
+  </script>
 </body>
 </html>
