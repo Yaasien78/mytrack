@@ -95,25 +95,20 @@ footer {
   flex-shrink: 0;
   box-shadow: 0 0 10px rgba(0, 87, 217, 0.4);
 }
-.price-center { 
-    color:white; 
-    font-weight: bold; 
-    font-size: 16px; 
-    text-align: center;
-    line-height: 1.2;
+        #piPrice {
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  text-align: center;
+  flex: 1;
+  letter-spacing: 0.5px;
+  animation: glow 2s ease-in-out infinite alternate;
 }
-.login-btn { 
-    color: var(--gold); 
-    font-size: 1.2rem; 
-    font-weight: bold; 
-    cursor: pointer;
-    letter-spacing: 2px; /* Biar lebih keren */
-}
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+
+@keyframes glow {
+  from { text-shadow: 0 0 5px #FFD700; }
+  to { text-shadow: 0 0 15px #FFD700, 0 0 20px #FFD700; }
+        }
 
 /* TAMBAHAN: Kasih jarak biar konten gak ketutup footer */
 .feed {
