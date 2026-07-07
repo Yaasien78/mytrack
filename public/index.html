@@ -298,21 +298,24 @@ body {
   margin: 0 auto;
 }
    
-    .ai-avatar-sticky {
+        .ai-avatar-sticky {
   position: fixed;
-  bottom: 90px; /* di atas footer */
-  left: 15px;
-  width: 50px; height: 50px; border-radius: 50%;
-  background: linear-gradient(135deg, #0057d9, #00bfff);
-  color: white; font-weight: bold; font-size: 16px;
-  display: none; /* awalnya disembunyikan */
-  align-items: center; justify-content: center;
-  box-shadow: 0 4px 20px rgba(0, 191, 255, 0.4);
-  z-index: 999;
+  bottom: 80px;  /* di atas footer */
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #0057b7; /* biru */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
   cursor: pointer;
-  animation: pulse 2s infinite;
-  transition: all 0.3s ease;
-}
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
 
 @keyframes pulse {
  0%, 100% { transform: scale(1); }
@@ -378,7 +381,7 @@ body {
 <!-- Tombol Floating -->
 
     <footer class="footer">
-  <button class="btn-footer btn-theme" onclick="openThemePicker()">🎨</button>
+        <div onclick="openThemePicker()">🎨</div>
   <div class="footer-center" id="loginBtn" onclick="handleLogin()">Yaasien</div>
   <button class="btn-footer btn-plus" onclick="toggleChat()">+</button>
     </footer>
@@ -391,44 +394,6 @@ window.onload = () => {
     const user = JSON.parse(savedUser);
     document.getElementById('loginBtn').innerText = "@" + user.username;
   }
-}
-
-// FUNGSI LOGIN PAKAI PI SDK
-async function handleLogin() {
-  const loginBtn = document.getElementById('loginBtn');
-  const savedUser = localStorage.getItem('piUser');
-
-  // KALAU UDAH LOGIN -> LOGOUT
-  if(savedUser) {
-    const user = JSON.parse(savedUser);
-    if(confirm("Logout dari @" + user.username + "?")) {
-      localStorage.removeItem('piUser');
-      loginBtn.innerText = "Yaasien";
-    }
-    return;
-  }
-
-  // KALAU BELUM LOGIN -> LOGIN
-  try {
-    const scopes = ['username', 'payments'];
-    const authResult = await Pi.authenticate(scopes, onIncompletePaymentFound);
-    
-    console.log("Login Sukses:", authResult);
-    loginBtn.innerText = "@" + authResult.user.username;
-    alert("Selamat datang @" + authResult.user.username + " 🎉");
-    
-    // Simpan biar gak login lagi
-    localStorage.setItem('piUser', JSON.stringify(authResult.user));
-
-  } catch (error) {
-    console.error("Login Gagal:", error);
-    alert("Login dibatalkan");
-  }
-}
-
-// BUAT HANDLE PAYMENT
-function onIncompletePaymentFound(payment) {
-  console.log("Payment belum selesai:", payment);
 }
 </script>
     
@@ -499,15 +464,40 @@ function openThemePicker() {
 }
     
 // FUNGSI BUAT BIKIN AVATAR STICKY OTOMATIS
-function createAvatarSticky() {
+
+    function createAvatarSticky() {
   const avatar = document.createElement('div');
   avatar.className = 'ai-avatar-sticky';
   avatar.innerText = 'AI';
   avatar.onclick = randomAvatarColor;
-  avatar.style.display = 'flex'; // <-- TAMBAH INI BIAR LANGSUNG MUNCUL
+  avatar.style.display = 'flex'; 
   document.body.appendChild(avatar);
-      }
-        
+}
+
+createAvatarSticky(); // <-- TAMBAH INI BIAR LANGSUNG MUNCUL
+// FUNGSI WAJIB PI SDK - HANDLE PAYMENT NYANGKUT
+function onIncompletePaymentFound(payment) {
+  console.log("Payment nyangkut ketemu:", payment);
+  
+  // KIRIM KE BACKEND KAMU BUAT DICEK
+  // Kalau belum ada backend, skip dulu pake alert
+  alert("Ada pembayaran Pi yang belum selesai. ID: " + payment.identifier);
+  
+  // CONTOH KALAU UDAH ADA BACKEND
+  /*
+  fetch('/payments/complete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ payment })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Payment selesai:', data);
+  })
+  .catch(err => console.error(err));
+  */
+}
+
 // FUNGSI LOGIN PAKAI PI SDK
 async function handleLogin() {
   const loginBtn = document.getElementById('loginBtn');
