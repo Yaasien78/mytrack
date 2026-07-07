@@ -339,22 +339,60 @@ body {
   opacity: 0.8;
         }
 
-        .footer-avatar {
-  width: 42px; height: 42px; border-radius: 50%;
-  background: linear-gradient(135deg, #0057b7, #FFD700);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; cursor: pointer; border: 2px solid white;
+        /* FOOTER UTAMA */
+.footer {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: #0057b7; /* biru */
+  border-top: 3px solid #FFD700; /* garis kuning atas */
+  display: flex;
+  justify-content: space-around; /* 3 item sejajar */
+  align-items: center;
+  z-index: 1000;
+  padding: 0 15px;
 }
 
-.btn-footer {
-  width: 42px; height: 42px; border-radius: 50%;
-  background: #FFD700; color: #0057b7; border: none;
-  font-size: 26px; font-weight: bold; cursor: pointer;
+/* 1. AVATAR KIRI - PUTIH */
+.footer-avatar {
+  width: 42px; 
+  height: 42px; 
+  border-radius: 50%;
+  background: white; /* DULU GRADASI -> GANTI JADI PUTIH */
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  font-size: 22px; 
+  cursor: pointer; 
+  border: none; /* HAPUS BORDER */
 }
 
+/* 2. LOGIN TENGAH - AKTIF BISA KLIK */
 #loginBtn {
-  color: white; font-weight: bold; font-size: 14px;
-        }
+  color: white; 
+  font-weight: bold; 
+  font-size: 16px;
+  cursor: pointer; /* BIAR BISA DIKLIK */
+}
+#loginBtn:hover {
+  text-decoration: underline;
+}
+
+/* 3. TOMBOL + KANAN - PUTIH */
+.btn-footer.btn-plus {
+  width: 42px; 
+  height: 42px; 
+  border-radius: 50%;
+  background: white; /* DULU KUNING -> GANTI JADI PUTIH */
+  color: #0057b7; /* TULISAN + BIRU */
+  border: none;
+  font-size: 28px; 
+  font-weight: bold; 
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+       }
     </style>
 </head>
 <body>
