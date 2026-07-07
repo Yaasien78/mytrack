@@ -5,63 +5,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Track</title>
 <style>
-  body { margin: 0; font-family: Arial, sans-serif; background: white; } /* LAYAR PUTIH */
+  body { margin: 0; font-family: Arial, sans-serif; background: white; height: 100vh; display: flex; flex-direction: column; }
   
-  /* HEADER KECIL */
-  .header { background: #004aad; padding: 6px 10px; border-bottom: 2px solid #ffcc00; display: flex; justify-content: space-between; align-items: center; color: white; }
+  /* HEADER SIMETRIS */
+  .header { background: #004aad; padding: 6px 12px; border-bottom: 2px solid #ffcc00; display: flex; justify-content: space-between; align-items: center; color: white; flex-shrink: 0; }
   
-  /* LOGO 40px */
-  .circle { width: 40px; height: 40px; border-radius: 50%; background: #004aad; border: 2px solid #ffcc00; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; text-decoration: none; font-size: 18px; }
-  .circle:first-child { font-size: 8px; line-height: 1.1; text-align: center; }
+  /* FOOTER SIMETRIS */
+  .footer { background: #004aad; padding: 6px 12px; border-top: 2px solid #ffcc00; display: flex; justify-content: space-between; align-items: center; color: white; flex-shrink: 0; }
   
-  #piPrice { font-size: 16px; font-weight: bold; flex: 1; text-align: center; line-height: 1.3; }
+  /* SEMUA LOGO SAMA UKURAN 40px */
+  .logo { 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    text-decoration: none; 
+    flex-shrink: 0; 
+    box-sizing: border-box;
+  }
   
-  .chat { flex: 1; overflow-y: auto; padding: 12px 10px; background: white; padding-bottom: 120px; } /* PUTIH */
-  .bubble-ai { background: #f0f8ff; border: 2px solid #00bfff; border-radius: 16px; padding: 12px 14px; color: #004aad; font-size: 14px; line-height: 1.6; box-shadow: 0 1px 4px rgba(0,0,0,0.08); max-width: 85%; }
-  .avatar-ai { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #004aad, #00bfff); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; margin-right: 8px; font-size: 14px; }
-  .msg-row { display: flex; align-items: flex-start; margin-bottom: 10px; }
+  /* LOGO HEADER: BORDER KUNING BG BIRU TULISAN PUTIH */
+  .logo-header { 
+    background: #004aad; 
+    border: 2px solid #ffcc00; 
+    color: white; 
+    font-weight: bold; 
+  }
+  .logo-header:first-of-type { font-size: 8px; line-height: 1.1; text-align: center; }
+  .logo-header:last-of-type { font-size: 18px; }
   
-  /* TOMBOL LOGIN BARU */
-  .btn-login { display: block; width: 90%; margin: 15px auto; padding: 10px; background: #004aad; color: white; text-align: center; border-radius: 20px; text-decoration: none; font-weight: bold; border: 2px solid #ffcc00; }
+  /* LOGO FOOTER: BG PUTIH */
+  .logo-footer { 
+    background: white; 
+    border: 2px solid white; 
+  }
+  .logo-footer:first-of-type { font-size: 24px; } /* PALETTE */
+  .logo-footer:last-of-type { font-size: 28px; color: #004aad; font-weight: bold; } /* + BIRU */
   
-  /* FOOTER KECIL */
-  .footer { background: #004aad; padding: 6px 10px; border-top: 2px solid #ffcc00; display: flex; align-items: center; gap: 8px; color: white; position: fixed; bottom: 0; width: 100%; box-sizing: border-box; }
+  /* HARGA TENGAH */
+  #piPrice { font-size: 13px; font-weight: 600; flex: 1; text-align: center; white-space: nowrap; letter-spacing: 0.2px; }
   
-  /* LOGO FOOTER 40px */
-  .avatar-user { width: 40px; height: 40px; border-radius: 50%; background: white; flex-shrink: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white; overflow: hidden; text-decoration: none; }
-  .avatar-user img { width: 100%; height: 100%; object-fit: cover; }
-  .username { flex: 1; text-align: center; font-weight: bold; font-size: 15px; }
-  .btn-plus { width: 40px; height: 40px; border-radius: 50%; background: white; color: #004aad; font-size: 26px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; text-decoration: none; }
+  /* LOGIN TENGAH FOOTER */
+  .btn-login-footer { 
+    padding: 8px 22px; 
+    background: #004aad; 
+    color: white; 
+    text-align: center; 
+    border-radius: 20px; 
+    text-decoration: none; 
+    font-weight: bold; 
+    font-size: 15px; 
+    border: 2px solid #ffcc00; 
+  }
+  
+  .chat { flex: 1; background: white; }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <a href="upload.html" class="circle">My<br>Track</a> <!-- KE UPLOAD -->
-  <div id="piPrice">1 Pi = <br> $0.111576 <br> Rp1,997.22</div>
-  <a href="market.html" class="circle">π</a>
+  <a href="upload.html" class="logo logo-header">My<br>Track</a> <!-- KIRI ATAS -->
+  <div id="piPrice">1 Pi = $0.111576 | Rp1,997.22</div>
+  <a href="market.html" class="logo logo-header">π</a> <!-- KANAN ATAS -->
 </div>
 
 <div class="chat">
-  <div class="msg-row">
-    <div class="avatar-ai">AI</div>
-    <div class="bubble-ai">
-      AI Tracker Aktif!<br>
-      Silahkan cek Harga Pi disini...<br><br>
-      Ada yang bisa di bantu...<br><br>
-      Silahkan klik tombol <b>+</b> untuk memulai percakapan.
-    </div>
-  </div>
-
-  <a href="login.html" class="btn-login">Login</a> <!-- TOMBOL LOGIN BAWAH -->
+  <!-- LAYAR KOSONG -->
 </div>
 
 <div class="footer">
-  <a href="avatar.html" class="avatar-user" id="btnBackAvatar"> <!-- KE AVATAR -->
-    <img src="palette.png">
-  </div>
-  <div class="username">@Yaasien</div>
-  <a href="ai.html" class="btn-plus">+</a> <!-- KE AI -->
+  <a href="avatar.html" class="logo logo-footer">🎨</a> <!-- KIRI BAWAH -->
+  <a href="login.html" class="btn-login-footer">Login</a> <!-- TENGAH BAWAH -->
+  <a href="ai.html" class="logo logo-footer">+</a> <!-- KANAN BAWAH -->
 </div>
 
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
@@ -76,9 +93,9 @@ async function updatePrice() {
     const data = await res.json();
     const usd = parseFloat(data.usd).toFixed(6);
     const idr = (usd * 17880).toLocaleString('id-ID');
-    el.innerHTML = `1 Pi = <br> $${usd} <br> Rp${idr}`;
+    el.innerHTML = `1 Pi = $${usd} | Rp${idr}`;
   } catch (e) {
-    el.innerHTML = `1 Pi = <br> $0.111576 <br> Rp1,997.22`;
+    el.innerHTML = `1 Pi = $0.111576 | Rp1,997.22`;
   }
 }
 updatePrice();
