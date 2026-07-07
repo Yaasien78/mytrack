@@ -70,6 +70,29 @@
   }
   
   .chat { flex: 1; background: white; }
+
+/* EFEK BINTANG MELEDAK */
+.star-burst {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: explode 0.8s ease-out forwards;
+}
+
+@keyframes explode {
+  0% { 
+    transform: scale(0.2); 
+    opacity: 1; 
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  100% { 
+    transform: scale(8); 
+    opacity: 0; 
+    box-shadow: 0 0 30px 10px currentColor;
+  }
+  }
 </style>
 </head>
 <body>
@@ -154,6 +177,31 @@ btnLogin.addEventListener('click', async () => {
 function onIncompletePaymentFound(payment) {
   console.log('Ada payment belum selesai:', payment);
   }
+  const avatarDisplay = document.getElementById('avatarDisplay');
+
+// WARNA LEDAKAN ACAK: BIRU, UNGU, PINK, KUNING, HIJAU
+const burstColors = ['#00bfff', '#a855f7', '#ff00ff', '#ffcc00', '#00ff88', '#ff4500'];
+
+// KLIK AVATAR = BINTANG MELEDAK
+avatarDisplay.addEventListener('click', (e) => {
+  const rect = avatarDisplay.getBoundingClientRect();
+  const x = e.clientX - rect.left; // posisi klik X
+  const y = e.clientY - rect.top;  // posisi klik Y
+  
+  const star = document.createElement('div');
+  star.classList.add('star-burst');
+  
+  const randomColor = burstColors[Math.floor(Math.random() * burstColors.length)];
+  star.style.left = `${x - 5}px`;
+  star.style.top = `${y - 5}px`;
+  star.style.color = randomColor; // warna ikut currentColor
+  star.style.background = randomColor;
+  
+  avatarDisplay.appendChild(star);
+  
+  // hapus setelah animasi selesai biar gak numpuk
+  setTimeout(() => star.remove(), 800);
+});
 </script>
 </body>
 </html>
