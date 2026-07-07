@@ -11,9 +11,11 @@
 body { padding-top: 70px; padding-bottom: 70px; background: #f5f5f5; font-family: Arial, sans-serif; }
 
 /* HEADER FIX - 1 BARIS DOANG */
-.main-container a.circle {
-  text-decoration: none; /* HAPUS GARIS BAWAH */
-  color: white; /* TULISAN PUTIH */
+.main-container {
+  position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+  background: #004aad; border-bottom: 3px solid #ffcc00;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0 12px; z-index: 9999;
 }
 .circle {
   width: 50px; height: 50px; border-radius: 50%;
@@ -44,7 +46,7 @@ body { padding-top: 70px; padding-bottom: 70px; background: #f5f5f5; font-family
 <!-- HEADER 1 SAJA -->
 <div class="main-container">
   <a href="upload.html" class="circle">My<br>Track</a>  <!-- KIRI KE UPLOAD -->
-  <div id="piPrice">1 Pi = $0.112014 | Rp2.003,62</div>
+  <div id="piPrice">1 Pi = Loading...</div>
   <a href="market.html" class="circle">π</a>  <!-- KANAN KE MARKET -->
 </div>
 
