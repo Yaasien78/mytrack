@@ -3,58 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyTrack AI</title>
+<title>My Track</title>
 <style>
-  body { margin: 0; font-family: Arial, sans-serif; background: #f0f2f5; }
+  body { margin: 0; font-family: Arial, sans-serif; background: #f5f5f5; }
   .page { display: none; height: 100vh; flex-direction: column; }
   .page.active { display: flex; }
 
-  /* HEADER */
-  .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: white; border-bottom: 1px solid #ddd; }
-  .circle { width: 50px; height: 50px; border-radius: 50%; background: #004aad; border: 3px solid #ffcc00; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; text-decoration: none; }
-  .circle:first-child { font-size: 9px; line-height: 1.1; text-align: center; padding: 2px; }
-  .circle:last-child { font-size: 24px; line-height: 1; }
-  #piPrice { font-weight: bold; font-size: 14px; }
+  /* HEADER BIRU */
+  .header { background: #004aad; padding: 8px 15px; border-bottom: 3px solid #ffcc00; display: flex; justify-content: space-between; align-items: center; color: white; }
+  .circle { width: 50px; height: 50px; border-radius: 50%; background: #004aad; border: 3px solid #ffcc00; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; text-decoration: none; font-size: 22px; }
+  .circle:first-child { font-size: 10px; line-height: 1.1; text-align: center; }
+  #piPrice { font-weight: bold; font-size: 15px; flex: 1; text-align: center; line-height: 1.4; }
+
+  /* CHAT */
+  .chat { flex: 1; overflow-y: auto; padding: 15px; background: #f5f5f5; }
+  .bubble-ai { background: white; border: 2px solid #00bfff; border-radius: 20px; padding: 12px 16px; color: #004aad; font-size: 15px; line-height: 1.6; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 85%; }
+  .avatar-ai { width: 40px; height: 40px; border-radius: 50%; background: #004aad; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; margin-right: 10px; }
+  .msg-row { display: flex; align-items: flex-start; margin-bottom: 15px; }
+
+  /* FOOTER BIRU */
+  .footer { background: #004aad; padding: 8px 15px; border-top: 3px solid #ffcc00; display: flex; align-items: center; gap: 10px; color: white; }
+  .avatar-user { width: 45px; height: 45px; border-radius: 50%; background: white; flex-shrink: 0; overflow: hidden; cursor: pointer; border: 2px solid white; }
+  .avatar-user img { width: 100%; height: 100%; object-fit: cover; }
+  .username { flex: 1; text-align: center; font-weight: bold; font-size: 16px; }
+  .btn-plus { width: 45px; height: 45px; border-radius: 50%; background: white; color: #004aad; font-size: 30px; border: none; font-weight: bold; cursor: pointer; }
 
   /* HALAMAN AVATAR */
-  .avatar-area { text-align: center; padding: 40px 0; flex: 1; }
-  .avatar-besar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #004aad; }
-  .chat-mini { flex: 1; overflow-y: auto; padding: 10px; background: white; margin: 0 15px; border-radius: 15px; }
-  .bubble-ai { background: #e5e5ea; padding: 8px 12px; border-radius: 18px; margin: 5px 0; display: inline-block; }
-  .bubble-user { background: #004aad; color: white; padding: 8px 12px; border-radius: 18px; margin: 5px 0; display: inline-block; float: right; clear: both; }
-
-  /* HALAMAN CHAT */
-  .chat { flex: 1; overflow-y: auto; padding: 10px; background: white; }
-  .avatar-ai { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #004aad, #0066ff); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; flex-shrink: 0; }
-
-  /* FOOTER */
-  .footer { display: flex; align-items: center; padding: 10px; background: white; border-top: 1px solid #ddd; gap: 10px; }
-  .avatar-user { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #004aad; flex-shrink: 0; overflow: hidden; cursor: pointer; }
-  .avatar-user:hover { opacity: 0.8; }
-  .avatar-user img { width: 100%; height: 100%; object-fit: cover; }
-  .footer input { flex: 1; border-radius: 20px; padding: 10px 15px; border: 1px solid #ccc; }
-  .btn-plus { width: 40px; height: 40px; border-radius: 50%; background: #004aad; color: white; font-size: 24px; border: none; font-weight: bold; cursor: pointer; }
+  .avatar-area { text-align: center; padding: 40px 20px; flex: 1; }
+  .avatar-besar { width: 130px; height: 130px; border-radius: 50%; border: 4px solid #004aad; }
 </style>
 </head>
 <body>
 
-<!-- HALAMAN 1: AVATAR UTAMA + AI MINI -->
+<!-- HALAMAN 1: AVATAR UTAMA -->
 <div id="page-avatar" class="page active">
   <div class="header">
-    <h3>Selamat Datang</h3>
+    <div class="circle">My<br>Track</div>
+    <h3 style="margin:0;">Selamat Datang</h3>
+    <div class="circle">π</div>
   </div>
   
   <div class="avatar-area">
-    <img src="ai.png" class="avatar-besar">
-    <p>Halo Guest! Aku AI kamu 👋</p>
+    <img src="palette.png" class="avatar-besar">
+    <p style="font-size:18px; margin-top:15px;">Halo Guest! Aku AI kamu 👋</p>
   </div>
 
-  <div id="chatMini" class="chat-mini">
-    <div class="bubble-ai">Kamu bisa tanya aku apa aja disini</div>
+  <div class="chat" id="chatMini">
+    <div class="msg-row">
+      <div class="avatar-ai">AI</div>
+      <div class="bubble-ai">Kamu bisa tanya aku apa aja disini</div>
+    </div>
   </div>
   
   <div class="footer">
-    <input type="text" id="inputMini" placeholder="Tanya AI...">
+    <div class="avatar-user">
+      <img src="palette.png">
+    </div>
+    <div class="username">Guest</div>
     <button id="btnPlus" class="btn-plus">+</button>
   </div>
 </div>
@@ -63,15 +68,20 @@
 <!-- HALAMAN 2: AI CHAT FULL -->
 <div id="page-chat" class="page">
   <div class="header">
-    <a href="#" class="circle">My<br>Track</a>
-    <div id="piPrice">1 Pi = Loading...</div>
+    <div class="circle">My<br>Track</div>
+    <div id="piPrice">1 Pi = $0.111315 | Rp1.993,85</div>
     <a href="market.html" class="circle">π</a>
   </div>
   
   <div class="chat">
-    <div style="display:flex; gap:10px; margin-bottom:10px;">
+    <div class="msg-row">
       <div class="avatar-ai">AI</div>
-      <div class="bubble-ai">AI Tracker Aktif! Harga Pi Live</div>
+      <div class="bubble-ai">
+        AI Tracker Aktif!<br>
+        Silahkan cek Harga Pi disini...<br><br>
+        Ada yang bisa di bantu...<br><br>
+        Silahkan klik tombol <b>+</b> untuk memulai percakapan.
+      </div>
     </div>
   </div>
 
@@ -79,27 +89,26 @@
     <div class="avatar-user" id="btnBackAvatar">
       <img src="palette.png">
     </div>
-    <span>@Yaasien</span>
-    <input type="text" placeholder="Ketik pesan...">
+    <div class="username">@Yaasien</div>
+    <button id="btnPlus2" class="btn-plus">+</button>
   </div>
 </div>
 
 
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script>
-// INIT PI SDK
 Pi.init({ version: "2.0", sandbox: true });
 
-// AMBIL HARGA PI DARI API PI
+// AMBIL HARGA PI
 async function updatePrice() {
   try {
     const res = await fetch('https://api.pi-blockchain.com/v1/price');
     const data = await res.json();
     const usd = parseFloat(data.usd).toFixed(6);
-    const idr = (usd * 17880).toFixed(2);
+    const idr = (usd * 17880).toLocaleString('id-ID');
     document.getElementById('piPrice').innerHTML = `1 Pi = $${usd} | Rp${idr}`;
   } catch (e) {
-    document.getElementById('piPrice').innerHTML = '1 Pi = $0.111576 | Rp1,997.22';
+    document.getElementById('piPrice').innerHTML = '1 Pi = $0.111315 | Rp1.993,85';
   }
 }
 updatePrice();
@@ -120,16 +129,6 @@ btnBackAvatar.onclick = () => {
   pageChat.classList.remove('active');
   pageAvatar.classList.add('active');
 }
-
-// CHAT MINI BUAT GUEST
-document.getElementById('inputMini').addEventListener('keypress', function(e){
-  if(e.key === 'Enter' && this.value.trim() !== ''){
-    document.getElementById('chatMini').innerHTML += `<div class="bubble-user">${this.value}</div>`;
-    document.getElementById('chatMini').innerHTML += `<div class="bubble-ai">Oke, nanti kita lanjut di Chat Full ya 😁</div>`;
-    this.value = '';
-    document.getElementById('chatMini').scrollTop = document.getElementById('chatMini').scrollHeight;
-  }
-});
 </script>
 
 </body>
