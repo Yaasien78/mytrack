@@ -96,18 +96,12 @@ footer {
   box-shadow: 0 0 10px rgba(0, 87, 217, 0.4);
 }
         #piPrice {
-  color: white;
+  color: white; /* WARNA PUTIH */
   font-weight: bold;
-  font-size: 15px;
+  font-size: 12px; /* KECILIN DIKIT BIAR MUAT 2 BARIS */
   text-align: center;
   flex: 1;
-  letter-spacing: 0.5px;
-  animation: glow 2s ease-in-out infinite alternate;
-}
-
-@keyframes glow {
-  from { text-shadow: 0 0 5px #FFD700; }
-  to { text-shadow: 0 0 15px #FFD700, 0 0 20px #FFD700; }
+  line-height: 1.4; /* JARAK ANTAR BARIS */
         }
 
 /* TAMBAHAN: Kasih jarak biar konten gak ketutup footer */
@@ -353,11 +347,13 @@ body {
 </a>
 
 <!-- JUDUL TENGAH + HARGA REALTIME -->
-<div style="text-align:center;">
-    
-    <div id="piPrice" style="color:white; font-size:14px; font-weight:700; margin-top:3px;">
-        Loading Pi Price...
-    </div>
+<div class="main-container">
+  <div>My<br>Track</div>
+  <div id="piPrice"> <!-- GANTI JADI DIV BIAR BISA 2 BARIS -->
+    <div>Loading...</div>
+    <div>Loading...</div>
+  </div>
+  <div>π</div>
 </div>
 
         <!-- 3. KAN - KLIK KE MARKET -->
@@ -403,32 +399,35 @@ window.onload = () => {
 }
 </script>
     
-<script>  
-// AMBIL HARGA PI DARI COINGECKO - UPDATE TIAP 30 DETIK
+// AMBIL HARGA PI DI COINGECKO - 2 BARIS - UPDATE TIAP 30 DETIK
 async function getPiPrice() {
-    try {
-        // Catatan: Pi belum ada di CG resmi. Sementara pakai "io" dulu
-        // Nanti ganti ke API resmi Pi Network kalau udah ada
-        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr');
-        const data = await res.json();
+  const priceEl = document.getElementById('piPrice');
+  
+  try {
+    // Catatan: Pi belum resmi di CG. Kalau gagal langsung ke catch
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr');
+    const data = await res.json();
 
-        const usd = data['pi-network'].usd;
-        const idr = data['pi-network'].idr;
+    const usd = data['pi-network'].usd;
+    const idr = data['pi-network'].idr;
 
-        document.getElementById('piPrice').innerHTML =
-            `1 Pi = $${usd} | Rp${idr.toLocaleString('id-ID')}`;
-
-    } catch (e) {
-        // KALAU GAGAL, PAKAI HARGA DEFAULT GCV DULU
-        document.getElementById('piPrice').innerHTML =
-            `1 Pi = $314,159 | Rp5,100,000,000`;
-    }
+    priceEl.innerHTML = `
+      <div>Pi/USDT = $${usd}</div>
+      <div>Pi/IDR = Rp${idr.toLocaleString('id-ID')}</div>
+    `;
+  } catch (e) {
+    // KALAU GAGAL, PAKAI HARGA DEFAULT GCV
+    priceEl.innerHTML = `
+      <div>Pi/USDT = $314,159 GCV</div>
+      <div>Pi/IDR = Rp5,000,000,000 GCV</div>
+    `;
+  }
 }
 
 // JALANIN PAS LOAD + UPDATE TIAP 30 DETIK
 getPiPrice();
 setInterval(getPiPrice, 30000);
-    
+  
     let clickCount = 0; // penghitung klik
 let clickTimer = null; // timer buat reset klik
 
