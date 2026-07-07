@@ -8,65 +8,40 @@
 <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
   html, body { height: 100%; background: #ffffff; }
+  .app { display: flex; flex-direction: column; height: 100vh; }
 
-  .app { display: flex; flex-direction: column; height: 100vh; position: relative; }
-
-  /* HEADER TENGAH */
+  /* HEADER BIRU BORDER GOLD */
   header {
     background: #0057d9;
+    border-bottom: 2px solid #ffcc00;
     color: white;
-    padding: 10px;
-    text-align: center;
-    border-bottom: 3px solid #ffcc00;
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  .harga { font-weight: bold; font-size: 14px; line-height: 1.4; }
+  .logo {
+    width: 45px; height: 45px; border-radius: 50%;
+    border: 2px solid #ffcc00; background: #0057d9;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 10px; color: white; line-height: 1.2;
+    text-decoration: none;
+  }
+  .harga {
+    text-align: center; font-weight: bold; font-size: 14px; line-height: 1.4;
+  }
+  .pi-logo {
+    width: 45px; height: 45px; border-radius: 50%;
+    border: 2px solid #ffcc00; background: #0057d9;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 22px; color: white;
+    text-decoration: none;
+  }
 
   /* CHAT AREA */
   .chat {
-    flex: 1;
-    background: #ffffff;
-    padding: 15px;
-    overflow-y: auto;
-    padding-bottom: 80px; /* biar gak ketutup footer */
+    flex: 1; background: #ffffff; padding: 15px; overflow-y: auto;
   }
-   /* FOOTER BIRU BORDER GOLD */
-footer {
-  background: #0057d9;
-  border-top: 2px solid #ffcc00; /* BORDER 2PX GOLD */
-  padding: 12px 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative; /* biar logo di atasnya */
-  z-index: 50;
-}
-
-.footer-left {
-  width: 45px; height: 45px;
-  border-radius: 50%;
-  border: 2px solid #0057d9; /* BORDER BIRU */
-  background: white;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 24px;
-}
-
-.footer-center {
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.footer-right {
-  width: 45px; height: 45px;
-  border-radius: 50%;
-  border: 2px solid #ffcc00; /* BORDER GOLD */
-  background: white;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px;
-  color: #0057d9;
-  font-weight: bold;
-  text-decoration: none;
-   }
 
   /* BUBBLE CHAT AI */
   .chat-ai { display: flex; gap: 10px; margin-top: 10px; }
@@ -85,43 +60,53 @@ footer {
     border: 10px solid transparent; border-right-color: #00bfff;
   }
 
-  /* 4 LOGO DI SUDUT - SAMA BESAR 45px */
-  .logo-btn {
-    position: absolute;
-    width: 45px; height: 45px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: bold; text-decoration: none;
-    border: 3px solid #ffcc00;
+  /* FOOTER BIRU BORDER GOLD */
+  footer {
     background: #0057d9;
-    color: white;
-    font-size: 22px;
-    z-index: 100;
+    border-top: 2px solid #ffcc00;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-
-  /* 1. KIRI ATAS - MY TRACK > upload.html */
-  .logo-tl { top: 10px; left: 10px; font-size: 10px; line-height: 1.2; }
-  
-  /* 2. KANAN ATAS - PI > market.html */
-  .logo-tr { top: 10px; right: 10px; }
-
-  /* 3. KIRI BAWAH - PALLET > avatar.html */
-  .logo-bl { bottom: 70px; left: 10px; background: white; border-color: #0057d9; font-size: 24px; }
-  
-  /* 4. KAN BAWAH - PLUS > ai.html */
-  .logo-br { bottom: 70px; right: 10px; background: white; color: #0057d9; }
-
+  .footer-left {
+    width: 45px; height: 45px; border-radius: 50%;
+    border: 2px solid #0057d9; background: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; text-decoration: none;
+  }
+  /* TOMBOL LOGIN TENGAH */
+  .login-btn {
+    background: #ffcc00;
+    color: #000;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .login-btn.logged {
+    background: #28a745;
+    color: white;
+  }
+  .footer-right {
+    width: 45px; height: 45px; border-radius: 50%;
+    border: 2px solid #ffcc00; background: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; color: #0057d9; font-weight: bold;
+    text-decoration: none;
+  }
 </style>
 </head>
 <body>
   <div class="app">
-    <!-- 4 LOGO DI SUDUT -->
-    <a href="upload.html" class="logo-btn logo-tl">My<br>Track</a>
-    <a href="market.html" class="logo-btn logo-tr">π</a>
-    
-    <!-- HEADER TENGAH -->
+    <!-- HEADER -->
     <header>
+      <a href="upload.html" class="logo">My<br>Track</a>
       <div class="harga">1 Pi = $0.112869 |<br>Rp2.032,77</div>
+      <a href="market.html" class="pi-logo">π</a>
     </header>
 
     <!-- CHAT -->
@@ -137,10 +122,29 @@ footer {
       </div>
     </div>
 
+    <!-- FOOTER -->
+    <footer>
+      <a href="avatar.html" class="footer-left">🎨</a>
+      <button class="login-btn" onclick="login()">Login</button>
+      <a href="ai.html" class="footer-right">+</a>
+    </footer>
   </div>
 
 <script>
   Pi.init({ version: "2.0", sandbox: true });
+
+  function login() {
+    Pi.authenticate(['username'])
+    .then(function(auth) {
+      const btn = document.querySelector('.login-btn');
+      btn.innerText = `@${auth.user.username}`;
+      btn.classList.add('logged'); // jadi hijau
+    })
+    .catch(function(error) {
+      alert("Login gagal: " + error);
+      console.error(error);
+    });
+  }
 </script>
 </body>
 </html>
