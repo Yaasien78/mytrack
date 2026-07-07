@@ -485,9 +485,10 @@ function createAvatarSticky() {
   const avatar = document.createElement('div');
   avatar.className = 'ai-avatar-sticky';
   avatar.innerText = 'AI';
-  avatar.onclick = randomAvatarColor; // klik avatar = random warna
+  avatar.onclick = randomAvatarColor;
+  avatar.style.display = 'flex'; // <-- TAMBAH INI BIAR LANGSUNG MUNCUL
   document.body.appendChild(avatar);
-}
+      }
 
 function startAI() {
   alert('Mulai AI Tracking!');
