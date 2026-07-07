@@ -533,6 +533,9 @@ function onIncompletePaymentFound(payment) {
   .catch(err => console.error(err));
   */
 }
+    // INIT PI SDK WAJIB ADA INI
+const scopes = ['username', 'payments'];
+Pi.init({ version: "2.0", sandbox: true }); // true = testnet. false = mainnet
 
 // FUNGSI LOGIN PAKAI PI SDK
 async function handleLogin() {
