@@ -192,12 +192,19 @@ header { /* Biar diem di atas */
 footer { /* Biar diem di bawah */
   position: fixed;
   bottom: 0; left: 0; right: 0;
+  height: 60px; /* KASIH TINGGI */
+  background: #0057b7;
+  border-top: 3px solid #FFD700;
+  display: flex; /* BIAR ISI RAPI */
+  justify-content: space-around;
+  align-items: center;
   z-index: 1000;
 }
 
 body {
-  padding-top: 70px; /* Se-tinggi header biar konten gak ketutup */
-        }
+  padding-top: 70px; /* Se-tinggi header */
+  padding-bottom: 70px; /* TAMBAH INI - Se-tinggi footer */
+    }
         /* EFEK SINAR PUTIH DENYUT DARI TENGAH - VERSI LEBIH LEBAR & JELAS */
 .energy-sphere::before {
   content: '';
@@ -297,10 +304,9 @@ body {
   z-index: 1; /* paling depan */
   margin: 0 auto;
 }
-   
-        .ai-avatar-sticky {
+   .ai-avatar-sticky {
   position: fixed;
-  bottom: 80px;  /* di atas footer */
+  bottom: 80px; /* di atas footer */
   right: 20px;
   width: 50px;
   height: 50px;
@@ -313,10 +319,9 @@ body {
   font-weight: bold;
   font-size: 14px;
   cursor: pointer;
-  z-index: 9999;
+  z-index: 999; /* DULU 9999 -> GANTI JADI 999 */
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
+   }
 @keyframes pulse {
  0%, 100% { transform: scale(1); }
  50% { transform: scale(1.1); }
@@ -335,18 +340,21 @@ body {
         }
 
         .footer-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24); /* pelangi */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  cursor: pointer;
-  border: 2px solid white;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: linear-gradient(135deg, #0057b7, #FFD700);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; cursor: pointer; border: 2px solid white;
+}
+
+.btn-footer {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: #FFD700; color: #0057b7; border: none;
+  font-size: 26px; font-weight: bold; cursor: pointer;
+}
+
+#loginBtn {
+  color: white; font-weight: bold; font-size: 14px;
         }
-        
     </style>
 </head>
 <body>
@@ -393,11 +401,10 @@ body {
   </div>
 
 <!-- Tombol Floating -->
-<div class="footer-avatar" onclick="openThemePicker()">🎨</div>
-<span id="loginBtn">@Yaasien</span>
-<button class="btn-footer btn-plus" onclick="startAI()">+</button>
     <footer class="footer">
-        
+      <div class="footer-avatar" onclick="openThemePicker()">🎨</div>
+<span id="loginBtn">@Yaasien</span>
+<button class="btn-footer btn-plus" onclick="startAI()">+</button>  
     <script>
 // CEK OTOMATIS PAS BUKA
 window.onload = () => {
