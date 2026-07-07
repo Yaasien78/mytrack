@@ -1,549 +1,83 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Track - Beranda</title>
-    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-    <script>
-Pi.init({ version: "2.0", sandbox: true });
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Track</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-window.onload = function() {
-    let headerMid = document.querySelector('.header-center'); 
-    
-    // Langsung set ke harga aja, mau login atau nggak
-    headerMid.innerHTML = `<span style="font-size:14px; color:white; font-weight:bold;">1 Pi = $0.11 | Rp2.039</span>`;
-    
-    // Jalanin harga biar update
-    getPiPrice(); 
-}
-    </script>
-    <style>
-        * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-        }
- 
-/* HEADER FINAL - SAMA KAYAK SS LAMA */
-.main-container {
+body { padding-top: 70px; padding-bottom: 70px; background: #f5f5f5; font-family: Arial, sans-serif; }
+
+/* HEADER FIX - 1 BARIS DOANG */
 .main-container {
   position: fixed; top: 0; left: 0; width: 100%; height: 65px;
   background: #004aad; border-bottom: 3px solid #ffcc00;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 0 12px; box-sizing: border-box; z-index: 1000;
+  padding: 0 12px; z-index: 9999;
 }
 .circle {
-  width: 50px; height: 50px; flex-shrink: 0; border-radius: 50%;
-  background: #004aad; border: 3px solid #ffcc00; color: white; /* AKTIF BIRU */
+  width: 50px; height: 50px; border-radius: 50%;
+  background: #004aad; border: 3px solid #ffcc00; color: white;
   display: flex; align-items: center; justify-content: center;
-  font-weight: bold; text-align: center;
+  font-weight: bold; flex-shrink: 0;
 }
 .circle:first-child { font-size: 11px; line-height: 1.2; }
 .circle:last-child { font-size: 28px; }
-#piPrice {
-  flex: 1; color: white; font-size: 15px; font-weight: bold;
-  text-align: center; line-height: 1.4; padding: 0 5px;
-}
-body { padding-top: 70px; padding-bottom: 70px; margin: 0; }
-     
-/* FOOTER BARU SEJAJAR */
-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: linear-gradient(to right, #004aad, #0057d9);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px; /* TADI 15PX, SAMAIN JADI 20PX */
-  box-sizing: border-box;
-  border-top: 2px solid #ffcc00;
-  z-index: 1000;
-}
+#piPrice { flex: 1; color: white; font-size: 15px; font-weight: bold; text-align: center; }
 
-.btn-theme { /* avatar kiri */
-  width: 50px; 
-  height: 50px;
-  border-radius: 50%;
-  background: #fff;
-  border: 3px solid #fff;
-  font-size: 28px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-}
+/* CHAT AI */
+.ai-section { padding: 20px; }
+.ai-chat { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 15px; }
+.ai-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #0057d9, #00bfff); color: white; font-weight: bold; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ai-bubble { background: #fff; color: #0057d9; padding: 12px 15px; border-radius: 18px; border: 2px solid #00bfff; font-size: 15px; line-height: 1.6; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 
-.login-btn { /* username tengah */
-  color: #fff; 
-  font-weight: bold; 
-  font-size: 1.2rem;
-  letter-spacing: 2px;
-  cursor: pointer;
-  flex: 1; /* BIKIN KE TENGAH */
-  text-align: center;
-}
-
-.btn-ai { /* tombol + kanan */
-  width: 50px; 
-  height: 50px;
-  border-radius: 50%;
-  background: #fff;
-  color: #0057d9;
-  font-size: 28px;
-  font-weight: 900;
-  border: 3px solid #fff;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  box-shadow: 0 0 10px rgba(0, 87, 217, 0.4);
-}
-        
-/* TAMBAHAN: Kasih jarak biar konten gak ketutup footer */
-.feed {
-  padding: 15px;
-  padding-bottom: 90px; /* 90px = tinggi footer + buffer */
-}
-
-/* Tombol Floating */
-
-.btn-theme {
-  color: #fff; /* Palet tetap putih */
-  font-size: 26px;
-}
-
-.btn-ai {
-  color: #0057d9; /* Plus biru sama ky latar footer */
-  font-weight: 900;
-  font-size: 32px;
-} /* <-- INI TADI KURANG */
-
-.feed { /* atau body kalau belum ada class feed */
-  padding-bottom: 90px; /* Tinggi footer + buffer */
-  padding-top: 20px;
-} /* <-- INI TADI KURANG */
-
-.avatar-container {
-  position: relative;
-  width: 90%;
-  max-width: 380px;
-  height: 90vw;
-  max-height: 380px;
-  margin: 60px auto; /* 60px atas, auto kiri kanan = tengah */
-  display: block;
-}
-
-.energy-sphere {
-  position: relative; 
-  overflow: visible; 
-  width: 100%; height: 100%;
-  border-radius: 50%;
-
-  /* BIRU LEBIH PEKAT + KONTRAS */
-  background: radial-gradient(circle at 30% 25%, 
-    #00e5ff 0%,      /* Titik tengah cyan terang */
-    #00bfff 25%,     /* Biru langit */
-    #0088ff 60%,     /* Biru sedang */
-    #0057d9 85%,     /* Biru tua */
-    #003a99 100%     /* Pinggir paling gelap */
-  );
-
-  /* GLOW BIRU LEBIH KUAT */
-  box-shadow: 
-    0 0 100px 40px rgba(0, 191, 255, 0.3), /* Aura luar biru */
-    inset 0 0 60px rgba(0, 229, 255, 0.2); /* Refleksi dalam */
-}
-
-header { /* Biar diem di atas */
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 1000;
-}
-
-body {
-  padding-top: 80px; /* 70px + 10px buffer */
-  padding-bottom: 80px;
-      }
-        /* EFEK SINAR PUTIH DENYUT DARI TENGAH - VERSI LEBIH LEBAR & JELAS */
-.energy-sphere::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 30%;  /* DARI 20% -> 30% biar titik awal lebih gede */
-  height: 30%;
-  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.3) 40%, rgba(255,255,255,0) 80%); /* Putihnya 100% + transisi lebih lembut */
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  animation: pulse-light 2.5s infinite ease-out; /* DARI 3s -> 2.5s biar lebih sering */
-  pointer-events: none;
-  filter: blur(2px); /* <-- INI KUNCINYA BIAR GLOW NYA LEBAR */
-}
-
-/* ANIMASI MEMBESAR DAN SIRNA */
-@keyframes pulse-light {
- 0% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1; /* DARI 0.8 -> 1 biar awalnya jelas banget */
-  }
- 30% {
-    opacity: 0.6;
-  }
- 100% {
-    transform: translate(-50%, -50%) scale(6); /* DARI 4.5 -> 6 biar meledaknya lebih lebar */
-    opacity: 0; 
-  }
-      }
-
-        /* TITIK SOROTAN DI KIRI ATAS BOLA */
-.energy-sphere::after {
-  content: '';
-  position: absolute;
-  top: 25%;  /* Posisinya di kiri atas */
-  left: 30%;
-  width: 15%;
-  height: 15%;
-  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-  border-radius: 50%;
-  filter: blur(8px); /* Biar lembut */
-  pointer-events: none;
-    }
-        /* CHAT AI TRACKER */
-.ai-chat {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  max-width: 90%;
-  margin: 20px auto 0 auto;
-  animation: fadeIn 1s ease-in;
-}
-.ai-avatar {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: linear-gradient(135deg, #0057d9, #00bfff);
-  color: white; font-weight: bold; font-size: 14px;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.ai-bubble {
-  background: #fff; color: #0057d9; padding: 12px 16px; border-radius: 18px;
-  border: 2px solid #00bfff; font-size: 15px; font-weight: 500; line-height: 1.6;
-  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.2); position: relative;
-}
-.ai-bubble::before {
-  content: ''; position: absolute; left: -10px; top: 15px;
-  border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-right: 10px solid #00bfff;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-    }
-
-        /* WRAPPER BOLA + CHAT */
-.ai-section {
-  position: relative; /* biar bola bisa numpang di dalamnya */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 300px; /* kasih tinggi biar bolanya keliatan */
-  margin-top: 20px;
-}
-
-/* BOLA VERSI BACKGROUND */
-.sphere-container-bg {
-  position: absolute; /* bikin dia melayang di belakang */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* pas di tengah */
-  z-index: 0; /* paling belakang */
-  opacity: 0.4; /* bikin transparan biar gak ganggu teks */
-}
-
-/* CHAT DI ATAS BOLA */
-.ai-chat {
-  position: relative; /* biar naik di atas bola */
-  z-index: 1; /* paling depan */
-  margin: 0 auto;
-}
-   .ai-avatar-sticky {
-  position: fixed;
-  bottom: 80px; /* di atas footer */
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: #0057b7; /* biru */
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 14px;
-  cursor: pointer;
-  z-index: 999; /* DULU 9999 -> GANTI JADI 999 */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-   }
-@keyframes pulse {
- 0%, 100% { transform: scale(1); }
- 50% { transform: scale(1.1); }
-    }
-
-        .footer-center {
-  flex: 1;
-  text-align: center;
-  font-weight: bold;
-  font-size: 18px;
-  color: white;
-  cursor: pointer;
-}
-.footer-center:hover {
-  opacity: 0.8;
-        }
-
-        /* FOOTER UTAMA - MENTOK KIRI KANAN */
-.footer {
-  position: fixed; 
-  bottom: 0; 
-  left: 0; 
-  right: 0;
-  height: 60px; 
-  background: #0057b7; 
-  border-top: 3px solid #FFD700;
-  display: flex; 
-  justify-content: space-between;
-  align-items: center;
-  z-index: 1000; 
-  padding: 0 10px; /* DARI 16px TURUNIN LAGI JADI 10px */
-}
-
-.footer-avatar {
-  width: 44px; height: 44px; border-radius: 50%; background: white;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 24px; cursor: pointer;
-}
-
-#loginBtn {
-  color: white; font-weight: bold; font-size: 18px;
-  cursor: pointer; text-decoration: none; /* UDAH BENER INI */
-}
-
-.btn-footer.btn-plus {
-  width: 44px; height: 44px; border-radius: 50%; background: white;
-  color: #0057b7; border: none; font-size: 30px; font-weight: bold;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-}
-    </style>
+/* FOOTER */
+.footer { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: #0057d7; border-top: 3px solid #FFD700; display: flex; justify-content: space-between; align-items: center; padding: 0 10px; z-index: 1000; }
+.footer-avatar { width: 44px; height: 44px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; }
+#loginBtn { color: white; font-weight: bold; font-size: 18px; cursor: pointer; text-decoration: none; }
+.btn-plus { width: 44px; height: 44px; border-radius: 50%; background: white; color: #0057d7; border: none; font-size: 30px; font-weight: bold; cursor: pointer; }
+.ai-avatar-sticky { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #0057d7; color: white; display: none; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; z-index: 999; }
+</style>
 </head>
 <body>
-    <header style="background:#0066cc; border-bottom:3px solid #ffd700; width:100%; padding:8px 0;">
-    <div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 15px; box-sizing:border-box;">
-        
-        <!-- KIRI - KLIK KE UPLOAD -->
-<a href="upload.html" style="height:42px; width:42px; background:#0066cc; border-radius:50%; border:3px solid #ffd700; box-shadow:0 0 0 2px white; display:flex; align-items:center; justify-content:center; text-decoration:none; flex-shrink:0;">
-    <span style="font-size:9px; font-weight:bold; color:white; line-height:1.0; text-align:center;">My<br>Track</span>
-</a>
 
-<!-- JUDUL TENGAH + HARGA REALTIME -->
+<!-- HEADER 1 SAJA -->
 <div class="main-container">
   <div class="circle">My<br>Track</div>
-  <div id="piPrice">
-    <div>Pi/USDT = Loading...</div>
-    <div>Pi/IDR = Loading...</div>
-  </div>
+  <div id="piPrice">1 Pi = Loading...</div>
   <div class="circle">π</div>
 </div>
 
-        <!-- 3. KAN - KLIK KE MARKET -->
-        <a href="market.html" style="height:42px; width:42px; background:#0066cc; border-radius:50%; border:3px solid #ffd700; box-shadow:0 0 0 2px white; display:flex; align-items:center; justify-content:center; text-decoration:none; flex-shrink:0;">
-            <span style="font-size:24px; font-weight:bold; color:white;">π</span>
-        </a>
-
-    </div>
-    </header>
-<!-- WRAPPER BOLA + CHAT -->
+<!-- CHAT -->
 <div class="ai-section">
-
-  <!-- BOLA DI BELAKANG -->
-  <div class="sphere-container-bg">
-    <div class="energy-sphere"></div>
-  </div>
-
-  <!-- CHAT DI DEPAN -->
   <div class="ai-chat">
     <div class="ai-avatar">AI</div>
     <div class="ai-bubble">
-      AI Tracker Aktif! <br>
-      Silahkan cek Harga Pi disini... <br><br>
-      Ada yang bisa di bantu... <br>
+      AI Tracker Aktif!<br>
+      Silahkan cek Harga Pi disini...<br><br>
+      Ada yang bisa di bantu...<br>
       Silahkan klik tombol <b>+</b> untuk memulai percakapan.
     </div>
   </div>
+</div>
 
-<!-- Tombol Floating -->
-    <footer class="footer">
+<!-- FOOTER -->
+<footer class="footer">
   <div class="footer-avatar" onclick="openThemePicker()">🎨</div>
-  <span id="loginBtn" onclick="loginPi()">@Yaasien</span> <!-- TAMBAH onclick + @ -->
-  <button class="btn-footer btn-plus" onclick="startAI()">+</button>
-    </footer> 
-    <script>
-// CEK OTOMATIS PAS BUKA
-window.onload = () => {
-  const savedUser = localStorage.getItem('piUser');
-  if(savedUser) {
-    const user = JSON.parse(savedUser);
-    document.getElementById('loginBtn').innerText = "@" + user.username;
-  }
-}  
-// AMBIL HARGA PI DI COINGECKO - 2 BARIS - UPDATE TIAP 30 DETIK
-async function getPiPrice() {
-  const priceEl = document.getElementById('piPrice');
-  
-  try {
-    // Catatan: Pi belum resmi di CG. Kalau gagal langsung ke catch
-    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr');
-    const data = await res.json();
+  <span id="loginBtn" onclick="handleLogin()">Yaasien</span>
+  <button class="btn-plus" onclick="startAI()">+</button>
+</footer>
 
-    const usd = data['pi-network'].usd;
-    const idr = data['pi-network'].idr;
+<div class="ai-avatar-sticky" onclick="randomAvatarColor()">AI</div>
 
-    priceEl.innerHTML = `
-      <div>Pi/USDT = $${usd}</div>
-      <div>Pi/IDR = Rp${idr.toLocaleString('id-ID')}</div>
-    `;
-  } catch (e) {
-    // KALAU GAGAL, PAKAI HARGA DEFAULT GCV
-    priceEl.innerHTML = `
-      <div>Pi/USDT = $314,159 GCV</div>
-      <div>Pi/IDR = Rp5,000,000,000 GCV</div>
-    `;
-  }
-}
+<script>
+// INIT PI SDK
+Pi.init({ version: "2.0", sandbox: true });
 
-// JALANIN PAS LOAD + UPDATE TIAP 30 DETIK
-getPiPrice();
-setInterval(getPiPrice, 30000);
-  
-    let clickCount = 0; // penghitung klik
-let clickTimer = null; // timer buat reset klik
-
-function openThemePicker() {
-  clickCount++;
-  
-  // Reset klik setelah 1 detik gak diklik lagi
-  clearTimeout(clickTimer);
-  clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
-
-  const avatarSticky = document.querySelector('.ai-avatar-sticky');
-  const avatarChat = document.querySelector('.ai-avatar-sticky'); // hapus yg .ai-avatar
-
-  // KLIK 1 = MUNCULIN AVATAR
-  if (clickCount === 1) {
-    if (!avatarSticky) createAvatarSticky(); // bikin avatar kalau belum ada
-    avatarSticky.style.display = 'flex'; // tampilin
-  }
-
-  // KLIK 2 = MUNCULIN PILIHAN WARNA
-  if (clickCount === 2) {
-    const colors = ['#0057d9', '#8B5CF6', '#16a34a', '#f97316', '#dc2626', '#000000'];
-    let pilihan = 'Pilih warna Avatar AI:\n\n';
-    colors.forEach((c, i) => { pilihan += `${i+1}. ${c}\n`; });
-    
-    const pilih = prompt(pilihan + '\nKetik nomor 1-6');
-    if(pilih && colors[pilih-1]) {
-      avatarSticky.style.background = colors[pilih-1];
-      
-    }
-    clickCount = 0; // reset
-  }
-
-  // KLIK 3 = HILANGIN AVATAR
-  if (clickCount === 3) {
-    if (avatarSticky) avatarSticky.style.display = 'none'; // sembunyiin
-    clickCount = 0; // reset
-  }
-}
-    
-// FUNGSI BUAT BIKIN AVATAR STICKY OTOMATIS
-
-    function createAvatarSticky() {
-  const avatar = document.createElement('div');
-  avatar.className = 'ai-avatar-sticky';
-  avatar.innerText = 'AI';
-  avatar.onclick = randomAvatarColor;
-  avatar.style.display = 'flex'; 
-  document.body.appendChild(avatar);
-}
-
-createAvatarSticky(); // <-- TAMBAH INI BIAR LANGSUNG MUNCUL
-// FUNGSI WAJIB PI SDK - HANDLE PAYMENT NYANGKUT
-function onIncompletePaymentFound(payment) {
-  console.log("Payment nyangkut ketemu:", payment);
-  
-  // KIRIM KE BACKEND KAMU BUAT DICEK
-  // Kalau belum ada backend, skip dulu pake alert
-  alert("Ada pembayaran Pi yang belum selesai. ID: " + payment.identifier);
-  
-  // CONTOH KALAU UDAH ADA BACKEND
-  /*
-  fetch('/payments/complete', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ payment })
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Payment selesai:', data);
-  })
-  .catch(err => console.error(err));
-  */
-}
-    // INIT PI SDK WAJIB ADA INI
-const scopes = ['username', 'payments'];
-Pi.init({ version: "2.0", sandbox: true }); // true = testnet. false = mainnet
-
-// FUNGSI LOGIN PAKAI PI SDK
-async function handleLogin() {
-  const loginBtn = document.getElementById('loginBtn');
-  const savedUser = localStorage.getItem('piUser');
-
-  // KALAU UDAH LOGIN -> LOGOUT
-  if(savedUser) {
-    const user = JSON.parse(savedUser);
-    if(confirm("Logout dari @" + user.username + " ?")) {
-      localStorage.removeItem('piUser');
-      loginBtn.innerText = "@Yaasien"; // FIX 1: TAMBAH @
-      alert("Berhasil Logout");
-    }
-    return;
-  }
-
-  // KALAU BELUM LOGIN -> LOGIN PAKAI PI
-  try {
-    const authResult = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound); // FIX 2: TAMBAH payments
-    
-    loginBtn.innerText = "@" + authResult.user.username;
-    alert("Selamat datang @" + authResult.user.username + " 🎉");
-    localStorage.setItem('piUser', JSON.stringify(authResult.user));
-    
-  } catch (error) {
-    alert("Login dibatalkan");
-    console.error(error);
-  }
-    }
-// AUTO GANTI NAMA PAS BUKA
-window.addEventListener('load', function() {
-  const savedUser = localStorage.getItem('piUser');
-  if(savedUser) {
-    const user = JSON.parse(savedUser);
-    document.getElementById('loginBtn').innerText = "@" + user.username;
-  }
-});
-        
-function startAI() {
-  alert('Mulai AI Tracking!');
-}
-    }
-        async function getPiPrice(){
+// AMBIL HARGA PI - 1 FUNGSI SAJA
+async function getPiPrice(){
   let el=document.getElementById('piPrice');
   try{
     let r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr');
@@ -552,10 +86,62 @@ function startAI() {
     let idr=d['pi-network'].idr.toLocaleString('id-ID');
     el.innerHTML=`1 Pi = $${usd} | Rp${idr}`;
   }catch(e){
-    el.innerHTML=`1 Pi = $314,159 GCV | Rp5,000,000,000 GCV`; /* FALLBACK */
+    el.innerHTML=`1 Pi = $314,159 GCV | Rp5,000,000,000 GCV`;
   }
 }
-getPiPrice(); setInterval(getPiPrice,30000); // update tiap 30 detik
-    </scrip>
+getPiPrice(); 
+setInterval(getPiPrice,30000);
+
+// LOGIN LOGOUT
+async function handleLogin(){
+  const loginBtn = document.getElementById('loginBtn');
+  const savedUser = localStorage.getItem('piUser');
+  if(savedUser){
+    if(confirm("Logout dari @" + JSON.parse(savedUser).username + " ?")){
+      localStorage.removeItem('piUser');
+      loginBtn.innerText = "Yaasien";
+      alert("Berhasil Logout");
+    }
+    return;
+  }
+  try {
+    const authResult = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound);
+    loginBtn.innerText = "@" + authResult.user.username;
+    localStorage.setItem('piUser', JSON.stringify(authResult.user));
+    alert("Selamat datang @" + authResult.user.username);
+  } catch (error) {
+    alert('Login dibatalkan');
+  }
+}
+
+window.onload = () => {
+  const savedUser = localStorage.getItem('piUser');
+  if(savedUser){
+    const user = JSON.parse(savedUser);
+    document.getElementById('loginBtn').innerText = "@" + user.username;
+  }
+}
+
+function onIncompletePaymentFound(payment){ console.log(payment); }
+
+function startAI(){ alert('Mulai AI Tracking!'); }
+
+let clickCount = 0; let clickTimer = null;
+function openThemePicker(){
+  clickCount++;
+  clearTimeout(clickTimer);
+  clickTimer = setTimeout(() => clickCount = 0, 1000);
+  const avatarSticky = document.querySelector('.ai-avatar-sticky');
+  if(clickCount === 1){ avatarSticky.style.display = 'flex'; }
+  if(clickCount === 2){
+    const colors = ['#0057d9','#BB5CF6','#16a34a','#f07316','#dc2626','#000000'];
+    let pilihan = prompt('Pilih warna AI:\n1- Biru\n2- Ungu\n3- Hijau\n4- Orange\n5- Merah\n6- Hitam');
+    if(pilihan && colors[pilihan-1]) avatarSticky.style.background = colors[pilihan-1];
+    clickCount = 0;
+  }
+  if(clickCount === 3){ avatarSticky.style.display = 'none'; clickCount = 0; }
+}
+function randomAvatarColor(){ const colors=['#0057d9','#BB5CF6','#16a34a','#f07316','#dc2626']; document.querySelector('.ai-avatar-sticky').style.background=colors[Math.floor(Math.random()*5)]; }
+</script>
 </body>
 </html>
