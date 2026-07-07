@@ -575,15 +575,6 @@ window.addEventListener('load', function() {
 function startAI() {
   alert('Mulai AI Tracking!');
 }
-    function loginPi() {
-  if(window.Pi) {
-    Pi.authenticate(['username'], function(auth) {
-      document.getElementById('loginBtn').innerText = '@' + auth.user.username;
-      alert("Login Berhasil: " + auth.user.username);
-    });
-  } else {
-    alert("Buka di Pi Browser untuk Login");
-  }
     }
         </script>
 </body>
