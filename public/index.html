@@ -69,6 +69,12 @@ body { padding-top: 70px; padding-bottom: 70px; background: #f5f5f5; font-family
   .main-container a {
   text-decoration: none; /* HAPUS GARIS BAWAH LINK */
   }
+  .avatar-user {
+  cursor: pointer; /* KASIH TELUNJUK TANGAN */
+}
+.avatar-user:hover {
+  opacity: 0.8; /* EFEK PAS DIHOVER */
+  }
 </style>
 </head>
 <body>
@@ -94,11 +100,20 @@ body { padding-top: 70px; padding-bottom: 70px; background: #f5f5f5; font-family
 </div>
 
 <!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-avatar" onclick="openThemePicker()">🎨</div>
-  <span id="loginBtn" onclick="handleLogin()">Yaasien</span>
-  <button class="btn-plus" onclick="startAI()">+</button>
-</footer>
+<!-- HALAMAN 2: AI CHAT FULL -->
+<div id="page-chat" class="page">
+  <div class="header">...</div>
+  
+  <div class="chat">...</div>
+
+  <div class="footer">
+    <div class="avatar-user" id="btnBackAvatar"> <!-- KASIH ID INI -->
+      <img src="palette.png">
+    </div>
+    <span>@Yaasien</span>
+    <input type="text" placeholder="Ketik pesan...">
+  </div>
+</div>
 
 <div class="ai-avatar-sticky" onclick="randomAvatarColor()">AI</div>
 
@@ -192,6 +207,24 @@ async function updatePrice() {
 // JALANKAN SAAT LOAD + UPDATE 30 DETIK SEKALI
 updatePrice();
 setInterval(updatePrice, 30000);
+    <script>
+  const btnPlus = document.getElementById('btnPlus');
+  const btnBackAvatar = document.getElementById('btnBackAvatar'); // GANTI INI
+  const pageChat = document.getElementById('page-chat');
+  const pageAvatar = document.getElementById('page-avatar');
+
+  // KLIK + -> KE CHAT FULL
+  btnPlus.onclick = () => {
+    pageAvatar.classList.remove('active');
+    pageChat.classList.add('active');
+  }
+
+  // KLIK AVATAR KIRI BAWAH -> BALIK KE AVATAR
+  btnBackAvatar.onclick = () => { 
+    pageChat.classList.remove('active');
+    pageAvatar.classList.add('active');
+  }
+</script>
   </script>
 </body>
 </html>
