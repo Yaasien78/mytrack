@@ -21,28 +21,28 @@ body { padding-top: 70px; padding-bottom: 70px; background: #f5f5f5; font-family
   width: 50px; 
   height: 50px; 
   border-radius: 50%;
-  background: #004aad; /* BIRU */
-  border: 3px solid #ffcc00; /* BORDER KUNING */
-  color: white; /* TULISAN PUTIH */
-  display: flex; 
-  align-items: center; 
-  justify-content: center; /* TENGAH VERTIKAL + HORIZONTAL */
+  background: #004aad; 
+  border: 3px solid #ffcc00; 
+  color: white;
+  display: flex;              /* PAKAI FLEX */
+  align-items: center;        /* TENGAH VERTIKAL */
+  justify-content: center;    /* TENGAH HORIZONTAL */
   font-weight: bold; 
   flex-shrink: 0;
-  text-decoration: none; /* HILANG GARIS BAWAH */
+  text-decoration: none;
 }
 
-/* KHUSUS LOGO KIRI "My Track" */
+/* KHUSUS KIRI "My Track" */
 .circle:first-child { 
   font-size: 11px; 
   line-height: 1.2; /* 2 BARIS */
   text-align: center;
 }
 
-/* KHUSUS LOGO KANAN "π" */
+/* KHUSUS KANAN "π" */
 .circle:last-child { 
-  font-size: 30px; /* GEDEIN BIAR SEIMBANG */
-  line-height: 50px; /* PAS TENGAH */
+  font-size: 32px; /* GEDEIN DIKIT */
+  line-height: 1; /* JANGAN PAKE 50px, BIAR FLEX YANG ATUR */
 }
 #piPrice { flex: 1; color: white; font-size: 15px; font-weight: bold; text-align: center; }
 
