@@ -446,7 +446,7 @@ function openThemePicker() {
   clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
 
   const avatarSticky = document.querySelector('.ai-avatar-sticky');
-  const avatarChat = document.querySelector('.ai-avatar');
+  const avatarChat = document.querySelector('.ai-avatar-sticky'); // hapus yg .ai-avatar
 
   // KLIK 1 = MUNCULIN AVATAR
   if (clickCount === 1) {
@@ -462,8 +462,8 @@ function openThemePicker() {
     
     const pilih = prompt(pilihan + '\nKetik nomor 1-6');
     if(pilih && colors[pilih-1]) {
-      avatarChat.style.background = colors[pilih-1];
-      avatarSticky.style.background = colors[pilih-1]; // ganti sticky juga
+      avatarSticky.style.background = colors[pilih-1];
+      
     }
     clickCount = 0; // reset
   }
