@@ -62,8 +62,23 @@ window.onload = function() {
 }
 
 /* KANAN */
-.main-container > div:last-child {
-  width: 50px; /* KASIH WIDTH TETAP */
+.main-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 70px; /* TINGGI BUAT 2 BARIS */
+  background: linear-gradient(to right, #004aad, #0057d9);
+  border-bottom: 3px solid #ffcc00;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.circle {
+  width: 50px;
   height: 50px;
   flex-shrink: 0;
   border-radius: 50%;
@@ -73,12 +88,21 @@ window.onload = function() {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
   font-weight: bold;
+  text-align: center;
+}
+.circle:first-child { font-size: 11px; line-height: 1.2; } /* My Track */
+.circle:last-child { font-size: 28px; } /* π */
+
+#piPrice {
+  flex: 1;
+  color: white; /* WARNA PUTIH SESUAI MINTA */
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.6;
     }
-
-        body { margin: 0; font-family: Arial; background: white; }
-
+        
 /* FOOTER BARU SEJAJAR */
 footer {
   position: fixed;
@@ -385,12 +409,12 @@ body {
 
 <!-- JUDUL TENGAH + HARGA REALTIME -->
 <div class="main-container">
-  <div>My<br>Track</div>
-  <div id="piPrice"> <!-- GANTI JADI DIV BIAR BISA 2 BARIS -->
-    <div>Loading...</div>
-    <div>Loading...</div>
+  <div class="circle">My<br>Track</div>
+  <div id="piPrice">
+    <div>Pi/USDT = Loading...</div>
+    <div>Pi/IDR = Loading...</div>
   </div>
-  <div>π</div>
+  <div class="circle">π</div>
 </div>
 
         <!-- 3. KAN - KLIK KE MARKET -->
@@ -433,9 +457,7 @@ window.onload = () => {
     const user = JSON.parse(savedUser);
     document.getElementById('loginBtn').innerText = "@" + user.username;
   }
-}
-</script>
-    
+}  
 // AMBIL HARGA PI DI COINGECKO - 2 BARIS - UPDATE TIAP 30 DETIK
 async function getPiPrice() {
   const priceEl = document.getElementById('piPrice');
