@@ -3,111 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Track - Pi App</title>
+<title>My Track</title>
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-  
   html, body { height: 100%; background: #ffffff; }
 
-  .app {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
+  .app { display: flex; flex-direction: column; height: 100vh; position: relative; }
 
-  /* HEADER */
+  /* HEADER TENGAH */
   header {
-    background: #007bff;
+    background: #0057d9;
     color: white;
-    padding: 12px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-    font-size: 18px;
-  }
-  .login-btn {
-    background: #ffcc00;
-    color: #000;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-
-  /* HARGA PI */
-  .price-bar {
-    background: #f1f1f1;
-    color: #333;
-    padding: 8px;
+    padding: 10px;
     text-align: center;
-    font-size: 14px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 3px solid #ffcc00;
   }
+  .harga { font-weight: bold; font-size: 14px; line-height: 1.4; }
 
-  /* AREA CHAT KOSONG PUTIH */
+  /* CHAT AREA */
   .chat {
     flex: 1;
     background: #ffffff;
     padding: 15px;
     overflow-y: auto;
+    padding-bottom: 80px; /* biar gak ketutup footer */
   }
 
-  /* FOOTER */
-  footer {
-    background: #007bff;
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
+  /* BUBBLE CHAT AI */
+  .chat-ai { display: flex; gap: 10px; margin-top: 10px; }
+  .avatar-ai {
+    background: #0057d9; color: white; border-radius: 50%;
+    width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+    font-weight: bold; flex-shrink: 0;
   }
-  footer button {
-    background: transparent;
-    border: none;
+  .bubble-ai {
+    background: white; border: 2px solid #00bfff; border-radius: 15px;
+    padding: 12px 15px; color: #0057d9; font-weight: bold; line-height: 1.6;
+    box-shadow: 0 0 10px rgba(0,191,255,0.3); position: relative;
+  }
+  .bubble-ai::before {
+    content: ''; position: absolute; left: -10px; top: 12px;
+    border: 10px solid transparent; border-right-color: #00bfff;
+  }
+
+  /* 4 LOGO DI SUDUT - SAMA BESAR 45px */
+  .logo-btn {
+    position: absolute;
+    width: 45px; height: 45px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; text-decoration: none;
+    border: 3px solid #ffcc00;
+    background: #0057d9;
     color: white;
     font-size: 22px;
-    cursor: pointer;
+    z-index: 100;
   }
+
+  /* 1. KIRI ATAS - MY TRACK > upload.html */
+  .logo-tl { top: 10px; left: 10px; font-size: 10px; line-height: 1.2; }
+  
+  /* 2. KANAN ATAS - PI > market.html */
+  .logo-tr { top: 10px; right: 10px; }
+
+  /* 3. KIRI BAWAH - PALLET > avatar.html */
+  .logo-bl { bottom: 70px; left: 10px; background: white; border-color: #0057d9; font-size: 24px; }
+  
+  /* 4. KAN BAWAH - PLUS > ai.html */
+  .logo-br { bottom: 70px; right: 10px; background: white; color: #0057d9; }
+
 </style>
 </head>
 <body>
   <div class="app">
+    <!-- 4 LOGO DI SUDUT -->
+    <a href="upload.html" class="logo-btn logo-tl">My<br>Track</a>
+    <a href="market.html" class="logo-btn logo-tr">π</a>
+    <a href="avatar.html" class="logo-btn logo-bl">🎨</a>
+    <a href="ai.html" class="logo-btn logo-br">+</a>
+
+    <!-- HEADER TENGAH -->
     <header>
-      <span>My Track</span>
-      <button class="login-btn" onclick="login()">Login</button>
+      <div class="harga">1 Pi = $0.112869 |<br>Rp2.032,77</div>
     </header>
 
-    <div class="price-bar">
-      Harga Pi: $0.00 USD
-    </div>
-
+    <!-- CHAT -->
     <div class="chat">
-      <!-- AREA KOSONG BUAT CHAT NANTI -->
+      <div class="chat-ai">
+        <div class="avatar-ai">AI</div>
+        <div class="bubble-ai">
+          AI Tracker Aktif!<br>
+          Silahkan cek Harga Pi disini...<br><br>
+          Ada yang bisa di bantu...<br>
+          Silahkan klik tombol + untuk memulai percakapan.
+        </div>
+      </div>
     </div>
 
-    <footer>
-      <button onclick="alert('Home')">🏠</button>
-      <button onclick="alert('Chat')">💬</button>
-      <button onclick="alert('+')">➕</button>
-    </footer>
   </div>
 
 <script>
   Pi.init({ version: "2.0", sandbox: true });
-
-  function login() {
-    Pi.authenticate(['username'])
-    .then(function(auth) {
-      document.querySelector('.login-btn').innerText = `@${auth.user.username}`;
-      document.querySelector('.login-btn').style.background = '#28a745';
-      document.querySelector('.login-btn').style.color = 'white';
-    })
-    .catch(function(error) {
-      alert("Login gagal: " + error);
-      console.error(error);
-    });
-  }
 </script>
 </body>
 </html>
