@@ -91,7 +91,7 @@
 
 <div class="footer">
   <a href="avatar.html" class="logo logo-footer">🎨</a> <!-- KIRI BAWAH -->
-  <a href="login.html" class="btn-login-footer">Login</a> <!-- TENGAH BAWAH -->
+<button id="btnLogin" class="btn-login-footer">Login</button>
   <a href="ai.html" class="logo logo-footer">+</a> <!-- KANAN BAWAH -->
 </div>
 
@@ -117,6 +117,43 @@ async function updatePrice() {
 }
 updatePrice();
 setInterval(updatePrice, 60000);
+  // INIT PI SDK
+Pi.init({ version: "2.0", sandbox: false }); 
+
+const btnLogin = document.getElementById('btnLogin');
+
+// CEK KALAU UDAH LOGIN
+const savedUser = localStorage.getItem('pi_username');
+if(savedUser){
+  btnLogin.innerText = '@' + savedUser;
+}
+
+// EVENT LOGIN
+btnLogin.addEventListener('click', async () => {
+  // kalau udah login, klik buat logout
+  if(localStorage.getItem('pi_username')){
+    localStorage.removeItem('pi_username');
+    btnLogin.innerText = 'Login';
+    alert('Logout Berhasil');
+    return;
+  }
+
+  try {
+    const scopes = ['username', 'payments'];
+    const authResult = await Pi.authenticate(scopes, onIncompletePaymentFound);
+    
+    const username = authResult.user.username;
+    localStorage.setItem('pi_username', username);
+    btnLogin.innerText = '@' + username; // GANTI JADI USERNAME
+    
+  } catch (err) {
+    alert('Login dibatalkan / Gagal');
+  }
+});
+
+function onIncompletePaymentFound(payment) {
+  console.log('Ada payment belum selesai:', payment);
+  }
 </script>
 </body>
 </html>
