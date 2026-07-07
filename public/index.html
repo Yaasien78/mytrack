@@ -542,26 +542,27 @@ async function handleLogin() {
   // KALAU UDAH LOGIN -> LOGOUT
   if(savedUser) {
     const user = JSON.parse(savedUser);
-    if(confirm("Logout dari @" + user.username + "?")) {
+    if(confirm("Logout dari @" + user.username + " ?")) {
       localStorage.removeItem('piUser');
-      loginBtn.innerText = "Yaasien";
+      loginBtn.innerText = "@Yaasien"; // FIX 1: TAMBAH @
+      alert("Berhasil Logout");
     }
     return;
   }
 
   // KALAU BELUM LOGIN -> LOGIN PAKAI PI
   try {
-    const authResult = await Pi.authenticate(['username'], onIncompletePaymentFound);
+    const authResult = await Pi.authenticate(['username', 'payments'], onIncompletePaymentFound); // FIX 2: TAMBAH payments
     
     loginBtn.innerText = "@" + authResult.user.username;
     alert("Selamat datang @" + authResult.user.username + " 🎉");
     localStorage.setItem('piUser', JSON.stringify(authResult.user));
-
+    
   } catch (error) {
     alert("Login dibatalkan");
+    console.error(error);
   }
-}
-
+    }
 // AUTO GANTI NAMA PAS BUKA
 window.addEventListener('load', function() {
   const savedUser = localStorage.getItem('piUser');
