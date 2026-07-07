@@ -24,25 +24,26 @@ body { padding-top: 70px; padding-bottom: 70px; background: #f5f5f5; font-family
   background: #004aad; 
   border: 3px solid #ffcc00; 
   color: white;
-  display: flex;              /* PAKAI FLEX */
-  align-items: center;        /* TENGAH VERTIKAL */
-  justify-content: center;    /* TENGAH HORIZONTAL */
+  display: flex;              
+  align-items: center;        /* CENTER VERTIKAL */
+  justify-content: center;    /* CENTER HORIZONTAL */
   font-weight: bold; 
   flex-shrink: 0;
   text-decoration: none;
 }
 
-/* KHUSUS KIRI "My Track" */
+/* KHUSUS KIRI "My Track" - KECILIN */
 .circle:first-child { 
-  font-size: 11px; 
-  line-height: 1.2; /* 2 BARIS */
+  font-size: 9px;    /* DARI 11px JADI 9px */
+  line-height: 1.1;  /* BIAR 2 BARIS RAPI */
   text-align: center;
+  padding: 2px;      /* KASIH NAPAS DIKIT */
 }
 
-/* KHUSUS KANAN "π" */
+/* KHUSUS KANAN "π" - KECILIN */
 .circle:last-child { 
-  font-size: 32px; /* GEDEIN DIKIT */
-  line-height: 1; /* JANGAN PAKE 50px, BIAR FLEX YANG ATUR */
+  font-size: 24px;   /* DARI 32px JADI 24px */
+  line-height: 1;    /* FLEX YANG ATUR CENTER */
 }
 #piPrice { flex: 1; color: white; font-size: 15px; font-weight: bold; text-align: center; }
 
