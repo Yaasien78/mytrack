@@ -382,10 +382,7 @@ body {
   <div class="footer-center" id="loginBtn" onclick="handleLogin()">Yaasien</div>
   <button class="btn-footer btn-plus" onclick="toggleChat()">+</button>
     </footer>
-
-    <script>
-        // script kamu taruh sini
-    </script>
+  
     <script>
 // CEK OTOMATIS PAS BUKA
 window.onload = () => {
@@ -434,8 +431,8 @@ function onIncompletePaymentFound(payment) {
   console.log("Payment belum selesai:", payment);
 }
 </script>
-            </script>
     
+</script>  
 // AMBIL HARGA PI DARI COINGECKO - UPDATE TIAP 30 DETIK
 async function getPiPrice() {
     try {
@@ -500,7 +497,7 @@ function openThemePicker() {
     clickCount = 0; // reset
   }
 }
-
+    
 // FUNGSI BUAT BIKIN AVATAR STICKY OTOMATIS
 function createAvatarSticky() {
   const avatar = document.createElement('div');
@@ -511,10 +508,42 @@ function createAvatarSticky() {
   document.body.appendChild(avatar);
       }
         
-function handleLogin() {
-  alert("Fitur Login belum dibuat bro 😅\nMau diarahkan ke halaman login?");
-  // window.location.href = "login.html"; // kalau udah ada file login.html
-        }
+// FUNGSI LOGIN PAKAI PI SDK
+async function handleLogin() {
+  const loginBtn = document.getElementById('loginBtn');
+  const savedUser = localStorage.getItem('piUser');
+
+  // KALAU UDAH LOGIN -> LOGOUT
+  if(savedUser) {
+    const user = JSON.parse(savedUser);
+    if(confirm("Logout dari @" + user.username + "?")) {
+      localStorage.removeItem('piUser');
+      loginBtn.innerText = "Yaasien";
+    }
+    return;
+  }
+
+  // KALAU BELUM LOGIN -> LOGIN PAKAI PI
+  try {
+    const authResult = await Pi.authenticate(['username'], onIncompletePaymentFound);
+    
+    loginBtn.innerText = "@" + authResult.user.username;
+    alert("Selamat datang @" + authResult.user.username + " 🎉");
+    localStorage.setItem('piUser', JSON.stringify(authResult.user));
+
+  } catch (error) {
+    alert("Login dibatalkan");
+  }
+}
+
+// AUTO GANTI NAMA PAS BUKA
+window.addEventListener('load', function() {
+  const savedUser = localStorage.getItem('piUser');
+  if(savedUser) {
+    const user = JSON.parse(savedUser);
+    document.getElementById('loginBtn').innerText = "@" + user.username;
+  }
+});
         
 function startAI() {
   alert('Mulai AI Tracking!');
