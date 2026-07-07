@@ -30,36 +30,32 @@ window.onload = function() {
   left: 0;
   width: 100%;
   height: 60px;
-  background: linear-gradient(to right, #004aad, #0057d9); /* samain sama footer */
-  display: flex !important;  /* KUNCI SEJAJAR */
-  justify-content: space-between; /* KIRI TENGAH KAN */
-  align-items: center; /* SEJAJAR VERTIKAL */
-  padding: 0 15px; /* KASIH JARAK KIRI KAN */
+  background: linear-gradient(to right, #004aad, #0057d9);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px; /* TADI 15PX, NAIKIN JADI 20PX BIAR SAMA KY BAWAH */
   box-sizing: border-box;
-  border-bottom: 3px solid #ffcc00; /* garis kuning */
+  border-bottom: 2px solid #ffcc00;
   z-index: 1000;
-        }
-        :root {
-            --blue: #0066cc;
-            --gold: #ffcc00;
         }
 
         body { margin: 0; font-family: Arial; background: white; }
 
 /* FOOTER BARU SEJAJAR */
 footer {
-  position: fixed; 
-  bottom: 0; 
-  left: 0; 
+  position: fixed;
+  bottom: 0;
+  left: 0;
   right: 0;
   height: 60px;
   background: linear-gradient(to right, #004aad, #0057d9);
-  display: flex;              /* BIKIN SEJAJAR */
-  justify-content: space-between; /* KIRI TENGAH KAN */
-  align-items: center;        /* SEJAJAR VERTIKAL */
-  padding: 0 15px; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px; /* TADI 15PX, SAMAIN JADI 20PX */
   box-sizing: border-box;
-  border-top: 3px solid #ffcc00;
+  border-top: 2px solid #ffcc00;
   z-index: 1000;
 }
 
