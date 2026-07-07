@@ -225,26 +225,7 @@ avatarDisplay.addEventListener('click', (e) => {
   // hapus setelah animasi selesai biar gak numpuk
   setTimeout(() => star.remove(), 800);
 });
-  const avatarDisplay = document.getElementById('avatarDisplay');
-const burstColors = ['#00bfff', '#a855f7', '#ff00ff', '#ffcc00', '#00ff88'];
-
-avatarDisplay.addEventListener('click', (e) => {
-  const rect = avatarDisplay.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
   
-  const star = document.createElement('div');
-  star.classList.add('star-burst');
-  const randomColor = burstColors[Math.floor(Math.random() * burstColors.length)];
-  
-  star.style.left = `${x - 5}px`;
-  star.style.top = `${y - 5}px`;
-  star.style.background = randomColor;
-  star.style.color = randomColor;
-  
-  avatarDisplay.appendChild(star);
-  setTimeout(() => star.remove(), 800);
-});
 </script>
 </body>
 </html>
