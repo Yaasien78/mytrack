@@ -24,11 +24,20 @@ window.onload = function() {
   padding: 0;
   box-sizing: border-box;
         }
-        .header-container {
-    display: flex !important;          /* 1. Kunci biar sejajar */
-    justify-content: space-between;    /* 2. Kiri - Tengah - Kanan */
-    align-items: center;               /* 3. Center vertikal */
-    width: 100%;                       /* 4. Isi full header */
+        .main-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(to right, #004aad, #0057d9); /* samain sama footer */
+  display: flex !important;  /* KUNCI SEJAJAR */
+  justify-content: space-between; /* KIRI TENGAH KAN */
+  align-items: center; /* SEJAJAR VERTIKAL */
+  padding: 0 15px; /* KASIH JARAK KIRI KAN */
+  box-sizing: border-box;
+  border-bottom: 3px solid #ffcc00; /* garis kuning */
+  z-index: 1000;
         }
         :root {
             --blue: #0066cc;
@@ -37,100 +46,59 @@ window.onload = function() {
 
         body { margin: 0; font-family: Arial; background: white; }
 
-    /* HEADER ATAS BARU SEJAJAR */
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+/* FOOTER BARU SEJAJAR */
+footer {
+  position: fixed; 
+  bottom: 0; 
+  left: 0; 
+  right: 0;
   height: 60px;
-  background: #007bff;
+  background: linear-gradient(to right, #004aad, #0057d9);
   display: flex;              /* BIKIN SEJAJAR */
   justify-content: space-between; /* KIRI TENGAH KAN */
   align-items: center;        /* SEJAJAR VERTIKAL */
-  padding: 0 15px;
+  padding: 0 15px; 
   box-sizing: border-box;
-  border-bottom: 2px solid #FFD700;
+  border-top: 3px solid #ffcc00;
   z-index: 1000;
 }
 
-.header-logo {
-  width: 40px;
-  height: 40px;
+.btn-theme { /* avatar kiri */
+  width: 50px; 
+  height: 50px;
   border-radius: 50%;
-  background: #FFD700;
-  color: #007bff;
-  font-weight: bold;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #fff;
+  border: 3px solid #fff;
+  font-size: 28px;
+  display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
 }
 
-.header-title {
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
+.login-btn { /* username tengah */
+  color: #fff; 
+  font-weight: bold; 
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  flex: 1; /* BIKIN KE TENGAH */
   text-align: center;
-  flex: 1; /* BIAR KE TENGAH BENERAN */
 }
 
-/* HEADER ATAS BARU SEJAJAR */
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 60px;
-  background: #007bff;
-  display: flex;              /* BIKIN SEJAJAR */
-  justify-content: space-between; /* KIRI TENGAH KAN */
-  align-items: center;        /* SEJAJAR VERTIKAL */
-  padding: 0 15px;
-  box-sizing: border-box;
-  border-bottom: 2px solid #FFD700;
-  z-index: 1000;
-}
-
-.header-logo {
-  width: 40px;
-  height: 40px;
+.btn-ai { /* tombol + kanan */
+  width: 50px; 
+  height: 50px;
   border-radius: 50%;
-  background: #FFD700;
-  color: #007bff;
-  font-weight: bold;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #fff;
+  color: #0057d9;
+  font-size: 28px;
+  font-weight: 900;
+  border: 3px solid #fff;
+  display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(0, 87, 217, 0.4);
 }
-
-.header-title {
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-  text-align: center;
-  flex: 1; /* BIAR KE TENGAH BENERAN */
-}
-
-.header-pi {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: white;
-  color: #007bff;
-  font-size: 24px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-    
 .price-center { 
     color:white; 
     font-weight: bold; 
@@ -158,30 +126,6 @@ window.onload = function() {
 }
 
 /* Tombol Floating */
-footer {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  background: linear-gradient(to right, #004aad, #0057d9);
-  border-top: 3px solid #ffcc00;
-  color: white;
-  padding: 10px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
-  z-index: 1000;
-}
-
-footer span { color: #fff; font-weight: bold; font-size: 18px; }
-.btn-footer {
-  width: 50px; height: 50px;
-  border-radius: 50%;
-  background: #fff; /* Latar tetap putih */
-  border: 3px solid #fff; /* Border putih biar nyatu ky di foto */
-  font-size: 28px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 0 10px rgba(0, 87, 217, 0.4); /* Glow biru tipis */
-}
 
 .btn-theme {
   color: #fff; /* Palet tetap putih */
@@ -236,21 +180,9 @@ header { /* Biar diem di atas */
   z-index: 1000;
 }
 
-footer { /* Biar diem di bawah */
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  height: 60px; /* KASIH TINGGI */
-  background: #0057b7;
-  border-top: 3px solid #FFD700;
-  display: flex; /* BIAR ISI RAPI */
-  justify-content: space-around;
-  align-items: center;
-  z-index: 1000;
-}
-
 body {
   padding-top: 70px; /* Se-tinggi header */
-  padding-bottom: 70px; /* TAMBAH INI - Se-tinggi footer */
+  padding-bottom: 80px; /* TAMBAH INI - Se-tinggi footer */
     }
         /* EFEK SINAR PUTIH DENYUT DARI TENGAH - VERSI LEBIH LEBAR & JELAS */
 .energy-sphere::before {
