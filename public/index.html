@@ -29,6 +29,44 @@
     overflow-y: auto;
     padding-bottom: 80px; /* biar gak ketutup footer */
   }
+   /* FOOTER BIRU BORDER GOLD */
+footer {
+  background: #0057d9;
+  border-top: 2px solid #ffcc00; /* BORDER 2PX GOLD */
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative; /* biar logo di atasnya */
+  z-index: 50;
+}
+
+.footer-left {
+  width: 45px; height: 45px;
+  border-radius: 50%;
+  border: 2px solid #0057d9; /* BORDER BIRU */
+  background: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+}
+
+.footer-center {
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.footer-right {
+  width: 45px; height: 45px;
+  border-radius: 50%;
+  border: 2px solid #ffcc00; /* BORDER GOLD */
+  background: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  color: #0057d9;
+  font-weight: bold;
+  text-decoration: none;
+   }
 
   /* BUBBLE CHAT AI */
   .chat-ai { display: flex; gap: 10px; margin-top: 10px; }
