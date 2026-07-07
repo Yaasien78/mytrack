@@ -37,52 +37,99 @@ window.onload = function() {
 
         body { margin: 0; font-family: Arial; background: white; }
 
-        .header { 
-            background: var(--blue);
-            color: white; 
-            padding: 10px 10px;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            border-bottom: 3px solid var(--gold); 
-            position: relative; 
-            z-index: 10; 
-        }
-        
-        .logo-left, .pi-logo-right { 
-            height:38px !important; 
-            width:38px !important;
-            min-width: 38px !important;
-            min-height: 38px !important;
-            aspect-ratio: 1 / 1;
-            box-sizing: border-box;
-            cursor:pointer; 
-            background: var(--blue); 
-            border-radius: 50%; 
-            border: 3px solid var(--gold);
-            box-shadow: 0 0 0 1px white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            flex-shrink: 0;
-        }
-        .pi-logo-right { 
-            background: var(--blue);
-        }
-        .logo-left span { 
-            font-size: 10px; 
-            font-weight: bold; 
-            color: white; 
-            line-height: 1.1; 
-            text-align: center;
-        }
-        .pi-logo-right span { 
-            font-size: 24px; 
-            font-weight: bold; 
-            color: white;                
-            line-height: 1;
-        }
+    /* HEADER ATAS BARU SEJAJAR */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: #007bff;
+  display: flex;              /* BIKIN SEJAJAR */
+  justify-content: space-between; /* KIRI TENGAH KAN */
+  align-items: center;        /* SEJAJAR VERTIKAL */
+  padding: 0 15px;
+  box-sizing: border-box;
+  border-bottom: 2px solid #FFD700;
+  z-index: 1000;
+}
+
+.header-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #FFD700;
+  color: #007bff;
+  font-weight: bold;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.header-title {
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  flex: 1; /* BIAR KE TENGAH BENERAN */
+}
+
+/* HEADER ATAS BARU SEJAJAR */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: #007bff;
+  display: flex;              /* BIKIN SEJAJAR */
+  justify-content: space-between; /* KIRI TENGAH KAN */
+  align-items: center;        /* SEJAJAR VERTIKAL */
+  padding: 0 15px;
+  box-sizing: border-box;
+  border-bottom: 2px solid #FFD700;
+  z-index: 1000;
+}
+
+.header-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #FFD700;
+  color: #007bff;
+  font-weight: bold;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.header-title {
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  flex: 1; /* BIAR KE TENGAH BENERAN */
+}
+
+.header-pi {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  color: #007bff;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
     
 .price-center { 
     color:white; 
