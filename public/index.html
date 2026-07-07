@@ -24,7 +24,11 @@ body { padding-top: 70px; padding-bottom: 70px; background: #f5f5f5; font-family
   font-weight: bold; flex-shrink: 0;
 }
 .circle:first-child { font-size: 11px; line-height: 1.2; }
-.circle:last-child { font-size: 28px; }
+.circle:last-child { 
+  font-size: 32px; /* BIKIN AGAK GEDE */
+  line-height: 50px; /* SAMA TINGGI DENGAN LINGKARAN */
+  text-align: center; /* TENGAHIN HORIZONTAL */
+  }
 #piPrice { flex: 1; color: white; font-size: 15px; font-weight: bold; text-align: center; }
 
 /* CHAT AI */
@@ -39,6 +43,16 @@ body { padding-top: 70px; padding-bottom: 70px; background: #f5f5f5; font-family
 #loginBtn { color: white; font-weight: bold; font-size: 18px; cursor: pointer; text-decoration: none; }
 .btn-plus { width: 44px; height: 44px; border-radius: 50%; background: white; color: #0057d7; border: none; font-size: 30px; font-weight: bold; cursor: pointer; }
 .ai-avatar-sticky { position: fixed; bottom: 80px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #0057d7; color: white; display: none; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; z-index: 999; }
+.circle {
+  width: 50px; height: 50px; border-radius: 50%;
+  background: #004aad; border: 3px solid #ffcc00; color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; flex-shrink: 0;
+  text-decoration: none; /* INI BARU - HAPUS GARIS BAWAH */
+  }
+  .main-container a {
+  text-decoration: none; /* HAPUS GARIS BAWAH LINK */
+  }
 </style>
 </head>
 <body>
