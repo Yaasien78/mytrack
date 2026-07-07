@@ -29,16 +29,53 @@ window.onload = function() {
   top: 0;
   left: 0;
   width: 100%;
-  height: 60px;
+  height: 70px; /* NAIKIN DIKIT BIAR MUAT 2 BARIS */
   background: linear-gradient(to right, #004aad, #0057d9);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px; /* TADI 15PX, NAIKIN JADI 20PX BIAR SAMA KY BAWAH */
+  padding: 0 15px;
   box-sizing: border-box;
-  border-bottom: 2px solid #ffcc00;
+  border-bottom: 3px solid #ffcc00;
   z-index: 1000;
-        }
+}
+
+/* KIRI */
+.main-container > div:first-child {
+  width: 60px; /* KASIH WIDTH TETAP */
+  flex-shrink: 0;
+  text-align: left;
+  color: #000;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+/* TENGAH */
+#piPrice {
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  flex: 1; /* TETEP FLEX 1 */
+  padding: 0 10px; /* KASIH JARAK BIAR GA MEPET */
+  line-height: 1.4;
+}
+
+/* KANAN */
+.main-container > div:last-child {
+  width: 50px; /* KASIH WIDTH TETAP */
+  height: 50px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  background: #FFD700;
+  color: #0057d9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+    }
 
         body { margin: 0; font-family: Arial; background: white; }
 
@@ -166,9 +203,9 @@ header { /* Biar diem di atas */
 }
 
 body {
-  padding-top: 70px; /* Se-tinggi header */
-  padding-bottom: 80px; /* TAMBAH INI - Se-tinggi footer */
-    }
+  padding-top: 80px; /* 70px + 10px buffer */
+  padding-bottom: 80px;
+      }
         /* EFEK SINAR PUTIH DENYUT DARI TENGAH - VERSI LEBIH LEBAR & JELAS */
 .energy-sphere::before {
   content: '';
