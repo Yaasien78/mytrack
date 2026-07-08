@@ -8,9 +8,8 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
 html, body { height: 100%; background:#000; overflow:hidden; }
-.app { display: flex; flex-direction: column; height: 100vh; position:relative; z-index:10; }
+.app { display: flex; flex-direction: column; height: 100vh; position:relative; z-index:10; pointer-events:none; } /* Biar klik tembus ke canvas */
 
-/* BACKGROUND */
 #bg-space{
   position:fixed; top:0; left:0; width:100%; height:100%; 
   background: url('space.jpg') center / cover no-repeat;
@@ -18,15 +17,15 @@ html, body { height: 100%; background:#000; overflow:hidden; }
   filter: brightness(0.55) contrast(1.2) saturate(0.9);
 }
 #bg-space::before{
-  content: '';
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
   background: 
     linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 25%),
     linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 25%);
   z-index: 2;
 }
-#space{position:fixed; top:0; left:0; width:100%; height:100%; z-index:3; cursor:pointer;}
+#space{position:fixed; top:0; left:0; width:100%; height:100%; z-index:3; cursor:pointer; touch-action: none;}
+
+header, footer { pointer-events: auto; } /* Tapi header footer tetap bisa diklik */
 
 header {
   background: #0057d9; border-bottom: 2px solid #ffcc00;
@@ -80,8 +79,24 @@ footer {
 <div id="bg-space"></div>
 <canvas id="space"></canvas>
 
-<!-- AUDIO SUARA KLIK -->
-<audio id="clickSound" src="https://cdn.pixabay.com/audio/2022/03/10/audio_d1714c66ba.mp3"></audio>
+<!-- SUARA PAKE WEB AUDIO BIAR PASTI JALAN -->
+<script>
+let audioCtx;
+function playSound() {
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  oscillator.type = 'sine';
+  oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+  oscillator.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.2);
+  gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+  oscillator.start();
+  oscillator.stop(audioCtx.currentTime + 0.2);
+}
+</script>
 
 <div class="app">
   <header>
@@ -101,26 +116,25 @@ window.addEventListener('load', function(){
   Pi.init({ version: "2.0", sandbox: true });
   document.getElementById('loginBtn').onclick = function(){
     Pi.authenticate(['username','payments'])
-    .then(function(auth) {
+   .then(function(auth) {
       document.getElementById('loginBtn').innerText = 'Hi ' + auth.user.username;
       document.getElementById('loginBtn').style.background = 'transparent';
     })
-    .catch(function(error) { alert("Login gagal: " + error); });
+   .catch(function(error) { alert("Login gagal: " + error); });
   }
 });
 
-// EFEK BINTANG + KETUK LAYAR
+// EFEK BINTANG + KETUK
 const canvas = document.getElementById('space');
 const ctx = canvas.getContext('2d');
-const clickSound = document.getElementById('clickSound');
 let w = canvas.width = window.innerWidth;
 let h = canvas.height = window.innerHeight;
 let cx = w/2;
 let cy = h*0.35;
 
 let stars = [];
-let explosions = []; // buat simpan ledakan cahaya
-const colors = ['#ff0000','#00ff00','#00ffff','#ffff00','#ff00ff','#ff8800','#0088ff']; // warna random
+let explosions = [];
+const colors = ['255,0,0','0,255,0','0,255,255','255,255,0','255,0,255','255,136,0','0,136,255'];
 
 for(let i=0; i<220; i++){
   stars.push({ x: (Math.random()-0.5)*w*2, y: (Math.random()-0.5)*h*2, z: Math.random()*w })
@@ -129,7 +143,6 @@ for(let i=0; i<220; i++){
 function animate(){
   ctx.clearRect(0,0,w,h);
   
-  // BINTANG JALAN
   stars.forEach(s=>{ 
     s.z -= 2.5; 
     if(s.z <= 1){ s.z = w; s.x = (Math.random()-0.5)*w*2; s.y = (Math.random()-0.5)*h*2; }
@@ -142,37 +155,35 @@ function animate(){
     ctx.fill();
   });
 
-  // EFEK LEDAKAN SINAR
   explosions.forEach((exp, i)=>{
-    exp.r += 8; // radius melebar
-    exp.a -= 0.05; // transparansi berkurang
+    exp.r += 12;
+    exp.a -= 0.04;
     ctx.strokeStyle = `rgba(${exp.color},${exp.a})`;
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 4;
     ctx.beginPath();
     ctx.arc(exp.x, exp.y, exp.r, 0, Math.PI*2);
     ctx.stroke();
-    
-    if(exp.a <= 0) explosions.splice(i,1); // hapus kalau udah hilang
+    if(exp.a <= 0) explosions.splice(i,1);
   });
   
   requestAnimationFrame(animate);
 }
 animate();
 
-// KETIKA LAYAR DIKETUK
-canvas.addEventListener('click', (e)=>{
-  let rect = canvas.getBoundingClientRect();
-  let x = e.clientX - rect.left;
-  let y = e.clientY - rect.top;
+// KETIKA LAYAR DIKETUK / DISENTUH
+function handleClick(e){
+  e.preventDefault();
+  let x = e.touches? e.touches[0].clientX : e.clientX;
+  let y = e.touches? e.touches[0].clientY : e.clientY;
   
-  let color = colors[Math.floor(Math.random()*colors.length)]; // pilih warna random
-  let rgb = color.match(/\w\w/g).map(x=>parseInt(x,16)); // ubah ke rgb
+  let color = colors[Math.floor(Math.random()*colors.length)];
+  explosions.push({x:x, y:y, r:10, a:1, color: color});
   
-  explosions.push({x:x, y:y, r:5, a:1, color: rgb.join(',')}); // tambah ledakan baru
-  
-  clickSound.currentTime = 0; // reset suara
-  clickSound.play(); // mainkan suara
-});
+  playSound(); // mainkan suara web audio
+}
+
+canvas.addEventListener('click', handleClick);
+canvas.addEventListener('touchstart', handleClick); // buat HP
 
 window.addEventListener('resize', ()=>{ 
   w = canvas.width = window.innerWidth; 
@@ -181,4 +192,4 @@ window.addEventListener('resize', ()=>{
 });
 </script>
 </body>
-  </html>
+</html>
