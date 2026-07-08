@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title></title>
 <style>
 html, body, div {
@@ -28,7 +28,7 @@ body {
 .arab {
   font-size: 6vw;
   font-weight: 900;
-  color: #00BFFF; /* BIRU MUDA LEBIH NYALA */
+  color: #00BFFF; /* BIRU MUDA NYALA */
   direction: rtl;
   line-height: 1.6;
   margin: 5px 0;
@@ -80,12 +80,14 @@ const content = document.getElementById('content');
 const counter = document.getElementById('counter');
 const urlParams = new URLSearchParams(window.location.search);
 const action = urlParams.get('action');
+
+// RESET OTOMATIS KALAU BUKA TANPA ACTION
 let index = parseInt(localStorage.getItem('textIndex')) || 0;
 
 function tampilkan() {
   if(index >= 7) {
     document.body.classList.add('hide');
-    localStorage.setItem('textIndex', 0);
+    localStorage.setItem('textIndex', 0); // RESET KE 0
     counter.innerText = '';
     return;
   }
@@ -104,8 +106,10 @@ if(action === 'next'){
   localStorage.setItem('textIndex', index);
   tampilkan();
 } else {
-  content.innerHTML = '';
-  counter.innerText = '';
+  // KALAU BUKA BIASA, RESET DULU KE 0
+  localStorage.setItem('textIndex', 0);
+  index = 0;
+  tampilkan(); // LANGSUNG TAMPILKAN NO 1
 }
 </script>
 
