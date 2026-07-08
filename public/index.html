@@ -73,7 +73,7 @@ function playSound() {
   </footer>
 </div>
 
-<iframe id="aiFrame" src="text.html" style="position:fixed; bottom:80px; left:0; width:100%; height:auto; max-height:45%; border:none; pointer-events:none; z-index:50; background:transparent;"></iframe>
+<iframe id="aiFrame" src="text.html" style="position:fixed; bottom:80px; left:0; width:100%; height:auto; max-height:45%; border:none; pointer-events:none; z-index:50; background:transparent; display:none;"></iframe>
   
 <script>
 let piUsername = null; // BUAT SIMPAN NAMA
@@ -164,20 +164,36 @@ function showGreeting(){
 document.getElementById('aiBtn').onclick = showGreeting;
 
 <script>
-let textIndex = 0; // SIMPAN DI SINI AJA
+// SCRIPT CANVAS + BINTANG JANGAN DIHAPUS
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let w,h,cx,cy;
+let stars=[], planets=[], explosions=[], colors=["#00BFFF","#FFD700","#FF69B4","#00FF7F"];
+let audio = new Audio('sound/ketuk.mp3');
+function playSound(){ audio.currentTime=0; audio.play().catch(()=>{}); }
 
+//... kode canvas bintang kamu yg lama taruh di sini ...
+
+// INI YANG BARU: KHUSUS TOMBOL PALET
+let textIndex = 0; 
 document.querySelector('.footer-left').onclick = function(e){
-  e.preventDefault(); // CEGAH PINDAH HALAMAN
+  e.preventDefault(); 
   textIndex++;
-  if(textIndex > 7) textIndex = 0; // RESET SETELAH 7
+  if(textIndex > 7) textIndex = 0; 
 
   const frame = document.getElementById('aiFrame');
   if(textIndex === 0){
-    frame.src = "text.html"; // KOSONGKAN
+    frame.style.display = 'none'; // SEMBUNYIKAN IFRAME PAS SELESAI
   } else {
-    frame.src = "text.html?i=" + textIndex; // KIRIM NOMOR
+    frame.style.display = 'block'; // MUNCULIN LAGI
+    frame.src = "text.html?i=" + textIndex; 
   }
-  playSound(); // SUARA KETUK
+  playSound(); 
+}
+
+// BIAR LOGIN TETAP JALAN
+document.querySelector('.footer-center').onclick = function(){
+  window.location.href = 'login.html'; // GANTI SESUAI LINK LOGIN KAMU
 }
 </script>
 </body>
