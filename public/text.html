@@ -7,38 +7,60 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif; }
 body {
-  background: transparent; /* transparan */
+  background: transparent;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px 15px 120px 15px;
-  color: #ffffff; /* HURUF PUTIH */
+  padding: 15px 12px 110px 12px; /* atas bawah dikecilin */
+  color: #ffffff;
   text-align: center;
   user-select: none;
 }
 .hide { display: none; }
 
 .arab {
-  font-size: 8vw;
+  font-size: 6vw; /* DIKECILIN dari 8vw */
   font-weight: bold;
   color: #ffffff;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   direction: rtl;
-  line-height: 1.8;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.7); /* biar kebaca */
+  line-height: 1.7;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
 }
-.latin { font-size: 5vw; color: #ffffff; font-style: italic; margin-bottom: 12px; text-shadow: 0 2px 8px rgba(0,0,0,0.7); }
-.indo { font-size: 4.5vw; color: #ffffff; font-weight: bold; margin-bottom: 10px; text-shadow: 0 2px 8px rgba(0,0,0,0.7); }
-.arti { font-size: 4vw; color: #ffffff; line-height: 1.6; text-shadow: 0 2px 8px rgba(0,0,0,0.7); }
-.counter { font-size: 3.5vw; color: #ffffff; margin-top: 20px; opacity: 0.7; }
+.latin { 
+  font-size: 3.8vw; /* DIKECILIN */
+  color: #ffffff; 
+  font-style: italic; 
+  margin-bottom: 8px; 
+  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+}
+.indo { 
+  font-size: 3.5vw; /* DIKECILIN */
+  color: #ffffff; 
+  font-weight: bold; 
+  margin-bottom: 8px; 
+  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+}
+.arti { 
+  font-size: 3.2vw; /* DIKECILIN */
+  color: #ffffff; 
+  line-height: 1.5; 
+  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+}
+.counter { 
+  font-size: 2.8vw; /* DIKECILIN */
+  color: #ffffff; 
+  margin-top: 15px; 
+  opacity: 0.8;
+}
 </style>
 </head>
 <body>
 
 <div id="content"></div>
-<div class="counter" id="counter">Klik tombol Text untuk mulai 1/7</div>
+<div class="counter" id="counter"></div>
 
 <script>
 const kalimat = [
@@ -51,15 +73,20 @@ const kalimat = [
   { arab: "گُوْنَكَنْ كُوْدْ رِفْ Yaasien پَدَ پِ نَتْوَرْكْ", latin: "Gunakan kode reff Yaasien pada Pi Network", indo: "Gunakan kode reff Yaasien pada Pi Network", arti: "Artinya: Masukkan kode undangan 'Yaasien' saat daftar Pi Network untuk saling mendukung." }
 ];
 
-// ambil index dari localStorage biar nyambung tiap klik tombol footer
-let index = parseInt(localStorage.getItem('textIndex')) || 0;
 const content = document.getElementById('content');
 const counter = document.getElementById('counter');
 
+// Cek apakah ini klik dari tombol footer
+const urlParams = new URLSearchParams(window.location.search);
+const action = urlParams.get('action');
+
+let index = parseInt(localStorage.getItem('textIndex')) || 0;
+
 function tampilkan() {
-  if(index >= 7) { // kalau udah 8
+  if(index >= 7) { // klik ke 8
     document.body.classList.add('hide');
-    localStorage.setItem('textIndex', 0); // reset buat klik berikutnya
+    localStorage.setItem('textIndex', 0);
+    counter.innerText = '';
     return;
   }
   const k = kalimat[index];
@@ -72,10 +99,16 @@ function tampilkan() {
   counter.innerText = `Klik tombol Text untuk lanjut ${index + 1}/7`;
 }
 
-// tiap buka halaman = ganti ke kalimat berikutnya
-index++;
-localStorage.setItem('textIndex', index);
-tampilkan();
+// LOGIKA: hanya ganti kalau ada?action=next dari tombol footer
+if(action === 'next'){
+  index++;
+  localStorage.setItem('textIndex', index);
+  tampilkan();
+} else {
+  // kalau baru buka tanpa klik, TETAP KOSONG
+  content.innerHTML = '';
+  counter.innerText = '';
+}
 </script>
 
 </body>
