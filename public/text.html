@@ -2,59 +2,61 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teks Dakwah</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title></title>
 <style>
-html, body {
-  background: transparent; /* TIDAK ADA BACKGROUND */
-  margin: 0;
-  padding: 0;
+html, body, div {
+  background: transparent!important;
+  background-color: transparent!important;
+  margin: 0!important;
+  padding: 0!important;
+  border: none!important;
+  box-shadow: none!important;
 }
-* { box-sizing:border-box; font-family:Arial, sans-serif; }
 body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 15px 12px 110px 12px;
+  padding: 10px;
   text-align: center;
-  user-select: none;
+  font-family: Arial, sans-serif;
 }
-.hide { display: none; }
+.hide { display: none!important; }
 
 .arab {
   font-size: 6vw;
   font-weight: 900;
-  color: #87CEFA; /* BIRU MUDA LANGIT */
-  margin-bottom: 10px;
+  color: #00BFFF; /* BIRU MUDA LEBIH NYALA */
   direction: rtl;
-  line-height: 1.7;
+  line-height: 1.6;
+  margin: 5px 0;
 }
 .latin { 
   font-size: 3.8vw;
-  color: #87CEFA; /* BIRU MUDA */
+  color: #00BFFF;
   font-style: italic; 
-  margin-bottom: 8px; 
+  margin: 4px 0;
   font-weight: 600;
 }
 .indo { 
   font-size: 3.5vw;
-  color: #87CEFA; /* BIRU MUDA */
+  color: #00BFFF;
   font-weight: 800; 
-  margin-bottom: 8px; 
+  margin: 4px 0;
 }
 .arti { 
   font-size: 3.2vw;
-  color: #87CEFA; /* BIRU MUDA */
-  line-height: 1.5; 
+  color: #00BFFF;
+  line-height: 1.4; 
+  margin: 4px 0;
   font-weight: 500;
 }
 .counter { 
   font-size: 2.8vw;
-  color: #87CEFA; /* BIRU MUDA */
-  margin-top: 15px; 
-  opacity: 0.9;
+  color: #00BFFF;
+  margin-top: 10px; 
 }
 </style>
 </head>
@@ -76,10 +78,8 @@ const kalimat = [
 
 const content = document.getElementById('content');
 const counter = document.getElementById('counter');
-
 const urlParams = new URLSearchParams(window.location.search);
 const action = urlParams.get('action');
-
 let index = parseInt(localStorage.getItem('textIndex')) || 0;
 
 function tampilkan() {
