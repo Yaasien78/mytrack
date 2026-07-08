@@ -4,29 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-html { background:transparent!important; }
-body { 
-  background:transparent!important; 
-  font-family:Arial; 
+/* MATIKAN SEMUA BACKGROUND */
+html, body { background:transparent!important; margin:0; padding:0; }
+* { box-sizing:border-box; }
+
+/* BOX CUMA SEBESAR KONTEN, TIDAK FULL SCREEN */
+.wrap { 
+  display:inline-block; 
   text-align:center; 
-  padding:15px 10px 120px 10px;
-  min-height:100vh;
-  display:flex; flex-direction:column; justify-content:center;
+  padding:8px 10px;
 }
 .hide { display:none!important; }
 
-/* SEMUA TEKS SAMA */
-.arab { font-size:6vw; font-weight:900; color:#00BFFF; direction:rtl; margin:5px 0; text-shadow:1px 1px 2px #000; }
-.latin { font-size:3.8vw; color:#00BFFF; font-style:italic; margin:4px 0; font-weight:600; text-shadow:1px 1px 2px #000; }
-.indo { font-size:3.5vw; color:#00BFFF; font-weight:800; margin:4px 0; text-shadow:1px 1px 2px #000; }
-.arti { font-size:3.2vw; color:#00BFFF; margin:4px 0; font-weight:500; text-shadow:1px 1px 2px #000; }
-.counter { font-size:2.8vw; color:#00BFFF; margin-top:10px; text-shadow:1px 1px 2px #000; }
+/* SEMUA TEKS BIRU MUDA + BAYANGAN BIAR KEBACA */
+.arab { font-size:5.5vw; font-weight:900; color:#00BFFF; direction:rtl; margin:4px 0; text-shadow:0 0 4px rgba(0,0,0,0.9); }
+.latin { font-size:3.6vw; color:#00BFFF; font-style:italic; margin:3px 0; font-weight:600; text-shadow:0 0 4px rgba(0,0,0,0.9); }
+.indo { font-size:3.3vw; color:#00BFFF; font-weight:800; margin:3px 0; text-shadow:0 0 4px rgba(0,0,0,0.9); }
+.arti { font-size:3vw; color:#00BFFF; margin:3px 0; font-weight:500; text-shadow:0 0 4px rgba(0,0,0,0.9); }
+.counter { font-size:2.6vw; color:#00BFFF; margin-top:6px; text-shadow:0 0 4px rgba(0,0,0,0.9); }
 </style>
 </head>
 <body>
-<div id="content"></div>
-<div id="counter"></div>
+<div id="wrap" class="wrap hide">
+  <div id="content"></div>
+  <div id="counter"></div>
+</div>
 
 <script>
 const kalimat = [
@@ -41,14 +43,15 @@ const kalimat = [
 
 let params = new URLSearchParams(window.location.search);
 let action = params.get('action');
-let idx = Number(localStorage.getItem('tIdx')) || 0; // ganti nama biar gak bentrok
+let idx = Number(localStorage.getItem('tIdx')) || 0;
 
 function show(){
   if(idx >= kalimat.length){
-    document.body.className = 'hide';
+    document.getElementById('wrap').classList.add('hide'); // HILANG TOTAL
     localStorage.setItem('tIdx', 0);
     return;
   }
+  document.getElementById('wrap').classList.remove('hide'); // MUNCUL
   let k = kalimat[idx];
   document.getElementById('content').innerHTML = 
     `<div class="arab">${k.arab}</div>
@@ -59,13 +62,12 @@ function show(){
 }
 
 if(action === 'next'){
-  show(); // TAMPILKAN DULU
-  idx = idx + 1; // BARU NAIK
+  show();
+  idx = idx + 1;
   localStorage.setItem('tIdx', idx);
 }else{
-  // BUKA BIASA = KOSONG
-  document.getElementById('content').innerHTML = '';
-  document.getElementById('counter').innerHTML = '';
+  // BUKA BIASA = HILANG TOTAL, TIDAK AMBIL TEMPAT
+  document.getElementById('wrap').classList.add('hide');
 }
 </script>
 </body>
