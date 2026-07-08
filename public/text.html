@@ -8,15 +8,14 @@
 * { margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif; }
 body {
   background: #ffffff;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  min-height:100vh;
   padding:20px;
+  padding-bottom: 100px; /* kasih ruang buat footer */
 }
 .box {
   width: 100%;
   max-width: 400px;
+  margin: 20px auto 80px auto; /* tengah + jarak bawah */
   background: #ffffff;
   border: 3px solid #ffcc00; /* BORDER GOLD */
   border-radius: 20px;
@@ -27,8 +26,8 @@ body {
   transition: 0.3s;
 }
 .box:hover { transform: scale(1.02); }
-.box.hidden { opacity: 0; pointer-events: none; }
-.arab { font-size: 24px; font-weight: bold; color: #0057d9; margin-bottom: 8px; direction: rtl; }
+.box.hidden { display: none; } /* ganti opacity biar bener2 hilang */
+.arab { font-size: 24px; font-weight: bold; color: #0057d9; margin-bottom: 8px; direction: rtl; line-height: 2; }
 .latin { font-size: 16px; color: #000; font-style: italic; margin-bottom: 8px; }
 .indo { font-size: 15px; color: #333; font-weight: bold; margin-bottom: 5px; }
 .arti { font-size: 14px; color: #555; line-height: 1.5; }
