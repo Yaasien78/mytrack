@@ -18,7 +18,6 @@ body {
   justify-content: center;
   align-items: center;
   padding: 15px 12px 110px 12px;
-  color: #ffffff; /* PUTIH */
   text-align: center;
   user-select: none;
 }
@@ -26,8 +25,9 @@ body {
 
 .arab {
   font-size: 6vw;
-  font-weight: bold;
-  color: #ffffff;
+  font-weight: 900;
+  color: #ffffff; /* PUTIH */
+  -webkit-text-stroke: 1px #000; /* OUTLINE HITAM 1PX */
   margin-bottom: 10px;
   direction: rtl;
   line-height: 1.7;
@@ -35,25 +35,30 @@ body {
 .latin { 
   font-size: 3.8vw;
   color: #ffffff;
+  -webkit-text-stroke: 0.5px #000; /* OUTLINE HITAM TIPIS */
   font-style: italic; 
   margin-bottom: 8px; 
+  font-weight: 600;
 }
 .indo { 
   font-size: 3.5vw;
   color: #ffffff;
-  font-weight: bold; 
+  -webkit-text-stroke: 1px #000;
+  font-weight: 800; 
   margin-bottom: 8px; 
 }
 .arti { 
   font-size: 3.2vw;
   color: #ffffff;
+  -webkit-text-stroke: 0.5px #000;
   line-height: 1.5; 
+  font-weight: 500;
 }
 .counter { 
   font-size: 2.8vw;
   color: #ffffff;
+  -webkit-text-stroke: 0.5px #000;
   margin-top: 15px; 
-  opacity: 0.9;
 }
 </style>
 </head>
