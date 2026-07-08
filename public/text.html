@@ -5,15 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Teks Dakwah</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif; }
+html, body {
+  background: transparent!important; /* PAKSA TRANSPARAN */
+  margin: 0;
+  padding: 0;
+}
+* { box-sizing:border-box; font-family:Arial, sans-serif; }
 body {
-  background: transparent;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 15px 12px 110px 12px; /* atas bawah dikecilin */
+  padding: 15px 12px 110px 12px;
   color: #ffffff;
   text-align: center;
   user-select: none;
@@ -21,39 +25,40 @@ body {
 .hide { display: none; }
 
 .arab {
-  font-size: 6vw; /* DIKECILIN dari 8vw */
+  font-size: 6vw;
   font-weight: bold;
   color: #ffffff;
   margin-bottom: 10px;
   direction: rtl;
   line-height: 1.7;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.9); /* shadow lebih tebal biar kebaca */
 }
 .latin { 
-  font-size: 3.8vw; /* DIKECILIN */
+  font-size: 3.8vw;
   color: #ffffff; 
   font-style: italic; 
   margin-bottom: 8px; 
-  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.9);
 }
 .indo { 
-  font-size: 3.5vw; /* DIKECILIN */
+  font-size: 3.5vw;
   color: #ffffff; 
   font-weight: bold; 
   margin-bottom: 8px; 
-  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.9);
 }
 .arti { 
-  font-size: 3.2vw; /* DIKECILIN */
+  font-size: 3.2vw;
   color: #ffffff; 
   line-height: 1.5; 
-  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.9);
 }
 .counter { 
-  font-size: 2.8vw; /* DIKECILIN */
+  font-size: 2.8vw;
   color: #ffffff; 
   margin-top: 15px; 
-  opacity: 0.8;
+  opacity: 0.9;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.9);
 }
 </style>
 </head>
@@ -76,14 +81,13 @@ const kalimat = [
 const content = document.getElementById('content');
 const counter = document.getElementById('counter');
 
-// Cek apakah ini klik dari tombol footer
 const urlParams = new URLSearchParams(window.location.search);
 const action = urlParams.get('action');
 
 let index = parseInt(localStorage.getItem('textIndex')) || 0;
 
 function tampilkan() {
-  if(index >= 7) { // klik ke 8
+  if(index >= 7) {
     document.body.classList.add('hide');
     localStorage.setItem('textIndex', 0);
     counter.innerText = '';
@@ -96,16 +100,14 @@ function tampilkan() {
     <div class="indo">${k.indo}</div>
     <div class="arti">${k.arti}</div>
   `;
-  counter.innerText = `Klik tombol Text untuk lanjut ${index + 1}/7`;
+  counter.innerText = `Klik 🎨 untuk lanjut ${index + 1}/7`;
 }
 
-// LOGIKA: hanya ganti kalau ada?action=next dari tombol footer
 if(action === 'next'){
   index++;
   localStorage.setItem('textIndex', index);
   tampilkan();
 } else {
-  // kalau baru buka tanpa klik, TETAP KOSONG
   content.innerHTML = '';
   counter.innerText = '';
 }
