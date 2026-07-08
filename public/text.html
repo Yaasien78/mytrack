@@ -5,9 +5,9 @@
 <style>
 body{margin:0; background:transparent; font-family:Arial; overflow:hidden;}
 #ai-popup{
-  position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
-  background: transparent; /* HAPUS BACKGROUND */
-  color: white; /* HURUF PUTIH SEMUA */
+  position:fixed; top:80px; left:50%; transform:translateX(-50%); /* PINDAH KE ATAS */
+  background: transparent;
+  color: white;
   padding: 0;
   border: none;
   font-weight: bold; 
@@ -17,7 +17,7 @@ body{margin:0; background:transparent; font-family:Arial; overflow:hidden;}
   transition: opacity 0.4s;
   text-align: center; 
   max-width: 90%;
-  text-shadow: 0 0 8px #000, 0 0 12px #0057d9; /* KASIH BAYANGAN BIAR KEBACA DI ANGKASA */
+  text-shadow: 0 0 8px #000, 0 0 12px #0057d9; /* KASIH GLOW BIAR JELAS */
   pointer-events: none;
 }
 </style>
@@ -29,14 +29,13 @@ body{margin:0; background:transparent; font-family:Arial; overflow:hidden;}
 let piUsername = null;
 
 const greetings = [
-  "Halo {name}! Siap menjelajah galaksi hari ini?",
-  "AI Tracker online. Ada misi apa?",
-  "Wah ketukan baru terdeteksi! Keren!",
-  "Selamat datang di My Track, {name}!",
-  "Energi kosmik melimpah. Lanjutkan!",
-  "Harga Pi stabil. Tetap semangat mining!",
-  "Jaga semangatmu, penjelajah angkasa!",
-  "Tracker siap. Mau menciptakan bintang berapa?"
+  "Hai Pioneer, saya AI Tracker, siap berinteraksi dengan Anda.",
+  "Silahkan klik Plus untuk memulai.",
+  "Selamat datang Pioneer",
+  "Pastikan anda sudah klik petir hari ini.",
+  "Mau buat apa hari ini.",
+  "AI Tracker siap menemani anda.",
+  "Silahkan login dulu dan gunakan reff Yaasien."
 ];
 
 window.addEventListener('message', function(e){
@@ -48,14 +47,12 @@ window.addEventListener('message', function(e){
 
 function showGreeting(){
   const popup = document.getElementById('ai-popup');
-  const name = piUsername ? piUsername : "Penjelajah";
   let text = greetings[Math.floor(Math.random()*greetings.length)];
-  text = text.replace("{name}", name);
   
   popup.innerText = text;
   popup.style.opacity = 1;
   playSound();
-  setTimeout(()=>{ popup.style.opacity = 0; }, 3000);
+  setTimeout(()=>{ popup.style.opacity = 0; }, 3000); // INI 3 DETIK
 }
 
 function playSound() {
