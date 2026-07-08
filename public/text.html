@@ -1,50 +1,40 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-html, body { background:transparent; margin:0; padding:0; }
-#content { text-align:center; }
-.arab { font-size:6vw; font-weight:900; color:#00BFFF; direction:rtl; margin:4px 0; text-shadow:0 0 4px #000; }
-.latin { font-size:3.8vw; color:#00BFFF; font-style:italic; margin:3px 0; font-weight:600; text-shadow:0 0 4px #000; }
-.indo { font-size:3.5vw; color:#00BFFF; font-weight:800; margin:3px 0; text-shadow:0 0 4px #000; }
-.arti { font-size:3.2vw; color:#00BFFF; margin:3px 0; font-weight:500; text-shadow:0 0 4px #000; }
-.counter { font-size:2.8vw; color:#00BFFF; margin-top:8px; text-shadow:0 0 4px #000; }
+html,body{background:transparent;margin:0;padding:5px 0;text-align:center}
+.arab{font-size:6vw;font-weight:900;color:#00BFFF;direction:rtl;margin:4px 0;text-shadow:0 0 4px #000}
+.latin{font-size:3.8vw;color:#00BFFF;font-style:italic;margin:3px 0;font-weight:600;text-shadow:0 0 4px #000}
+.indo{font-size:3.5vw;color:#00BFFF;font-weight:800;margin:3px 0;text-shadow:0 0 4px #000}
+.arti{font-size:3.2vw;color:#00BFFF;margin:3px 0;font-weight:500;text-shadow:0 0 4px #000}
+.counter{font-size:2.8vw;color:#00BFFF;margin-top:6px;text-shadow:0 0 4px #000}
 </style>
 </head>
 <body>
-<div id="content"></div>
-<div id="counter"></div>
-
+<div id="c"></div>
 <script>
-const kalimat = [
-  { arab: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", latin: "Bismillahirrahmanirrahim", indo: "Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang", arti: "Artinya: Kita memulai segala sesuatu dengan menyebut nama Allah yang memiliki kasih sayang luas kepada semua makhluk." },
-  { arab: "أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ", latin: "Asyhadu alla ilaha illallah, wa asyhadu anna muhammadar rasulullah", indo: "Aku bersaksi bahwa tidak ada tuhan selain Allah, dan aku bersaksi bahwa Muhammad adalah utusan Allah", arti: "Artinya: Dua kalimat syahadat sebagai pintu masuk Islam dan bukti keimanan kepada Allah dan Rasul-Nya." },
-  { arab: "اللَّهُمَّ صَلِّ عَلَىٰ سَيِّدِنَا مُحَمَّدٍ وَعَلَىٰ آلِ سَيِّدِنَا مُحَمَّدٍ", latin: "Allahumma sholli ala sayyidina muhammad wa ala ali sayyidina muhammad", indo: "Ya Allah, limpahkanlah shalawat kepada junjungan kami Nabi Muhammad dan kepada keluarga junjungan kami Nabi Muhammad", arti: "Artinya: Doa memohon keberkahan dan kemuliaan untuk Nabi Muhammad SAW beserta keluarganya." },
-  { arab: "سَلَامُ بَتِيرْ بُوَاتْ پِوْنِيْرْ", latin: "Salam Petir buat Pioner", indo: "Salam Petir buat Pioner", arti: "Artinya: Salam semangat klik petir setiap hari untuk para Pioneer Pi Network. Jeger.. jeger.. jegerr.. ⚡" },
-  { arab: "سُدَهْكَهْ كْلِكْ پَتِيْرْ هَرِ اِنِ", latin: "Sudahkah klik petir hari ini", indo: "Sudahkah klik petir hari ini", arti: "Artinya: Pengingat untuk tidak lupa menambang Pi setiap 24 jam sekali." },
-  { arab: "AI TRACKER سِيَاْپْ مَنَمَانِي اَنْدَا هَرِ اِنِ", latin: "AI Tracker siap menemani anda hari ini", indo: "AI Tracker siap menemani anda hari ini", arti: "Artinya: AI Tracker akan membantu menjawab pertanyaan tentang Pi Network dan lainnya." },
-  { arab: "گُوْنَكَنْ كُوْدْ رِفْ Yaasien پَدَ پِ نَتْوَرْكْ", latin: "Gunakan kode reff Yaasien pada Pi Network", indo: "Gunakan kode reff Yaasien pada Pi Network", arti: "Artinya: Masukkan kode undangan 'Yaasien' saat daftar Pi Network untuk saling mendukung." }
+const k = [
+["بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ","Bismillahirrahmanirrahim","Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang","Artinya: Kita memulai segala sesuatu dengan menyebut nama Allah yang memiliki kasih sayang luas kepada semua makhluk."],
+
+["أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ","Asyhadu alla ilaha illallah, wa asyhadu anna muhammadar rasulullah","Aku bersaksi bahwa tidak ada tuhan selain Allah, dan aku bersaksi bahwa Muhammad adalah utusan Allah","Artinya: Dua kalimat syahadat sebagai pintu masuk Islam dan bukti keimanan kepada Allah dan Rasul-Nya."],
+
+["اللَّهُمَّ صَلِّ عَلَىٰ سَيِّدِنَا مُحَمَّدٍ وَعَلَىٰ آلِ سَيِّدِنَا مُحَمَّدٍ","Allahumma sholli ala sayyidina muhammad wa ala ali sayyidina muhammad","Ya Allah, limpahkanlah shalawat kepada junjungan kami Nabi Muhammad dan kepada keluarga junjungan kami Nabi Muhammad","Artinya: Doa memohon keberkahan dan kemuliaan untuk Nabi Muhammad SAW beserta keluarganya."],
+
+["سَلَامُ بَتِيرْ بُوَاتْ پِوْنِيْرْ","Salam Petir buat Pioner","Salam Petir buat Pioner","Artinya: Salam semangat klik petir setiap hari untuk para Pioneer Pi Network. Jeger.. jeger.. jegerr.. ⚡"],
+
+["سُدَهْكَهْ كْلِكْ پَتِيْرْ هَرِ اِنِ","Sudahkah klik petir hari ini","Sudahkah klik petir hari ini","Artinya: Pengingat untuk tidak lupa menambang Pi setiap 24 jam sekali."],
+
+["AI TRACKER سِيَاْپْ مَنَمَانِي اَنْدَا هَرِ اِنِ","AI Tracker siap menemani anda hari ini","AI Tracker siap menemani anda hari ini","Artinya: AI Tracker akan membantu menjawab pertanyaan tentang Pi Network dan lainnya."],
+
+["گُوْنَكَنْ كُوْدْ رِفْ Yaasien پَدَ پِ نَتْوَرْكْ","Gunakan kode reff Yaasien pada Pi Network","Gunakan kode reff Yaasien pada Pi Network","Artinya: Masukkan kode undangan 'Yaasien' saat daftar Pi Network untuk saling mendukung."]
 ];
 
-let params = new URLSearchParams(window.location.search);
-let action = params.get('action');
-let idx = Number(localStorage.getItem('tIdx')) || 0;
-
-if(action === 'next'){
-  if(idx < kalimat.length){
-    let k = kalimat[idx];
-    document.getElementById('content').innerHTML = 
-      `<div class="arab">${k.arab}</div><div class="latin">${k.latin}</div><div class="indo">${k.indo}</div><div class="arti">${k.arti}</div>`;
-    document.getElementById('counter').innerHTML = `Klik 🎨 untuk lanjut ${idx+1}/7`;
-  } else {
-    document.getElementById('content').innerHTML = '';
-    document.getElementById('counter').innerHTML = '';
-    localStorage.setItem('tIdx', 0);
-  }
-  idx++;
-  localStorage.setItem('tIdx', idx);
+let i = new URLSearchParams(location.search).get('i');
+if(i && i>0 && i<=7){
+  let x = k[i-1];
+  document.getElementById('c').innerHTML = 
+  `<div class="arab">${x[0]}</div><div class="latin">${x[1]}</div><div class="indo">${x[2]}</div><div class="arti">${x[3]}</div><div class="counter">Klik 🎨 untuk lanjut ${i}/7</div>`;
 }
 </script>
 </body>
