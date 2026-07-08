@@ -41,21 +41,33 @@ footer { background: #0057d9; border-top: 2px solid #fffc00; padding: 6px 15px; 
 </div>
 
 <script>
-// 1. SUARA
+// 1. SUARA KRISTAL TING
 let audioCtx;
 function playSound() {
   if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const oscillator = audioCtx.createOscillator();
-  const gainNode = audioCtx.createGain();
-  oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
-  oscillator.type = 'sine';
-  oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
-  oscillator.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.2);
-  gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-  gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-  oscillator.start(); oscillator.stop(audioCtx.currentTime + 0.2);
-}
-
+  
+  // Bikin 2 oscillator biar ada gema kristal
+  for(let i = 0; i < 2; i++){
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    
+    oscillator.connect(gainNode); 
+    gainNode.connect(audioCtx.destination);
+    
+    oscillator.type = 'sine'; // sine = suara paling bersih/kristal
+    
+    // Frekuensi tinggi. 1200Hz = nada ting. Yang kedua ditunda dikit buat gema
+    oscillator.frequency.setValueAtTime(1200 + i*300, audioCtx.currentTime + i*0.05);
+    
+    // Volume naik cepat turun cepat = "ting"
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    gainNode.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.01); // naik
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25); // turun cepat
+    
+    oscillator.start(); 
+    oscillator.stop(audioCtx.currentTime + 0.25);
+  }
+                                               }
 // 2. LOGIN PI
 let piUsername = null;
 window.addEventListener('load', function(){
@@ -69,34 +81,43 @@ window.addEventListener('load', function(){
   }
 });
 
-// 3. EFEK BINTANG + SINAR
+// 3. EFEK BINTANG + CAHAYA BIAS
 const canvas = document.getElementById('space');
 const ctx = canvas.getContext('2d');
 let w = canvas.width = window.innerWidth;
 let h = canvas.height = window.innerHeight;
 let cx = w/2; let cy = h*0.35;
 let stars = [];
-let explosions = []; // UNTUK SINAR
-const colors = ['255,0,0','0,255,0','0,0,255','255,255,0','255,0,255','0,255,255','255,136,0','0,136,255']; // INI YG KEMARIN LUPA
+let lights = []; // GANTI NAMA DARI explosions JADI lights
+const colors = ['255,0,0','0,255,0','0,0,255','255,255,0','255,0,255','0,255,255','255,136,0','0,136,255'];
 
 for(let i=0; i<220; i++){ stars.push({ x: (Math.random()-0.5)*w*2, y: (Math.random()-0.5)*h*2, z: Math.random()*w }) }
 
 function animate(){
   ctx.clearRect(0,0,w,h);
+  
+  // BINTANG JALAN
   stars.forEach(s=>{ s.z -= 2.5; if(s.z <= 1){ s.z = w; s.x = (Math.random()-0.5)*w*2; s.y = (Math.random()-0.5)*h*2; }
     let x = (s.x * (w / s.z)) + cx; let y = (s.y * (w / s.z)) + cy;
     let size = (1 - s.z/w) * 2.5; ctx.fillStyle = 'white'; ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI*2); ctx.fill();
   });
   
-  // EFEK SINAR KETIKA KLIK
-  explosions.forEach((exp, i)=>{
-    exp.r += 3; exp.a -= 0.08;
-    ctx.strokeStyle = `rgba(${exp.color},${exp.a})`;
-    ctx.lineWidth = 2;
+  // EFEK CAHAYA MEMBIAS BARU
+  lights.forEach((light, i)=>{
+    light.r += 8; // melebar cepat
+    light.a -= 0.04; // hilang pelan
+    
+    let gradient = ctx.createRadialGradient(light.x, light.y, 0, light.x, light.y, light.r);
+    gradient.addColorStop(0, `rgba(${light.color},${light.a})`); // tengah terang
+    gradient.addColorStop(0.4, `rgba(${light.color},${light.a * 0.5})`); // bias
+    gradient.addColorStop(1, `rgba(${light.color},0)`); // tepi hilang
+    
+    ctx.fillStyle = gradient;
     ctx.beginPath();
-    ctx.arc(exp.x, exp.y, exp.r, 0, Math.PI*2);
-    ctx.stroke();
-    if(exp.a <= 0) explosions.splice(i,1);
+    ctx.arc(light.x, light.y, light.r, 0, Math.PI*2);
+    ctx.fill();
+    
+    if(light.a <= 0) lights.splice(i,1); // hapus kalau udah hilang
   });
   
   requestAnimationFrame(animate);
@@ -108,9 +129,10 @@ function handleClick(e){
   let x = e.touches? e.touches[0].clientX : e.clientX; 
   let y = e.touches? e.touches[0].clientY : e.clientY;
   let color = colors[Math.floor(Math.random()*colors.length)];
-  explosions.push({x:x, y:y, r:10, a:1, color: color}); // TAMBAH SINAR
+  lights.push({x:x, y:y, r:5, a:1, color: color}); // TAMBAH CAHAYA BARU
   playSound();
-}
+                     }
+  
 canvas.addEventListener('click', handleClick);
 canvas.addEventListener('touchstart', handleClick);
 window.addEventListener('resize', ()=>{ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; cx = w/2; cy = h*0.35; });
