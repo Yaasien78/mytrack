@@ -7,92 +7,61 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif; }
 body {
-  background: #ffffff;
+  background: transparent; /* transparan */
   min-height: 100vh;
-  padding: 20px;
-  padding-bottom: 120px; /* kasih ruang buat footer */
-}
-.box {
-  width: 100%;
-  max-width: 400px;
-  margin: 10px auto;
-  background: #ffffff;
-  border: 3px solid #ffcc00; /* BORDER GOLD */
-  border-radius: 20px;
-  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 15px 120px 15px;
+  color: #ffffff; /* HURUF PUTIH */
   text-align: center;
-  box-shadow: 0 4px 15px rgba(0,87,217,0.2);
-  cursor: pointer;
-  transition: 0.2s;
+  user-select: none;
 }
-.box:active { transform: scale(0.98); }
-.box.hide { display: none; } /* buat klik ke 8 */
-.arab { font-size: 24px; font-weight: bold; color: #0057d9; margin-bottom: 8px; direction: rtl; line-height: 2; }
-.latin { font-size: 16px; color: #000; font-style: italic; margin-bottom: 8px; }
-.indo { font-size: 15px; color: #333; font-weight: bold; margin-bottom: 5px; }
-.arti { font-size: 14px; color: #555; line-height: 1.6; }
-.counter { font-size: 12px; color: #777; margin-top: 15px; }
+.hide { display: none; }
+
+.arab {
+  font-size: 8vw;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 15px;
+  direction: rtl;
+  line-height: 1.8;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.7); /* biar kebaca */
+}
+.latin { font-size: 5vw; color: #ffffff; font-style: italic; margin-bottom: 12px; text-shadow: 0 2px 8px rgba(0,0,0,0.7); }
+.indo { font-size: 4.5vw; color: #ffffff; font-weight: bold; margin-bottom: 10px; text-shadow: 0 2px 8px rgba(0,0,0,0.7); }
+.arti { font-size: 4vw; color: #ffffff; line-height: 1.6; text-shadow: 0 2px 8px rgba(0,0,0,0.7); }
+.counter { font-size: 3.5vw; color: #ffffff; margin-top: 20px; opacity: 0.7; }
 </style>
 </head>
 <body>
 
-<div class="box" id="textBox" onclick="gantiKalimat()">
-  <div id="content"></div>
-  <div class="counter" id="counter">Klik untuk lanjut 1/7</div>
-</div>
+<div id="content"></div>
+<div class="counter" id="counter">Klik tombol Text untuk mulai 1/7</div>
 
 <script>
 const kalimat = [
-  {
-    arab: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
-    latin: "Bismillahirrahmanirrahim",
-    indo: "Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang",
-    arti: "Artinya: Kita memulai segala sesuatu dengan menyebut nama Allah yang memiliki kasih sayang luas kepada semua makhluk."
-  },
-  {
-    arab: "أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ",
-    latin: "Asyhadu alla ilaha illallah, wa asyhadu anna muhammadar rasulullah",
-    indo: "Aku bersaksi bahwa tidak ada tuhan selain Allah, dan aku bersaksi bahwa Muhammad adalah utusan Allah",
-    arti: "Artinya: Dua kalimat syahadat sebagai pintu masuk Islam dan bukti keimanan kepada Allah dan Rasul-Nya."
-  },
-  {
-    arab: "اللَّهُمَّ صَلِّ عَلَىٰ سَيِّدِنَا مُحَمَّدٍ وَعَلَىٰ آلِ سَيِّدِنَا مُحَمَّدٍ",
-    latin: "Allahumma sholli ala sayyidina muhammad wa ala ali sayyidina muhammad",
-    indo: "Ya Allah, limpahkanlah shalawat kepada junjungan kami Nabi Muhammad dan kepada keluarga junjungan kami Nabi Muhammad",
-    arti: "Artinya: Doa memohon keberkahan dan kemuliaan untuk Nabi Muhammad SAW beserta keluarganya."
-  },
-  {
-    arab: "سَلَامُ بَتِيرْ بُوَاتْ پِوْنِيْرْ",
-    latin: "Salam Petir buat Pioner",
-    indo: "Salam Petir buat Pioner",
-    arti: "Artinya: Salam semangat klik petir setiap hari untuk para Pioneer Pi Network. Jeger.. jeger.. jegerr.. ⚡"
-  },
-  {
-    arab: "سُدَهْكَهْ كْلِكْ پَتِيْرْ هَرِ اِنِ",
-    latin: "Sudahkah klik petir hari ini",
-    indo: "Sudahkah klik petir hari ini",
-    arti: "Artinya: Pengingat untuk tidak lupa menambang Pi setiap 24 jam sekali."
-  },
-  {
-    arab: "AI TRACKER سِيَاْپْ مَنَمَانِي اَنْدَا هَرِ اِنِ",
-    latin: "AI Tracker siap menemani anda hari ini",
-    indo: "AI Tracker siap menemani anda hari ini",
-    arti: "Artinya: AI Tracker akan membantu menjawab pertanyaan tentang Pi Network dan lainnya."
-  },
-  {
-    arab: "گُوْنَكَنْ كُوْدْ رِفْ Yaasien پَدَ پِ نَتْوَرْكْ",
-    latin: "Gunakan kode reff Yaasien pada Pi Network",
-    indo: "Gunakan kode reff Yaasien pada Pi Network",
-    arti: "Artinya: Masukkan kode undangan 'Yaasien' saat daftar Pi Network untuk saling mendukung."
-  }
+  { arab: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", latin: "Bismillahirrahmanirrahim", indo: "Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang", arti: "Artinya: Kita memulai segala sesuatu dengan menyebut nama Allah yang memiliki kasih sayang luas kepada semua makhluk." },
+  { arab: "أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ", latin: "Asyhadu alla ilaha illallah, wa asyhadu anna muhammadar rasulullah", indo: "Aku bersaksi bahwa tidak ada tuhan selain Allah, dan aku bersaksi bahwa Muhammad adalah utusan Allah", arti: "Artinya: Dua kalimat syahadat sebagai pintu masuk Islam dan bukti keimanan kepada Allah dan Rasul-Nya." },
+  { arab: "اللَّهُمَّ صَلِّ عَلَىٰ سَيِّدِنَا مُحَمَّدٍ وَعَلَىٰ آلِ سَيِّدِنَا مُحَمَّدٍ", latin: "Allahumma sholli ala sayyidina muhammad wa ala ali sayyidina muhammad", indo: "Ya Allah, limpahkanlah shalawat kepada junjungan kami Nabi Muhammad dan kepada keluarga junjungan kami Nabi Muhammad", arti: "Artinya: Doa memohon keberkahan dan kemuliaan untuk Nabi Muhammad SAW beserta keluarganya." },
+  { arab: "سَلَامُ بَتِيرْ بُوَاتْ پِوْنِيْرْ", latin: "Salam Petir buat Pioner", indo: "Salam Petir buat Pioner", arti: "Artinya: Salam semangat klik petir setiap hari untuk para Pioneer Pi Network. Jeger.. jeger.. jegerr.. ⚡" },
+  { arab: "سُدَهْكَهْ كْلِكْ پَتِيْرْ هَرِ اِنِ", latin: "Sudahkah klik petir hari ini", indo: "Sudahkah klik petir hari ini", arti: "Artinya: Pengingat untuk tidak lupa menambang Pi setiap 24 jam sekali." },
+  { arab: "AI TRACKER سِيَاْپْ مَنَمَانِي اَنْدَا هَرِ اِنِ", latin: "AI Tracker siap menemani anda hari ini", indo: "AI Tracker siap menemani anda hari ini", arti: "Artinya: AI Tracker akan membantu menjawab pertanyaan tentang Pi Network dan lainnya." },
+  { arab: "گُوْنَكَنْ كُوْدْ رِفْ Yaasien پَدَ پِ نَتْوَرْكْ", latin: "Gunakan kode reff Yaasien pada Pi Network", indo: "Gunakan kode reff Yaasien pada Pi Network", arti: "Artinya: Masukkan kode undangan 'Yaasien' saat daftar Pi Network untuk saling mendukung." }
 ];
 
-let index = 0;
+// ambil index dari localStorage biar nyambung tiap klik tombol footer
+let index = parseInt(localStorage.getItem('textIndex')) || 0;
 const content = document.getElementById('content');
 const counter = document.getElementById('counter');
-const box = document.getElementById('textBox');
 
 function tampilkan() {
+  if(index >= 7) { // kalau udah 8
+    document.body.classList.add('hide');
+    localStorage.setItem('textIndex', 0); // reset buat klik berikutnya
+    return;
+  }
   const k = kalimat[index];
   content.innerHTML = `
     <div class="arab">${k.arab}</div>
@@ -100,19 +69,12 @@ function tampilkan() {
     <div class="indo">${k.indo}</div>
     <div class="arti">${k.arti}</div>
   `;
-  counter.innerText = `Klik untuk lanjut ${index + 1}/7`;
+  counter.innerText = `Klik tombol Text untuk lanjut ${index + 1}/7`;
 }
 
-function gantiKalimat() {
-  index++;
-  if(index >= 7) { // klik ke 8
-    box.classList.add('hide'); // hilang sendiri
-    return;
-  }
-  tampilkan();
-}
-
-// tampilkan kalimat pertama pas dibuka
+// tiap buka halaman = ganti ke kalimat berikutnya
+index++;
+localStorage.setItem('textIndex', index);
 tampilkan();
 </script>
 
