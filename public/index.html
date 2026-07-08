@@ -196,5 +196,26 @@ document.querySelector('.footer-center').onclick = function(){
   window.location.href = 'login.html'; // GANTI SESUAI LINK LOGIN KAMU
 }
 </script>
+  <iframe id="aiFrame" src="about:blank" style="position:fixed; bottom:80px; left:0; width:100%; height:auto; max-height:45%; border:none; pointer-events:none; z-index:99; background:transparent; display:none;"></iframe>
+
+<script>
+let textIndex = 0;
+const frame = document.getElementById('aiFrame');
+
+// CARI TOMBOL PALET BERDASAR GAMBAR, BUKAN CLASS
+document.querySelector('.footer-left img').onclick = function(e){
+  e.stopPropagation();
+  textIndex++;
+  if(textIndex > 7){
+    textIndex = 0;
+    frame.style.display = 'none';
+    frame.src = "about:blank";
+  } else {
+    frame.style.display = 'block';
+    frame.src = "text.html?i=" + textIndex;
+  }
+  new Audio('sound/ketuk.mp3').play().catch(()=>{}); // SUARA LANGSUNG
+}
+</script>
 </body>
 </html>
