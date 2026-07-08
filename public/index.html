@@ -67,7 +67,7 @@ function playSound() {
     <a href="market.html" class="pi-logo">π</a>
   </header>
   <footer>
-  <a href="/text.html?action=next" class="footer-left">🎨</a>
+  <a href="#" class="footer-left"> class="footer-left">🎨</a>
   <button class="login-btn" id="loginBtn">Login</button>
   <a href="/ai.html" class="footer-right">+</a>
   </footer>
@@ -154,45 +154,19 @@ window.addEventListener('resize', ()=>{
   cx = w/2; cy = h*0.35;
 });
 
-// KIRIM SAPAAN KE text.html
-function showGreeting(){
-  const frame = document.getElementById('aiFrame');
-  frame.contentWindow.postMessage({type: 'showGreeting', username: piUsername}, '*');
-}
-document.getElementById('aiBtn').onclick = showGreeting;
-
 <script>
-// SCRIPT CANVAS + BINTANG JANGAN DIHAPUS
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
-let w,h,cx,cy;
-let stars=[], planets=[], explosions=[], colors=["#00BFFF","#FFD700","#FF69B4","#00FF7F"];
-let audio = new Audio('sound/ketuk.mp3');
-function playSound(){ audio.currentTime=0; audio.play().catch(()=>{}); }
+// SUARA PAKAI YANG ATAS SAJA JANGAN DIBUAT LAGI
+// CANVAS PAKAI YANG ATAS SAJA JANGAN DIBUAT LAGI
 
-//... kode canvas bintang kamu yg lama taruh di sini ...
-
-// INI YANG BARU: KHUSUS TOMBOL PALET
-let textIndex = 0; 
-document.querySelector('.footer-left').onclick = function(e){
-  e.preventDefault(); 
+// KODE TOMBOL TEKS - VERSI AMAN
+let textIndex = 0;
+document.querySelector('.footer-left').addEventListener('click', function(e){
+  e.preventDefault(); // PENTING: Biar gak pindah ke text.html
+  playSound(); // pake fungsi suara yg atas
   textIndex++;
-  if(textIndex > 7) textIndex = 0; 
-
-  const frame = document.getElementById('aiFrame');
-  if(textIndex === 0){
-    frame.style.display = 'none'; // SEMBUNYIKAN IFRAME PAS SELESAI
-  } else {
-    frame.style.display = 'block'; // MUNCULIN LAGI
-    frame.src = "text.html?i=" + textIndex; 
-  }
-  playSound(); 
-}
-
-// BIAR LOGIN TETAP JALAN
-document.querySelector('.footer-center').onclick = function(){
-  window.location.href = 'login.html'; // GANTI SESUAI LINK LOGIN KAMU
-}
+  if(textIndex > 7) textIndex = 1; // mulai dari 1
+  window.open('text.html?i=' + textIndex, '_blank', 'width=400,height=400'); // buka di tab baru kecil
+});
 </script>
 </body>
 </html>
