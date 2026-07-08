@@ -8,14 +8,14 @@
 * { margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif; }
 body {
   background: #ffffff;
-  min-height:100vh;
-  padding:20px;
-  padding-bottom: 100px; /* kasih ruang buat footer */
+  min-height: 100vh;
+  padding: 20px;
+  padding-bottom: 120px; /* kasih ruang buat footer */
 }
 .box {
   width: 100%;
   max-width: 400px;
-  margin: 20px auto 80px auto; /* tengah + jarak bawah */
+  margin: 10px auto;
   background: #ffffff;
   border: 3px solid #ffcc00; /* BORDER GOLD */
   border-radius: 20px;
@@ -23,14 +23,14 @@ body {
   text-align: center;
   box-shadow: 0 4px 15px rgba(0,87,217,0.2);
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.2s;
 }
-.box:hover { transform: scale(1.02); }
-.box.hidden { display: none; } /* ganti opacity biar bener2 hilang */
+.box:active { transform: scale(0.98); }
+.box.hide { display: none; } /* buat klik ke 8 */
 .arab { font-size: 24px; font-weight: bold; color: #0057d9; margin-bottom: 8px; direction: rtl; line-height: 2; }
 .latin { font-size: 16px; color: #000; font-style: italic; margin-bottom: 8px; }
 .indo { font-size: 15px; color: #333; font-weight: bold; margin-bottom: 5px; }
-.arti { font-size: 14px; color: #555; line-height: 1.5; }
+.arti { font-size: 14px; color: #555; line-height: 1.6; }
 .counter { font-size: 12px; color: #777; margin-top: 15px; }
 </style>
 </head>
@@ -105,21 +105,14 @@ function tampilkan() {
 
 function gantiKalimat() {
   index++;
-
-  if(index === 7) { // klik ke 8
-    box.classList.add('hidden'); // hilang
+  if(index >= 7) { // klik ke 8
+    box.classList.add('hide'); // hilang sendiri
     return;
   }
-
-  if(index === 8) { // klik ke 9
-    index = 0; // reset ke awal
-    box.classList.remove('hidden'); // muncul lagi
-  }
-
   tampilkan();
 }
 
-// tampilkan pertama kali
+// tampilkan kalimat pertama pas dibuka
 tampilkan();
 </script>
 
