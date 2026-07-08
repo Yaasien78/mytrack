@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-html, body { background:transparent; margin:0; padding:5px 0; }
-
-.arab { font-size:6vw; font-weight:900; color:#00BFFF; direction:rtl; margin:4px 0; text-align:center; text-shadow:0 0 3px #000; }
-.latin { font-size:3.8vw; color:#00BFFF; font-style:italic; margin:3px 0; text-align:center; font-weight:600; text-shadow:0 0 3px #000; }
-.indo { font-size:3.5vw; color:#00BFFF; font-weight:800; margin:3px 0; text-align:center; text-shadow:0 0 3px #000; }
-.arti { font-size:3.2vw; color:#00BFFF; margin:3px 0; text-align:center; font-weight:500; text-shadow:0 0 3px #000; }
-.counter { font-size:2.8vw; color:#00BFFF; margin-top:8px; text-align:center; text-shadow:0 0 3px #000; }
+html, body { background:transparent; margin:0; padding:0; }
+#content { text-align:center; }
+.arab { font-size:6vw; font-weight:900; color:#00BFFF; direction:rtl; margin:4px 0; text-shadow:0 0 4px #000; }
+.latin { font-size:3.8vw; color:#00BFFF; font-style:italic; margin:3px 0; font-weight:600; text-shadow:0 0 4px #000; }
+.indo { font-size:3.5vw; color:#00BFFF; font-weight:800; margin:3px 0; text-shadow:0 0 4px #000; }
+.arti { font-size:3.2vw; color:#00BFFF; margin:3px 0; font-weight:500; text-shadow:0 0 4px #000; }
+.counter { font-size:2.8vw; color:#00BFFF; margin-top:8px; text-shadow:0 0 4px #000; }
 </style>
 </head>
 <body>
@@ -36,10 +36,7 @@ if(action === 'next'){
   if(idx < kalimat.length){
     let k = kalimat[idx];
     document.getElementById('content').innerHTML = 
-      `<div class="arab">${k.arab}</div>
-       <div class="latin">${k.latin}</div>
-       <div class="indo">${k.indo}</div>
-       <div class="arti">${k.arti}</div>`;
+      `<div class="arab">${k.arab}</div><div class="latin">${k.latin}</div><div class="indo">${k.indo}</div><div class="arti">${k.arti}</div>`;
     document.getElementById('counter').innerHTML = `Klik 🎨 untuk lanjut ${idx+1}/7`;
   } else {
     document.getElementById('content').innerHTML = '';
@@ -48,10 +45,6 @@ if(action === 'next'){
   }
   idx++;
   localStorage.setItem('tIdx', idx);
-} else {
-  // BUKA BIASA KOSONG
-  document.getElementById('content').innerHTML = '';
-  document.getElementById('counter').innerHTML = '';
 }
 </script>
 </body>
