@@ -73,8 +73,8 @@ function playSound() {
   </footer>
 </div>
 
-<iframe id="aiFrame" src="text.html" style="position:fixed; bottom:80px; left:0; width:100%; height:auto; max-height:40%; border:none; pointer-events:none; z-index:50; background:transparent;"></iframe>
-
+<iframe id="aiFrame" src="text.html" style="position:fixed; bottom:80px; left:0; width:100%; height:auto; max-height:45%; border:none; pointer-events:none; z-index:50; background:transparent;"></iframe>
+  
 <script>
 let piUsername = null; // BUAT SIMPAN NAMA
 
@@ -163,6 +163,22 @@ function showGreeting(){
 }
 document.getElementById('aiBtn').onclick = showGreeting;
 
+<script>
+let textIndex = 0; // SIMPAN DI SINI AJA
+
+document.querySelector('.footer-left').onclick = function(e){
+  e.preventDefault(); // CEGAH PINDAH HALAMAN
+  textIndex++;
+  if(textIndex > 7) textIndex = 0; // RESET SETELAH 7
+
+  const frame = document.getElementById('aiFrame');
+  if(textIndex === 0){
+    frame.src = "text.html"; // KOSONGKAN
+  } else {
+    frame.src = "text.html?i=" + textIndex; // KIRIM NOMOR
+  }
+  playSound(); // SUARA KETUK
+}
 </script>
 </body>
-  </html>
+</html>
