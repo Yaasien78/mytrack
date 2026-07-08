@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title></title>
 <style>
-html, body, div {
+/* PAKSA SEMUA TRANSPARAN */
+html, body, #content, #counter, div {
   background: transparent!important;
   background-color: transparent!important;
   margin: 0!important;
   padding: 0!important;
-  border: none!important;
+  border: 0!important;
+  outline: none!important;
   box-shadow: none!important;
 }
 body {
@@ -19,44 +21,46 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  padding: 10px 12px 120px 12px;
   text-align: center;
   font-family: Arial, sans-serif;
 }
 .hide { display: none!important; }
 
+/* SEMUA TEKS BIRU MUDA */
+.arab,.latin,.indo,.arti,.counter {
+  color: #00BFFF; /* BIRU MUDA NYALA */
+  text-shadow: 0 0 3px rgba(0,0,0,0.8); /* KASIH BAYANGAN TIPIS BIAR KEBACA DI GAMBAR */
+}
+
 .arab {
   font-size: 6vw;
   font-weight: 900;
-  color: #00BFFF; /* BIRU MUDA NYALA */
   direction: rtl;
   line-height: 1.6;
-  margin: 5px 0;
+  margin: 6px 0;
 }
 .latin { 
   font-size: 3.8vw;
-  color: #00BFFF;
   font-style: italic; 
   margin: 4px 0;
   font-weight: 600;
 }
 .indo { 
   font-size: 3.5vw;
-  color: #00BFFF;
   font-weight: 800; 
   margin: 4px 0;
 }
 .arti { 
   font-size: 3.2vw;
-  color: #00BFFF;
   line-height: 1.4; 
   margin: 4px 0;
   font-weight: 500;
 }
 .counter { 
   font-size: 2.8vw;
-  color: #00BFFF;
   margin-top: 10px; 
+  opacity: 0.9;
 }
 </style>
 </head>
@@ -81,13 +85,12 @@ const counter = document.getElementById('counter');
 const urlParams = new URLSearchParams(window.location.search);
 const action = urlParams.get('action');
 
-// RESET OTOMATIS KALAU BUKA TANPA ACTION
 let index = parseInt(localStorage.getItem('textIndex')) || 0;
 
 function tampilkan() {
   if(index >= 7) {
     document.body.classList.add('hide');
-    localStorage.setItem('textIndex', 0); // RESET KE 0
+    localStorage.setItem('textIndex', 0);
     counter.innerText = '';
     return;
   }
@@ -102,14 +105,12 @@ function tampilkan() {
 }
 
 if(action === 'next'){
+  tampilkan();
   index++;
   localStorage.setItem('textIndex', index);
-  tampilkan();
 } else {
-  // KALAU BUKA BIASA, RESET DULU KE 0
-  localStorage.setItem('textIndex', 0);
-  index = 0;
-  tampilkan(); // LANGSUNG TAMPILKAN NO 1
+  content.innerHTML = '';
+  counter.innerText = '';
 }
 </script>
 
