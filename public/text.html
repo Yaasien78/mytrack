@@ -2,73 +2,127 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teks Dakwah</title>
 <style>
-body{margin:0; background:transparent; font-family:Arial; overflow:hidden;}
-#ai-popup{
-  position:fixed; top:80px; left:50%; transform:translateX(-50%); /* PINDAH KE ATAS */
-  background: transparent;
-  color: white;
-  padding: 0;
-  border: none;
-  font-weight: bold; 
-  font-size: 18px; 
-  z-index: 9999;
-  opacity: 0; 
-  transition: opacity 0.4s;
-  text-align: center; 
-  max-width: 90%;
-  text-shadow: 0 0 8px #000, 0 0 12px #0057d9; /* KASIH GLOW BIAR JELAS */
-  pointer-events: none;
+* { margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif; }
+body {
+  background: #ffffff;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
 }
+.box {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  border: 3px solid #ffcc00; /* BORDER GOLD */
+  border-radius: 20px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,87,217,0.2);
+  cursor: pointer;
+  transition: 0.3s;
+}
+.box:hover { transform: scale(1.02); }
+.box.hidden { opacity: 0; pointer-events: none; }
+.arab { font-size: 24px; font-weight: bold; color: #0057d9; margin-bottom: 8px; direction: rtl; }
+.latin { font-size: 16px; color: #000; font-style: italic; margin-bottom: 8px; }
+.indo { font-size: 15px; color: #333; font-weight: bold; margin-bottom: 5px; }
+.arti { font-size: 14px; color: #555; line-height: 1.5; }
+.counter { font-size: 12px; color: #777; margin-top: 15px; }
 </style>
 </head>
 <body>
-<div id="ai-popup"></div>
+
+<div class="box" id="textBox" onclick="gantiKalimat()">
+  <div id="content"></div>
+  <div class="counter" id="counter">Klik untuk lanjut 1/7</div>
+</div>
 
 <script>
-let piUsername = null;
-
-const greetings = [
-  "Hai Pioneer, saya AI Tracker, siap berinteraksi dengan Anda.",
-  "Silahkan klik Plus untuk memulai.",
-  "Selamat datang Pioneer",
-  "Pastikan anda sudah klik petir hari ini.",
-  "Mau buat apa hari ini.",
-  "AI Tracker siap menemani anda.",
-  "Silahkan login dulu dan gunakan reff Yaasien."
+const kalimat = [
+  {
+    arab: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+    latin: "Bismillahirrahmanirrahim",
+    indo: "Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang",
+    arti: "Artinya: Kita memulai segala sesuatu dengan menyebut nama Allah yang memiliki kasih sayang luas kepada semua makhluk."
+  },
+  {
+    arab: "أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللَّهِ",
+    latin: "Asyhadu alla ilaha illallah, wa asyhadu anna muhammadar rasulullah",
+    indo: "Aku bersaksi bahwa tidak ada tuhan selain Allah, dan aku bersaksi bahwa Muhammad adalah utusan Allah",
+    arti: "Artinya: Dua kalimat syahadat sebagai pintu masuk Islam dan bukti keimanan kepada Allah dan Rasul-Nya."
+  },
+  {
+    arab: "اللَّهُمَّ صَلِّ عَلَىٰ سَيِّدِنَا مُحَمَّدٍ وَعَلَىٰ آلِ سَيِّدِنَا مُحَمَّدٍ",
+    latin: "Allahumma sholli ala sayyidina muhammad wa ala ali sayyidina muhammad",
+    indo: "Ya Allah, limpahkanlah shalawat kepada junjungan kami Nabi Muhammad dan kepada keluarga junjungan kami Nabi Muhammad",
+    arti: "Artinya: Doa memohon keberkahan dan kemuliaan untuk Nabi Muhammad SAW beserta keluarganya."
+  },
+  {
+    arab: "سَلَامُ بَتِيرْ بُوَاتْ پِوْنِيْرْ",
+    latin: "Salam Petir buat Pioner",
+    indo: "Salam Petir buat Pioner",
+    arti: "Artinya: Salam semangat klik petir setiap hari untuk para Pioneer Pi Network. Jeger.. jeger.. jegerr.. ⚡"
+  },
+  {
+    arab: "سُدَهْكَهْ كْلِكْ پَتِيْرْ هَرِ اِنِ",
+    latin: "Sudahkah klik petir hari ini",
+    indo: "Sudahkah klik petir hari ini",
+    arti: "Artinya: Pengingat untuk tidak lupa menambang Pi setiap 24 jam sekali."
+  },
+  {
+    arab: "AI TRACKER سِيَاْپْ مَنَمَانِي اَنْدَا هَرِ اِنِ",
+    latin: "AI Tracker siap menemani anda hari ini",
+    indo: "AI Tracker siap menemani anda hari ini",
+    arti: "Artinya: AI Tracker akan membantu menjawab pertanyaan tentang Pi Network dan lainnya."
+  },
+  {
+    arab: "گُوْنَكَنْ كُوْدْ رِفْ Yaasien پَدَ پِ نَتْوَرْكْ",
+    latin: "Gunakan kode reff Yaasien pada Pi Network",
+    indo: "Gunakan kode reff Yaasien pada Pi Network",
+    arti: "Artinya: Masukkan kode undangan 'Yaasien' saat daftar Pi Network untuk saling mendukung."
+  }
 ];
 
-window.addEventListener('message', function(e){
-  if(e.data.type === 'showGreeting'){
-    piUsername = e.data.username;
-    showGreeting();
+let index = 0;
+const content = document.getElementById('content');
+const counter = document.getElementById('counter');
+const box = document.getElementById('textBox');
+
+function tampilkan() {
+  const k = kalimat[index];
+  content.innerHTML = `
+    <div class="arab">${k.arab}</div>
+    <div class="latin">${k.latin}</div>
+    <div class="indo">${k.indo}</div>
+    <div class="arti">${k.arti}</div>
+  `;
+  counter.innerText = `Klik untuk lanjut ${index + 1}/7`;
+}
+
+function gantiKalimat() {
+  index++;
+
+  if(index === 7) { // klik ke 8
+    box.classList.add('hidden'); // hilang
+    return;
   }
-});
 
-function showGreeting(){
-  const popup = document.getElementById('ai-popup');
-  let text = greetings[Math.floor(Math.random()*greetings.length)];
-  
-  popup.innerText = text;
-  popup.style.opacity = 1;
-  playSound();
-  setTimeout(()=>{ popup.style.opacity = 0; }, 3000); // INI 3 DETIK
+  if(index === 8) { // klik ke 9
+    index = 0; // reset ke awal
+    box.classList.remove('hidden'); // muncul lagi
+  }
+
+  tampilkan();
 }
 
-function playSound() {
-  let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const oscillator = audioCtx.createOscillator();
-  const gainNode = audioCtx.createGain();
-  oscillator.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-  oscillator.type = 'sine';
-  oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
-  oscillator.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.15);
-  gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-  gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-  oscillator.start();
-  oscillator.stop(audioCtx.currentTime + 0.15);
-}
+// tampilkan pertama kali
+tampilkan();
 </script>
+
 </body>
 </html>
