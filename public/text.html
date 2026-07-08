@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<style>
+body{margin:0; background:transparent; font-family:Arial; overflow:hidden;}
+#ai-popup{
+  position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
+  background: transparent; /* HAPUS BACKGROUND */
+  color: white; /* HURUF PUTIH SEMUA */
+  padding: 0;
+  border: none;
+  font-weight: bold; 
+  font-size: 18px; 
+  z-index: 9999;
+  opacity: 0; 
+  transition: opacity 0.4s;
+  text-align: center; 
+  max-width: 90%;
+  text-shadow: 0 0 8px #000, 0 0 12px #0057d9; /* KASIH BAYANGAN BIAR KEBACA DI ANGKASA */
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+<div id="ai-popup"></div>
+
+<script>
+let piUsername = null;
+
+const greetings = [
+  "Halo {name}! Siap menjelajah galaksi hari ini?",
+  "AI Tracker online. Ada misi apa?",
+  "Wah ketukan baru terdeteksi! Keren!",
+  "Selamat datang di My Track, {name}!",
+  "Energi kosmik melimpah. Lanjutkan!",
+  "Harga Pi stabil. Tetap semangat mining!",
+  "Jaga semangatmu, penjelajah angkasa!",
+  "Tracker siap. Mau menciptakan bintang berapa?"
+];
+
+window.addEventListener('message', function(e){
+  if(e.data.type === 'showGreeting'){
+    piUsername = e.data.username;
+    showGreeting();
+  }
+});
+
+function showGreeting(){
+  const popup = document.getElementById('ai-popup');
+  const name = piUsername ? piUsername : "Penjelajah";
+  let text = greetings[Math.floor(Math.random()*greetings.length)];
+  text = text.replace("{name}", name);
+  
+  popup.innerText = text;
+  popup.style.opacity = 1;
+  playSound();
+  setTimeout(()=>{ popup.style.opacity = 0; }, 3000);
+}
+
+function playSound() {
+  let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  oscillator.type = 'sine';
+  oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+  oscillator.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.15);
+  gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+  oscillator.start();
+  oscillator.stop(audioCtx.currentTime + 0.15);
+}
+</script>
+</body>
+</html>
