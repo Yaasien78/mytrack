@@ -120,14 +120,91 @@ header{
   </div>
   <textarea id="q" placeholder="Tanya AI Tracker..."></textarea>
 </div>
-
+  
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script>
 const chatBox = document.getElementById('chatBox');
 const input = document.getElementById('q');
-const jawabanAI = {"gcv":"GCV = 1 Pi = 314159 USD","petir":"Klik petir 24 jam sekali","mainnet":"Mainnet Terbuka Pi bisa ditukar","default":"Maaf AI masih belajar. Coba: GCV, Petir, Mainnet"};
-function ngomong(teks){const ucapan=new SpeechSynthesisUtterance(teks);ucapan.lang='id-ID';speechSynthesis.speak(ucapan);}
-function jawab(){let q=input.value;if(q.trim()==="")return;chatBox.innerHTML+=`<div class="user">${q}</div>`;let qLower=q.toLowerCase();let jawaban=jawabanAI.default;for(let key in jawabanAI){if(qLower.includes(key)){jawaban=jawabanAI[key];break;}}setTimeout(()=>{chatBox.innerHTML+=`<div class="bot">${jawaban}</div>`;ngomong(jawaban);chatBox.scrollTop=chatBox.scrollHeight;},500);input.value="";chatBox.scrollTop=chatBox.scrollHeight;}
-document.getElementById('fileInput').onchange=function(e){let file=e.target.files[0];if(file){chatBox.innerHTML+=`<div class="user">📎 ${file.name}</div>`;chatBox.innerHTML+=`<div class="bot">File diterima Pioneer</div>`;}};
-const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;const recognition=new SpeechRecognition();recognition.lang='id-ID';document.getElementById('mic').onclick=function(){recognition.start();this.style.background="#00FF00";};recognition.onresult=function(event){input.value=event.results[0][0].transcript;document.getElementById('mic').style.background="#FF0000";jawab();};recognition.onend=function(){document.getElementById('mic').style.background="#FF0000";};
-</script>
+const GROQ_API_KEY = "later"; // KEY KAMU
+let currentUser = null;
+
+// LOGIN PI
+Pi.init({ version: "2.0", sandbox: false });
+Pi.authenticate(['username','payments'], 
+function(payment){console.log(payment)}, 
+function(auth){
+  currentUser=auth.user; 
+  chatBox.innerHTML += `<div class="bot">Hai ${auth.user.username} 👋</div>`
+})
+
+function ngomong(teks){
+  const ucapan = new SpeechSynthesisUtterance(teks);
+  ucapan.lang = 'id-ID';
+  speechSynthesis.speak(ucapan);
+}
+
+async function jawab(){
+  let q = input.value;
+  if(q.trim()==="") return;
+  chatBox.innerHTML += `<div class="user">${q}</div>`;
+  input.value = "";
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  try{
+    chatBox.innerHTML += `<div class="bot" id="loading">AI Tracker lagi mikir...</div>`;
+    
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${GROQ_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "llama-3.1-70b-versatile",
+        messages: [
+          {role: "system", content: `Kamu adalah AI Tracker untuk Pioneer Pi Network. Sapa user: ${currentUser?.username}. Jawab singkat bahasa Indonesia. Fokus Pi, GCV, Mainnet.`},
+          {role: "user", content: q}
+        ]
+      })
+    });
+    const data = await res.json();
+    document.getElementById("loading").remove();
+    
+    let answer = data.choices[0].message.content;
+    chatBox.innerHTML += `<div class="bot">${answer}</div>`;
+    ngomong(answer);
+  }catch(err){
+    document.getElementById("loading").remove();
+    chatBox.innerHTML += `<div class="bot">Server AI error. Coba lagi ya</div>`;
+  }
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// FILE UPLOAD
+document.getElementById('fileInput').onchange = function(e){
+  let file = e.target.files[0];
+  if(file){
+    chatBox.innerHTML += `<div class="user">📎 ${file.name}</div>`;
+    chatBox.innerHTML += `<div class="bot">File diterima Pioneer</div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+};
+
+// VOICE MIC
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
+recognition.lang = 'id-ID';
+document.getElementById('mic').onclick = function(){
+  recognition.start();
+  this.style.background = "#00FF00";
+};
+recognition.onresult = function(event){
+  input.value = event.results[0][0].transcript;
+  document.getElementById('mic').style.background = "#FF0000";
+  jawab();
+};
+recognition.onend = function(){
+  document.getElementById('mic').style.background = "#FF0000";
+};
+</script> 
 </body></html>
