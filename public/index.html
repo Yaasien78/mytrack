@@ -13,7 +13,23 @@ html, body { height: 100%; background: #000; overflow: hidden; }
 #space{ position:fixed; top:0; left:0; width:100%; height:100%; z-index:3; cursor:pointer; touch-action: none; }
 header, footer { pointer-events: auto; }
 header { background: #0057d9; border-bottom: 2px solid #fffc00; color: white; padding: 6px 15px; display: flex; justify-content: space-between; align-items:center }
-.logo { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fffc00; background: #0057d9; display: flex; align-items:center; justify-content:center; font-weight:bold; color:white; text-decoration:none; }
+.logo { 
+  width: 45px; 
+  height: 45px; 
+  border-radius: 50%; 
+  border: 2px solid #fffc00; 
+  background: #0057d9; 
+  display: flex; 
+  align-items:center; 
+  justify-content:center; 
+  font-weight:bold; 
+  color:white; 
+  text-decoration:none;
+  font-size: 9px;        /* KECILIN BIAR MUAT */
+  line-height: 11px;     /* JARAK BARIS DISEMPITIN */
+  text-align: center;    /* BIAR DI TENGAH */
+  flex-direction: column;/* BIAR MY DI ATAS TRACK DI BAWAH */
+}
 .harga { text-align: center; font-weight: bold; font-size: 14px; line-height: 1.4; }
 .pi-logo { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fffc00; background: #0057d9; font-weight:bold; display:flex; align-items:center; justify-content:center; color:white; text-decoration:none; font-size:24px }
 footer { background: #0057d9; border-top: 2px solid #fffc00; padding: 6px 15px; display: flex; justify-content: space-between; align-items:center }
@@ -31,7 +47,7 @@ footer { background: #0057d9; border-top: 2px solid #fffc00; padding: 6px 15px; 
     <a href="upload.html" class="logo">My<br>Track</a>
     <div class="harga">1 Pi = $0.112869 <br> Rp2,032.77</div>
     <a href="market.html" class="pi-logo">π</a>
-  </header>
+  </header
   <div style="flex:1"></div>
   <footer>
     <a href="#" class="footer-left">🎨</a>
