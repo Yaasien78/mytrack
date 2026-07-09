@@ -27,11 +27,10 @@ html,body{
   display:flex;
   justify-content:center;
   align-items:center;
-  pointer-events: none; /* BIAR TENGAH GA BISA DIKLIK */
 }
 
 .teks{
-  font-size:20px; /* UDAH KECIL */
+  font-size:18px; /* DIKECILIN LAGI DIKIT */
   font-weight:900;
   color:#00FFEA; 
   text-transform: uppercase;
@@ -44,23 +43,8 @@ html,body{
   margin-top:15px;
   color:#FFFFFF; 
   font-weight:bold;
-  text-shadow:none;
 }
 a{color:#FFCF00;text-decoration:none;font-size:14px;position:absolute;top:15px;left:15px;font-family:sans-serif;z-index:10;}
-
-/* TOMBOL PALETTE BUAT KLIK */
-#btnPalette{
-  position:fixed;
-  bottom:70px;
-  left:20px;
-  font-size:35px;
-  background:rgba(0,0,0,0.5);
-  border-radius:50%;
-  padding:10px;
-  cursor:pointer;
-  z-index:99;
-  border:2px solid #00FFEA;
-}
 </style>
 </head>
 <body>
@@ -70,9 +54,6 @@ a{color:#FFCF00;text-decoration:none;font-size:14px;position:absolute;top:15px;l
   <div id="c" class="teks"></div>
   <div id="nomor" class="counter"></div>
 </div>
-
-<!-- TOMBOL PALETTE BARU -->
-<div id="btnPalette">🎨</div>
 
 <script>
 const k = [
@@ -97,11 +78,28 @@ function tampil(){
 }
 tampil(); 
 
-// KLIK NYA PINDAH KE TOMBOL PALETTE
-document.getElementById('btnPalette').onclick = function(){ 
-  nomor = nomor + 1;
-  if(nomor > k.length) nomor = 1; 
-  tampil();
-}
+// Tunggu 2 detik biar tombol palette bawaan app muncul dulu
+setTimeout(function(){
+  // Cari tombol palette bawaan berdasarkan class nya
+  let btnPalette = document.querySelector('button img[src*="palette"], div img[src*="palette"], .palette');
+  
+  // Kalau ga ketemu, coba cari tombol paling kiri bawah
+  if(!btnPalette){
+    btnPalette = document.querySelector('body > div:last-child > div:first-child');
+  }
+
+  if(btnPalette){
+    btnPalette.style.cursor = 'pointer';
+    btnPalette.onclick = function(){ 
+      nomor = nomor + 1;
+      if(nomor > k.length) nomor = 1; 
+      tampil();
+    }
+    console.log("Tombol palette sudah dihubungkan");
+  } else {
+    console.log("Tombol palette tidak ditemukan");
+  }
+}, 2000);
+
 </script>
 </body></html>
