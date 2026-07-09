@@ -37,9 +37,9 @@ footer { background: #0057d9; border-top: 2px solid #fffc00; padding: 6px 15px; 
     <div class="harga">1 Pi = $0.112869 <br> Rp2,032.77</div>
     <a href="market.html" class="pi-logo">π</a>
   </header>
-  <div style="flex:1"></div>
+  <iframe id="textFrame" src="text.html" style="flex:1; width:100%; border:none; background:transparent; pointer-events:none;"></iframe>
   <footer>
-    <a href="#" class="footer-left">🎨</a>
+    <a href="#" class="footer-left" id="btnQuote">🎨</a>
     <button class="login-btn" id="loginBtn">Login</button>
     <a href="ai.html" class="footer-right">+</a>
   </footer>
@@ -147,6 +147,11 @@ document.querySelector('.footer-left').onclick = function(e){
   e.preventDefault();
   playSound();
 }
+  // 5. GANTI KALIMAT
+document.getElementById('btnQuote').onclick = function(e){
+  e.preventDefault();
+  document.getElementById('textFrame').contentWindow.postMessage('next', '*');
+        }
 </script>
 </body>
 </html>
