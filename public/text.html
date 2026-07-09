@@ -1,83 +1,56 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Spirit Pioneer</title>
+<head><meta charset="UTF-8">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap'); /* FONT ROBOT */
 
-body { 
-  background:transparent; /* TEMBUS */
-  color:#fffc00; /* KUNING EMAS */
-  display:flex; 
-  align-items:center; 
-  justify-content:center; 
-  height:100vh; 
-  text-align:center; 
-  font-size:20px; /* DIKECILIN DIKIT BIAR MUAT 2 BARIS */
-  font-weight:bold; 
-  padding:20px; 
-  font-family: 'Orbitron', sans-serif;
-  text-shadow: 0 0 10px #000; /* KASIH BAYANGAN BIAR TETAP KEBACA DI ATAS BINTANG */
-  margin:0;
-}
-
-#nomor{
-  position:absolute;
-  bottom:100px; /* DIATAS TOMBOL LOGIN */
-  font-size:14px;
-  color:#ffffff;
-  text-shadow: 0 0 5px #000;
-}
-
-/* AREA KLIK INVISIBLE PAS DI ATAS TOMBOL PALETTE */
-#areaKlik{
-  position:fixed;
-  bottom:5px;
-  left:5px;
-  width:65px; 
-  height:65px;
-  z-index:99999; /* PALING ATAS */
+body{
   background:transparent;
-  cursor:pointer;
+  color:#00FFEA; /* BIRU CYAN TEKNOLOGI */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  text-align:center;
+  font-family: 'Orbitron', sans-serif; /* GAYA ROBOT */
+  font-size:5vw; /* RESPONSIVE */
+  font-weight:900;
+  padding:20px;
+  /* text-shadow DIHAPUS BIAR POLOS */
+  letter-spacing:2px; /* JARAK HURUF KAYAK AI */
+  /* text-transform DIHAPUS BIAR NORMAL */
 }
 </style>
 </head>
-<body>
-
-<div id="c"></div>
-<div id="nomor"></div>
-
-<!-- AREA KLIK INVISIBLE -->
-<div id="areaKlik"></div>
-
+<body></body>
 <script>
-const k = [
-"JANGAN MENYERAH PIONEER, PI ADALAH MASA DEPAN",
-"KLIK PETIR SETIAP 24 JAM JANGAN LUPA",
-"KONSENSUS 314159 HARGA MASA DEPAN",
-"AI TRACKER SIAP MEMBANTU SEMUA PIONER",
-"GUNAKAN KODE REFF YAASIEN",
-"BERSABAR KARENA KEMENANGAN SUDAH DEKAT",
-"PI NETWORK ADALAH REVOLUSI KEUANGAN"
+const quotes = [
+  "Jangan Menyerah Pioneer, Pi Adalah Masa Depan",
+  "Setiap Klik Petir Adalah Investasi Untuk Anak Cucu",
+  "Kita Menambang Bukan Hari Ini, Tapi Untuk 10 Tahun Kedepan",
+  "GCV 314159 USD Adalah Harga Yang Kita Perjuangkan",
+  "Bersabar, Beriman, Dan Terus Menambang",
+  "Satu Ekosistem, Satu Komunitas, Satu Tujuan: Sukses",
+  "Kamu Bukan Penambang Biasa, Kamu Adalah Pionir"
 ];
-let nomor = 0; // MULAI KOSONG
 
-function tampil(){
-  if(nomor === 0){
-    document.getElementById('c').innerText = ""; 
-    document.getElementById('nomor').innerText = "";
-  } else {
-    document.getElementById('c').innerText = k[nomor-1];
-    document.getElementById('nomor').innerText = nomor + "/7";
+let index = 0;
+let total = quotes.length + 1; // 7 + 1 = 8
+
+function changeQuote(){
+  if(index < 7){ // 0-6 = tampil 7 kalimat spirit
+    document.body.innerText = quotes[index];
+  } else { // 7 = KOSONG
+    document.body.innerText = ``;
   }
+  index++;
+  if(index >= total) index = 0; // kalau udah 8 balik ke 0
 }
-tampil(); 
 
-document.getElementById('areaKlik').onclick = function(){ 
-  nomor = nomor + 1;
-  if(nomor > k.length) nomor = 1; 
-  tampil();
-}
-</script>
-</body></html>
+// dengerin perintah dari index.html tombol bintang
+window.addEventListener('message', (e) => {
+  if(e.data === 'next') changeQuote();
+});
+
+changeQuote(); // tampil pertama
+</script></html>
