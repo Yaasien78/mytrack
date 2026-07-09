@@ -5,79 +5,37 @@
 <title>AI Tracker Pioneer</title>
 <style>
 body{margin:0;font-family:sans-serif;background:#fff;}
-header{background:#0057FF;color:#fff;padding:15px;font-size:20px;font-weight:bold;display:flex;justify-content:space-between;align-items:center;}
-#uploadBtn{font-size:28px;cursor:pointer;}
+header{
+  background:#0057FF;
+  color:#fff;
+  padding:15px;
+  font-size:20px;
+  font-weight:bold;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:2px solid #FFD700; /* BORDER EMAS */
+}
+#uploadBtn{font-size:20px;cursor:pointer;} /* SYMBOL LEBIH KECIL */
 
 #chatBox{
   height:55vh;
   overflow-y:auto;
   padding:15px;
-  border:2px solid #FFD700; /* BORDER GOLD */
+  border:2px solid #FFD700;
   margin:15px;
   border-radius:20px;
   background:#fff;
-  margin-bottom:90px; /* KASIH JARAK BUAT INPUT */
+  margin-bottom:90px;
 }
 
-.bot{
-  color:#0057FF; /* TULISAN BIRU */
-  border:2px solid #FFD700; /* BOX BORDER GOLD */
-  padding:12px;
-  border-radius:15px;
-  margin:10px 0;
-  max-width:80%;
-  background:transparent;
-}
+.bot{color:#0057FF;border:2px solid #FFD700;padding:12px;border-radius:15px;margin:10px 0;max-width:80%;background:transparent;}
+.user{color:#000;padding:12px;border-radius:15px;margin:10px 0;margin-left:auto;max-width:80%;text-align:right;background:transparent;}
 
-.user{
-  color:#000; /* TULISAN HITAM */
-  padding:12px;
-  border-radius:15px;
-  margin:10px 0;
-  margin-left:auto;
-  max-width:80%;
-  text-align:right;
-  background:transparent;
-}
-
-#inputArea{
-  display:flex;
-  padding:15px;
-  gap:10px;
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:#fff;
-  border-top:1px solid #ddd;
-}
-
-#btnCol{ /* KOLOM TOMBOL 2 BARIS */
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-#q{
-  flex:1;
-  padding:12px;
-  border:2px solid #0057FF;
-  border-radius:15px;
-  font-size:16px;
-  height:90px; /* BIKIN TINGGI BIAR 2 BARIS */
-  resize:none;
-}
-
-button{
-  width:50px;
-  height:50px;
-  border:none;
-  border-radius:50%;
-  background:#0057FF;
-  color:#fff;
-  font-size:22px;
-  cursor:pointer;
-}
+#inputArea{display:flex;padding:15px;gap:10px;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;}
+#btnCol{display:flex;flex-direction:column;gap:8px;}
+#q{flex:1;padding:12px;border:2px solid #0057FF;border-radius:15px;font-size:16px;height:90px;resize:none;}
+button{width:50px;height:50px;border:none;border-radius:50%;background:#0057FF;color:#fff;font-size:22px;cursor:pointer;}
 #mic{background:#FF0000;}
 #fileInput{display:none;}
 </style>
@@ -95,73 +53,21 @@ button{
 </div>
 
 <div id="inputArea">
-  <div id="btnCol"> <!-- KOLOM KANAN 2 TOMBOL -->
-    <button onclick="jawab()">✈️</button> <!-- ATAS = SEND -->
-    <button id="mic">🎤</button> <!-- BAWAH = MIC -->
+  <div id="btnCol">
+    <button onclick="jawab()">✈️</button>
+    <button id="mic">🎤</button>
   </div>
-  <textarea id="q" placeholder="Tanya AI Tracker..."></textarea> <!-- BOX KETIK DI KIRI -->
+  <textarea id="q" placeholder="Tanya AI Tracker..."></textarea>
 </div>
 
 <script>
+// JS nya sama kayak sebelumnya, copy dari chat sebelum ini
 const chatBox = document.getElementById('chatBox');
 const input = document.getElementById('q');
-
-const jawabanAI = {
-  "gcv":"GCV adalah Global Consensus Value. Nilai yang kita perjuangkan 1 Pi = 314159 USD",
-  "314159":"Itu adalah harga GCV yang kita perjuangkan bersama Pioneer!",
-  "petir":"Ingat klik petir setiap 24 jam sekali biar mining tidak berhenti ya",
-  "mainnet":"Mainnet Terbuka adalah saat Pi bisa ditukar dan digunakan di ekosistem",
-  "yaasien":"Kode referral kamu YAASIEN. Ajak teman biar mining makin cepat",
-  "default":"Maaf AI masih belajar. Coba tanya: GCV, Petir, Mainnet, atau Kode Reff"
-}
-
-function ngomong(teks){
-  const ucapan = new SpeechSynthesisUtterance(teks);
-  ucapan.lang = 'id-ID';
-  speechSynthesis.speak(ucapan);
-}
-
-function jawab(){
-  let q = input.value;
-  if(q.trim() === "") return;
-  chatBox.innerHTML += `<div class="user">${q}</div>`;
-  let qLower = q.toLowerCase();
-  let jawaban = jawabanAI.default;
-  for(let key in jawabanAI){
-    if(qLower.includes(key)){ jawaban = jawabanAI[key]; break; }
-  }
-  setTimeout(()=>{
-    chatBox.innerHTML += `<div class="bot">${jawaban}</div>`;
-    ngomong(jawaban);
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }, 500);
-  input.value = "";
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-document.getElementById('fileInput').onchange = function(e){
-  let file = e.target.files[0];
-  if(file){
-    chatBox.innerHTML += `<div class="user">📎 Mengirim file: ${file.name}</div>`;
-    chatBox.innerHTML += `<div class="bot">File ${file.name} diterima. AI masih belajar baca file ya Pioneer</div>`;
-  }
-}
-
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const recognition = new SpeechRecognition();
-recognition.lang = 'id-ID';
-document.getElementById('mic').onclick = function(){
-  recognition.start();
-  this.style.background = "#00FF00";
-}
-recognition.onresult = function(event){
-  let ucapan = event.results[0][0].transcript;
-  input.value = ucapan;
-  document.getElementById('mic').style.background = "#FF0000";
-  jawab();
-}
-recognition.onend = function(){
-  document.getElementById('mic').style.background = "#FF0000";
-}
+const jawabanAI = {"gcv":"GCV = 1 Pi = 314159 USD","petir":"Klik petir 24 jam sekali","mainnet":"Mainnet Terbuka Pi bisa ditukar","default":"Maaf AI masih belajar. Coba: GCV, Petir, Mainnet"};
+function ngomong(teks){const ucapan = new SpeechSynthesisUtterance(teks);ucapan.lang='id-ID';speechSynthesis.speak(ucapan);}
+function jawab(){let q=input.value;if(q.trim()==="")return;chatBox.innerHTML+=`<div class="user">${q}</div>`;let qLower=q.toLowerCase();let jawaban=jawabanAI.default;for(let key in jawabanAI){if(qLower.includes(key)){jawaban=jawabanAI[key];break;}}setTimeout(()=>{chatBox.innerHTML+=`<div class="bot">${jawaban}</div>`;ngomong(jawaban);chatBox.scrollTop=chatBox.scrollHeight;},500);input.value="";chatBox.scrollTop=chatBox.scrollHeight;}
+document.getElementById('fileInput').onchange=function(e){let file=e.target.files[0];if(file){chatBox.innerHTML+=`<div class="user">📎 ${file.name}</div>`;chatBox.innerHTML+=`<div class="bot">File diterima Pioneer</div>`;}}
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;const recognition=new SpeechRecognition();recognition.lang='id-ID';document.getElementById('mic').onclick=function(){recognition.start();this.style.background="#00FF00";};recognition.onresult=function(event){input.value=event.results[0][0].transcript;document.getElementById('mic').style.background="#FF0000";jawab();};recognition.onend=function(){document.getElementById('mic').style.background="#FF0000";};
 </script>
 </body></html>
