@@ -1,19 +1,70 @@
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8">
-<title>Profil Pioneer</title>
+<head>
+<meta charset="UTF-8">
+<title>Profil Islami</title>
 <style>
-html,body{background:#000; margin:0; padding:20px; text-align:center; height:100vh; color:#00BFFF;}
-.arab{font-size:6vw;font-weight:900;direction:rtl;margin:4px 0;text-shadow:0 0 4px #000}
-.latin{font-size:3.8vw;font-style:italic;margin:3px 0;font-weight:600;text-shadow:0 0 4px #000}
-.indo{font-size:3.5vw;font-weight:800;margin:3px 0;text-shadow:0 0 4px #000}
-.arti{font-size:3.2vw;margin:3px 0;font-weight:500;text-shadow:0 0 4px #000}
-.counter{font-size:2.8vw;margin-top:6px;text-shadow:0 0 4px #000}
-a{color:#fffc00; text-decoration:none; font-size:4vw; position:absolute; top:10px; left:10px;}
+html,body{
+  margin:0; 
+  padding:20px; 
+  text-align:center; 
+  height:100vh; 
+  /* BACKGROUND FOTO MAKKAH */
+  background:url('makkah.html') no-repeat center fixed; 
+  background-size:cover;
+  color:#00BFFF; /* BIRU LANGIT ELEGAN */
+  font-family: 'Arial', sans-serif; /* FONT BERSIH BIAR KEBACA */
+}
+/* BOX TRANSPARAN BIAR TULISAN KEBACA DI ATAS FOTO */
+#c{
+  background:rgba(0,0,0,0.55); /* HITAM TRANSPARAN */
+  padding:30px;
+  border-radius:20px;
+  margin-top:8vh;
+  display:inline-block;
+  box-shadow:0 0 20px rgba(0,191,255,0.4); /* GLOW BIRU HALUS */
+}
+.arab{
+  font-size:32px;
+  font-weight:900;
+  direction:rtl;
+  margin:10px 0;
+  color:#00BFFF; /* BIRU */
+  text-shadow:0 0 8px rgba(0,191,255,0.8); /* GLOW BIRU */
+}
+.latin{
+  font-size:18px;
+  font-style:italic;
+  margin:5px 0;
+  font-weight:600;
+  color:#FFFFFF; /* PUTIH BIAR JELAS */
+  text-shadow:0 0 4px #000;
+}
+.indo{
+  font-size:16px;
+  font-weight:700;
+  margin:3px 0;
+  color:#FFFFFF; /* PUTIH */
+  text-shadow:0 0 4px #000;
+}
+.arti{
+  font-size:12px;
+  font-style:italic;
+  font-weight:100;
+  color:#CCCCCC; /* ABU TERANG */
+  text-shadow:0 0 4px #000;
+}
+.counter{
+  font-size:14px;
+  margin-top:15px;
+  color:#FFCF00; /* KUNING EMAS */
+  font-weight:bold;
+}
+a{color:#FFCF00;text-decoration:none;font-size:14px;position:absolute;top:15px;left:15px;font-weight:bold;}
 </style>
 </head>
 <body>
-<a href="index.html">⬅️</a>
+<a href="index.html">← Kembali</a>
 <div id="c"></div>
 
 <script>
@@ -26,17 +77,23 @@ const k = [
 ["AI TRACKER سِيَاْپْ مَنَمَانِي","AI Tracker siap menemani","AI Tracker siap menemani anda hari ini","Artinya: AI Tracker bantu jawab Pi Network."],
 ["گُوْنَكَنْ كُوْدْ رِفْ Yaasien","Gunakan kode reff Yaasien","Gunakan kode reff Yaasien pada Pi Network","Artinya: Masukkan kode undangan 'Yaasien'."]
 ];
-let nomor = 1;
-function tampil(){
-  let x = k[nomor-1];
-  document.getElementById('c').innerHTML = 
-  `<div class="arab">${x[0]}</div><div class="latin">${x[1]}</div><div class="indo">${x[2]}</div><div class="arti">${x[3]}</div><div class="counter">${nomor}/7</div>`;
-}
-tampil(); // tampil pertama
+let nomor = 1; 
+let total = k.length + 1; // 7 + 1 = 8
 
-document.body.onclick = function(){ // klik layar = ganti kalimat
+function tampil(){
+  if(nomor <= 7){ 
+    let x = k[nomor-1];
+    document.getElementById('c').innerHTML = 
+    `<div class="arab">${x[0]}</div><div class="latin">${x[1]}</div><div class="indo">${x[2]}</div><div class="arti">${x[3]}</div><div class="counter">${nomor}/7</div>`;
+  } else { // 8 KOSONG
+    document.getElementById('c').innerHTML = ``; 
+  }
+}
+tampil(); 
+
+document.body.onclick = function(){ 
   nomor = nomor + 1;
-  if(nomor > 7) nomor = 1;
+  if(nomor > total) nomor = 1; 
   tampil();
 }
 </script>
