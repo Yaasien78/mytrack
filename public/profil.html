@@ -6,23 +6,24 @@
 <style>
 html,body{
   margin:0; 
-  padding:20px; 
+  padding:0; 
   text-align:center; 
   height:100vh; 
-  /* BACKGROUND FOTO MAKKAH */
+  /* FOTO KA'BAH FULL SCREEN */
   background:url('makkah.html') no-repeat center fixed; 
   background-size:cover;
-  color:#00BFFF; /* BIRU LANGIT ELEGAN */
-  font-family: 'Arial', sans-serif; /* FONT BERSIH BIAR KEBACA */
+  color:#00BFFF; /* BIRU */
 }
-/* BOX TRANSPARAN BIAR TULISAN KEBACA DI ATAS FOTO */
+/* BOX TRANSPARAN TIPIS AJA BIAR FOTO KELIATAN */
 #c{
-  background:rgba(0,0,0,0.55); /* HITAM TRANSPARAN */
-  padding:30px;
+  background:rgba(0,0,0,0.25); /* DARI 0.55 JADI 0.25 */
+  padding:25px 20px;
   border-radius:20px;
-  margin-top:8vh;
+  margin-top:5vh;
+  margin-left:10px;
+  margin-right:10px;
   display:inline-block;
-  box-shadow:0 0 20px rgba(0,191,255,0.4); /* GLOW BIRU HALUS */
+  backdrop-filter: blur(3px); /* EFEK KACA BURAM */
 }
 .arab{
   font-size:32px;
@@ -30,37 +31,38 @@ html,body{
   direction:rtl;
   margin:10px 0;
   color:#00BFFF; /* BIRU */
-  text-shadow:0 0 8px rgba(0,191,255,0.8); /* GLOW BIRU */
+  text-shadow:0 0 10px #000, 0 0 5px #00BFFF; /* GLOW + BAYANGAN HITAM BIAR KEBACA */
 }
 .latin{
   font-size:18px;
   font-style:italic;
   margin:5px 0;
   font-weight:600;
-  color:#FFFFFF; /* PUTIH BIAR JELAS */
-  text-shadow:0 0 4px #000;
+  color:#FFFFFF; 
+  text-shadow:0 2px 4px #000;
 }
 .indo{
   font-size:16px;
   font-weight:700;
   margin:3px 0;
-  color:#FFFFFF; /* PUTIH */
-  text-shadow:0 0 4px #000;
+  color:#FFFFFF; 
+  text-shadow:0 2px 4px #000;
 }
 .arti{
   font-size:12px;
   font-style:italic;
   font-weight:100;
-  color:#CCCCCC; /* ABU TERANG */
-  text-shadow:0 0 4px #000;
+  color:#DDDDDD; 
+  text-shadow:0 2px 4px #000;
 }
 .counter{
   font-size:14px;
   margin-top:15px;
   color:#FFCF00; /* KUNING EMAS */
   font-weight:bold;
+  text-shadow:0 2px 4px #000;
 }
-a{color:#FFCF00;text-decoration:none;font-size:14px;position:absolute;top:15px;left:15px;font-weight:bold;}
+a{color:#FFCF00;text-decoration:none;font-size:14px;position:absolute;top:15px;left:15px;font-weight:bold;text-shadow:0 2px 4px #000;}
 </style>
 </head>
 <body>
