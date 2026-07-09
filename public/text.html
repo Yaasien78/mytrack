@@ -1,56 +1,79 @@
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8">
+<head>
+<meta charset="UTF-8">
+<title>Spirit Pioneer</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap'); /* FONT ROBOT */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
 
-body{
-  background:transparent;
-  color:#00FFEA; /* BIRU CYAN TEKNOLOGI */
+html,body{
+  margin:0; 
+  padding:0; 
+  text-align:center; 
+  height:100vh; 
+  background:url('luarangkasa.jpg') no-repeat center fixed; 
+  background-size:cover;
+  font-family: 'Orbitron', sans-serif;
   display:flex;
-  align-items:center;
   justify-content:center;
-  height:100vh;
-  text-align:center;
-  font-family: 'Orbitron', sans-serif; /* GAYA ROBOT */
-  font-size:5vw; /* RESPONSIVE */
-  font-weight:900;
-  padding:20px;
-  text-shadow:0 0 5px #00FFEA, 0 0 15px #00FFEA, 0 0 30px #0088FF; /* EFEK GLOW CYAN */
-  letter-spacing:2px; /* JARAK HURUF KAYAK AI */
-  text-transform: uppercase; /* HURUF KAPITAL SEMUA */
+  align-items:center;
 }
+
+#c{
+  background:rgba(0,0,0,0.3); /* BOX TIPIS AJA BIAR TULISAN KEBACA */
+  padding:30px 20px;
+  border-radius:20px;
+}
+
+.teks{
+  font-size:28px;
+  font-weight:900;
+  color:#00FFEA; /* CYAN ROBOT */
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  line-height:1.5;
+  /* SEMUA EFEK GLOW DIHAPUS */
+  text-shadow:none; 
+}
+.counter{
+  font-size:16px;
+  margin-top:20px;
+  color:#FFFFFF; /* PUTIH BIAR JELAS */
+  font-weight:bold;
+  text-shadow:none;
+}
+a{color:#FFCF00;text-decoration:none;font-size:14px;position:absolute;top:15px;left:15px;font-family:sans-serif;}
 </style>
 </head>
-<body></body>
+<body>
+<a href="index.html">← Kembali</a>
+<div>
+  <div id="c" class="teks"></div>
+  <div id="nomor" class="counter"></div>
+</div>
+
 <script>
-const quotes = [
-  "JANGAN MENYERAH PIONEER, PI ADALAH MASA DEPAN",
-  "SETIAP KLIK PETIR ADALAH INVESTASI UNTUK ANAK CUCU",
-  "KITA MENAMBANG BUKAN HARI INI, TAPI UNTUK 10 TAHUN KEDEPAN",
-  "GCV 314159 USD ADALAH HARGA YANG KITA PERJUANGKAN",
-  "BERSABAR, BERIMAN, DAN TERUS MENAMBANG",
-  "SATU EKOSISTEM, SATU KOMUNITAS, SATU TUJUAN: SUKSES",
-  "KAMU BUKAN PENAMBANG BIASA, KAMU ADALAH PIONIR"
+const k = [
+"JANGAN MENYERAH PIONEER, PI ADALAH MASA DEPAN",
+"KLIK PETIR SETIAP 24 JAM JANGAN LUPA",
+"KONSENSUS 314159 HARGA MASA DEPAN",
+"AI TRACKER SIAP MEMBANTU SEMUA PIONER",
+"GUNAKAN KODE REFF YAASIEN",
+"BERSABAR KARENA KEMENANGAN SUDAH DEKAT",
+"PI NETWORK ADALAH REVOLUSI KEUANGAN"
 ];
+let nomor = 1;
 
-let index = 0;
-let total = quotes.length + 1; // 7 + 1 = 8
-
-function changeQuote(){
-  if(index < 7){ // 0-6 = tampil 7 kalimat spirit
-    document.body.innerHTML = quotes[index];
-  } else { // 7 = KOSONG
-    document.body.innerHTML = ``;
-  }
-  index++;
-  if(index >= total) index = 0; // kalau udah 8 balik ke 0
+function tampil(){
+  document.getElementById('c').innerText = k[nomor-1];
+  document.getElementById('nomor').innerText = nomor + "/7";
 }
+tampil();
 
-// dengerin perintah dari index.html tombol bintang
-window.addEventListener('message', (e) => {
-  if(e.data === 'next') changeQuote();
-});
-
-changeQuote(); // tampil pertama
-</script></html>
+document.body.onclick = function(){ 
+  nomor = nomor + 1;
+  if(nomor > k.length) nomor = 1; 
+  tampil();
+}
+</script>
+</body></html>
