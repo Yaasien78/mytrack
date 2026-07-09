@@ -1,46 +1,56 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><meta charset="UTF-8">
 <style>
-body { 
-  background:transparent; 
-  color:#fffc00; 
-  display:flex; 
-  align-items:center; 
-  justify-content:center; 
-  height:100vh; 
-  text-align:center; 
-  font-size:24px; 
-  font-weight:bold; 
-  padding:20px; 
-  text-shadow: 0 0 10px #000; /* KASIH BAYANGAN BIAR TETAP KEBACA DI ATAS BINTANG */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap'); /* FONT ROBOT */
+
+body{
+  background:transparent;
+  color:#00FFEA; /* BIRU CYAN TEKNOLOGI */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  text-align:center;
+  font-family: 'Orbitron', sans-serif; /* GAYA ROBOT */
+  font-size:5vw; /* RESPONSIVE */
+  font-weight:900;
+  padding:20px;
+  text-shadow:0 0 5px #00FFEA, 0 0 15px #00FFEA, 0 0 30px #0088FF; /* EFEK GLOW CYAN */
+  letter-spacing:2px; /* JARAK HURUF KAYAK AI */
+  text-transform: uppercase; /* HURUF KAPITAL SEMUA */
 }
 </style>
 </head>
-<body>
-<div id="quote">Klik tombol bintang untuk mulai</div>
-
+<body></body>
 <script>
 const quotes = [
-  "Jangan menyerah, Pi Network akan membawa perubahan",
-  "Satu Pi, Satu Harapan, Satu Masa Depan",
-  "Tetap Menambang, Tetap Percaya",
-  "Kesuksesan dimulai dari klik hari ini",
-  "Kita adalah Pioneer, kita adalah masa depan",
-  "Sabar adalah kunci, Pi adalah hasilnya",
-  "Bersama kita bisa, Bersama kita Pi"
+  "JANGAN MENYERAH PIONEER, PI ADALAH MASA DEPAN",
+  "SETIAP KLIK PETIR ADALAH INVESTASI UNTUK ANAK CUCU",
+  "KITA MENAMBANG BUKAN HARI INI, TAPI UNTUK 10 TAHUN KEDEPAN",
+  "GCV 314159 USD ADALAH HARGA YANG KITA PERJUANGKAN",
+  "BERSABAR, BERIMAN, DAN TERUS MENAMBANG",
+  "SATU EKOSISTEM, SATU KOMUNITAS, SATU TUJUAN: SUKSES",
+  "KAMU BUKAN PENAMBANG BIASA, KAMU ADALAH PIONIR"
 ];
 
 let index = 0;
+let total = quotes.length + 1; // 7 + 1 = 8
+
 function changeQuote(){
-  index = (index + 1) % quotes.length;
-  document.getElementById('quote').innerText = quotes[index];
+  if(index < 7){ // 0-6 = tampil 7 kalimat spirit
+    document.body.innerHTML = quotes[index];
+  } else { // 7 = KOSONG
+    document.body.innerHTML = ``;
+  }
+  index++;
+  if(index >= total) index = 0; // kalau udah 8 balik ke 0
 }
 
-// Dengerin pesan dari index.html
+// dengerin perintah dari index.html tombol bintang
 window.addEventListener('message', (e) => {
   if(e.data === 'next') changeQuote();
 });
-</script>
-</body>
-</html>
+
+changeQuote(); // tampil pertama
+</script></html>
