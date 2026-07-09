@@ -20,37 +20,59 @@ html,body{
 }
 
 #c{
-  background:rgba(0,0,0,0.3); /* BOX TIPIS AJA BIAR TULISAN KEBACA */
-  padding:30px 20px;
+  background:rgba(0,0,0,0.3); 
+  padding:20px 15px;
   border-radius:20px;
+  min-height:120px; 
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  pointer-events: none; /* BIAR TENGAH GA BISA DIKLIK */
 }
 
 .teks{
-  font-size:28px;
+  font-size:20px; /* UDAH KECIL */
   font-weight:900;
-  color:#00FFEA; /* CYAN ROBOT */
+  color:#00FFEA; 
   text-transform: uppercase;
-  letter-spacing: 3px;
-  line-height:1.5;
-  /* SEMUA EFEK GLOW DIHAPUS */
+  letter-spacing: 2px;
+  line-height:1.4;
   text-shadow:none; 
 }
 .counter{
-  font-size:16px;
-  margin-top:20px;
-  color:#FFFFFF; /* PUTIH BIAR JELAS */
+  font-size:14px; 
+  margin-top:15px;
+  color:#FFFFFF; 
   font-weight:bold;
   text-shadow:none;
 }
-a{color:#FFCF00;text-decoration:none;font-size:14px;position:absolute;top:15px;left:15px;font-family:sans-serif;}
+a{color:#FFCF00;text-decoration:none;font-size:14px;position:absolute;top:15px;left:15px;font-family:sans-serif;z-index:10;}
+
+/* TOMBOL PALETTE BUAT KLIK */
+#btnPalette{
+  position:fixed;
+  bottom:70px;
+  left:20px;
+  font-size:35px;
+  background:rgba(0,0,0,0.5);
+  border-radius:50%;
+  padding:10px;
+  cursor:pointer;
+  z-index:99;
+  border:2px solid #00FFEA;
+}
 </style>
 </head>
 <body>
 <a href="index.html">← Kembali</a>
+
 <div>
   <div id="c" class="teks"></div>
   <div id="nomor" class="counter"></div>
 </div>
+
+<!-- TOMBOL PALETTE BARU -->
+<div id="btnPalette">🎨</div>
 
 <script>
 const k = [
@@ -62,15 +84,21 @@ const k = [
 "BERSABAR KARENA KEMENANGAN SUDAH DEKAT",
 "PI NETWORK ADALAH REVOLUSI KEUANGAN"
 ];
-let nomor = 1;
+let nomor = 0; // MULAI KOSONG
 
 function tampil(){
-  document.getElementById('c').innerText = k[nomor-1];
-  document.getElementById('nomor').innerText = nomor + "/7";
+  if(nomor === 0){
+    document.getElementById('c').innerText = ""; 
+    document.getElementById('nomor').innerText = "";
+  } else {
+    document.getElementById('c').innerText = k[nomor-1];
+    document.getElementById('nomor').innerText = nomor + "/7";
+  }
 }
-tampil();
+tampil(); 
 
-document.body.onclick = function(){ 
+// KLIK NYA PINDAH KE TOMBOL PALETTE
+document.getElementById('btnPalette').onclick = function(){ 
   nomor = nomor + 1;
   if(nomor > k.length) nomor = 1; 
   tampil();
