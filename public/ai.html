@@ -206,5 +206,54 @@ recognition.onresult = function(event){
 recognition.onend = function(){
   document.getElementById('mic').style.background = "#FF0000";
 };
+  <script>
+let hargaTerbaru = {usd: "...", idr: "..."};
+
+// 1. AMBIL HARGA DARI COINGECKO TIAP 10 DETIK
+async function updateHarga() {
+  try {
+    let res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr");
+    let data = await res.json();
+    hargaTerbaru.usd = data["pi-network"].usd;
+    hargaTerbaru.idr = data["pi-network"].idr.toLocaleString("id-ID");
+  } catch(e) { console.log("Gagal ambil harga") }
+}
+updateHarga();
+setInterval(updateHarga, 10000);
+
+
+// 2. FUNGSI KIRIM PESAN + AI JAWAB
+function kirimPesan() {
+  let input = document.getElementById("inputPesan"); // ganti sesuai id input kamu
+  let pesan = input.value;
+  if(pesan == "") return;
+  
+  addChat("Kamu", pesan);
+  input.value = "";
+
+  let jawaban = "Aku belum ngerti bro 😅 Coba tanya 'harga pi berapa'";
+  
+  if(pesan.toLowerCase().includes("harga") && pesan.toLowerCase().includes("pi")) {
+    jawaban = `📊 Harga Pi Network saat ini:\n1 Pi = $${hargaTerbaru.usd}\nRp${hargaTerbaru.idr}`;
+  }
+  if(pesan.toLowerCase().includes("halo")) {
+    jawaban = "Halo juga bro! Ada yg bisa aku bantu?";
+  }
+
+  setTimeout(() => addChat("AI MyTrack", jawaban), 600);
+}
+
+// 3. FUNGSI TAMPILIN CHAT
+function addChat(nama, teks) {
+  let chatBox = document.getElementById("chatBox"); // ganti sesuai id chat kamu
+  chatBox.innerHTML += `<div><b>${nama}:</b> ${teks.replace(/\n/g,"<br>")}</div><br>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Enter buat kirim
+document.getElementById("inputPesan").addEventListener("keypress", function(e){
+  if(e.key === "Enter") kirimPesan();
+})
+
 </script> 
 </body></html>
