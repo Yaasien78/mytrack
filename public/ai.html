@@ -172,7 +172,7 @@ async function jawab(){
     return;
   }
 
-  // KALO NANYA HARGA BARU KE GROQ
+// KALO NANYA HARGA BARU KE GROQ
 chatBox.innerHTML += `<div class="bot" id="loading">AI Tracker lagi mikir...</div>`;
 
 try{
@@ -193,15 +193,7 @@ try{
   document.getElementById("loading").remove();
   chatBox.innerHTML += `<div class="bot">Gagal jawab bro. Error: ${e.message}</div>`;
   }
-    document.getElementById("loading").remove();
-    chatBox.innerHTML += `<div class="bot">${jawaban}</div>`;
-    ngomong(jawaban);
-  } catch(e) {
-    document.getElementById("loading").remove();
-    chatBox.innerHTML += `<div class="bot">Gagal jawab bro. Cek GROQ_API_KEY</div>`;
-  }
-}
-
+  
 // 5. FUNGSI MIC + LAMPU IJO
 const btnMic = document.getElementById('mic');
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
