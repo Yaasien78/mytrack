@@ -120,15 +120,13 @@ header{
   </div>
   <textarea id="q" placeholder="Tanya AI Tracker..."></textarea>
 </div>
-  
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script>
 const chatBox = document.getElementById('chatBox');
 const input = document.getElementById('q');
 let hargaTerbaru = {usd: "...", idr: "..."};
 
-// 1. UPDATE HARGA PI OTOMATIS
+// 1. UPDATE HARGA
 async function updateHarga() {
   try {
     let res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr");
@@ -140,14 +138,11 @@ async function updateHarga() {
 updateHarga();
 setInterval(updateHarga, 10000);
 
-// 2. LOGIN PI
-Pi.init({ version: "2.0", sandbox: false });
-Pi.authenticate(['username', 'payments'],
-  function(payment){console.log(payment)},
-  function(auth){
-    chatBox.innerHTML += `<div class="bot">Hai ${auth.user.username} 👋</div>`
-  }
-);
+// 2. LOGIN PI - DIAMANKAN
+try{
+  Pi.init({ version: "2.0", sandbox: false });
+  Pi.authenticate(['username'], {onIncompletePayment: ()=>{}});
+}catch(e){ console.log("Buka di Pi Browser buat login") }
 
 // 3. FUNGSI NGOMONG
 function ngomong(teks){
@@ -156,7 +151,7 @@ function ngomong(teks){
   speechSynthesis.speak(ucapan);
 }
 
-// 4. FUNGSI KIRIM PESAN - UDAH DI FIX
+// 4. FUNGSI KIRIM PESAN
 async function jawab(){
   let q = input.value;
   if(q.trim()==="") return;
@@ -164,65 +159,42 @@ async function jawab(){
   input.value = "";
   chatBox.scrollTop = chatBox.scrollHeight;
 
-  // CEK KALO NANYA HARGA
   if(q.toLowerCase().includes("harga") && q.toLowerCase().includes("pi")) {
-    let jawaban = `📊 Harga Pi Network saat ini:\n1 Pi = $${hargaTerbaru.usd}\nRp${hargaTerbaru.idr}`;
+    let jawaban = `Harga Pi Network saat ini:\nPi = $${hargaTerbaru.usd}\nRp${hargaTerbaru.idr}`;
     chatBox.innerHTML += `<div class="bot">${jawaban.replace(/\n/g,"<br>")}</div>`;
+    ngomong(jawaban); return;
+  }
+
+  chatBox.innerHTML += `<div class="bot" id="loading">AI Tracker lagi mikir...</div>`;
+  try{
+    const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: q })});
+    const data = await res.json();
+    document.getElementById("loading").remove();
+    let jawaban = data.choices[0].message.content;
+    chatBox.innerHTML += `<div class="bot">${jawaban}</div>`;
     ngomong(jawaban);
-    return;
+  } catch(e) {
+    document.getElementById("loading").remove();
+    chatBox.innerHTML += `<div class="bot">Gagal jawab bro. Error: ${e.message}</div>`;
   }
-
-// KALO NANYA HARGA BARU KE GROQ
-chatBox.innerHTML += `<div class="bot" id="loading">AI Tracker lagi mikir...</div>`;
-
-try{
-  const res = await fetch("/api/chat", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ message: q })
-});
-
-  const data = await res.json();
-  document.getElementById("loading").remove();
-
-  let jawaban = data.choices[0].message.content;
-  chatBox.innerHTML += `<div class="bot">${jawaban}</div>`;
-  ngomong(jawaban);
-
-} catch(e) {
-  document.getElementById("loading").remove();
-  chatBox.innerHTML += `<div class="bot">Gagal jawab bro. Error: ${e.message}</div>`;
-  }
-  
-// 5. FUNGSI MIC - LAMPU IJO
-const btnMic = document.getElementById("mic");
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; // FIX
-const recognition = new SpeechRecognition(); // FIX
-recognition.lang = 'id-ID';
-
-btnMic.onclick = () => {
-  recognition.start();
-  btnMic.style.background = "lime"; // JADI IJO
-  btnMic.style.boxShadow = "0 0 15px lime"; // efek nyala
 }
 
-recognition.onresult = (event) => {
-  input.value = event.results[0][0].transcript;
-  jawab(); // langsung kirim
+// 5. FUNGSI MIC
+if(window.SpeechRecognition || window.webkitSpeechRecognition){
+  const btnMic = document.getElementById("mic");
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'id-ID';
+
+  btnMic.onclick = () => { recognition.start(); btnMic.style.background = "lime"; }
+  recognition.onresult = (event) => { input.value = event.results[0][0].transcript; jawab(); }
+  recognition.onend = () => { btnMic.style.background = "#FF0000"; }
+  recognition.onerror = () => { btnMic.style.background = "#FF0000"; alert("Mic gagal. Cek izin mikrofon"); }
+}else{
+  document.getElementById("mic").style.display = "none";
 }
 
-recognition.onend = () => {
-  btnMic.style.background = "red"; // BALIK MERAH LAGI
-  btnMic.style.boxShadow = "none";
-}
-
-recognition.onerror = () => {
-  btnMic.style.background = "red"; // KALO ERROR BALIK MERAH
-  btnMic.style.boxShadow = "none";
-  alert("Mic gagal. Cek izin mikrofon di browser");
-}
-
-// Enter buat kirim
+// ENTER BUAT KIRIM
 input.addEventListener("keypress", e => { if(e.key === "Enter") jawab() })
-</script> 
+</script>
 </body></html>
