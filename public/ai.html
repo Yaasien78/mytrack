@@ -120,13 +120,27 @@ header{
   </div>
   <textarea id="q" placeholder="Tanya AI Tracker..."></textarea>
 </div>
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script>
 const chatBox = document.getElementById('chatBox');
 const input = document.getElementById('q');
 let hargaTerbaru = {usd: "...", idr: "..."};
 
-// 1. UPDATE HARGA
+// INI KODE LOCALSTORAGE CEK LOGIN
+const username = localStorage.getItem("piUsername");
+const token = localStorage.getItem("piToken");
+
+// Kalau belum login, tendang balik ke halaman utama
+if(!token || !username){
+  alert("Silakan login dulu di halaman utama");
+  window.location.href = "/"; // ke index.html
+}
+
+// Kalau udah login, sapa
+chatBox.innerHTML += `<div class="bot">Hai ${username} 👋 Ada yang bisa saya bantu?</div>`
+
+  // 1. UPDATE HARGA
 async function updateHarga() {
   try {
     let res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr");
