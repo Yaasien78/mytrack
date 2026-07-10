@@ -172,19 +172,27 @@ async function jawab(){
     return;
   }
 
-  // KALO NGGAK NANYA HARGA BARU KE GROQ
-  chatBox.innerHTML += `<div class="bot" id="loading">AI Tracker lagi mikir...</div>`;
-  try{
-    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: { "Authorization": "Bearer " + GROQ_API_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "llama3-8b-8192",
-        messages: [{role:"user", content: q}]
-      })
-    });
-    const data = await res.json();
-    let jawaban = data.choices[0].message.content;
+  // KALO NANYA HARGA BARU KE GROQ
+chatBox.innerHTML += `<div class="bot" id="loading">AI Tracker lagi mikir...</div>`;
+
+try{
+  const res = await fetch("/api/chat", { // NEMBAK KE VERCEL
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: q })
+  });
+
+  const data = await res.json();
+  document.getElementById("loading").remove();
+
+  let jawaban = data.choices[0].message.content;
+  chatBox.innerHTML += `<div class="bot">${jawaban}</div>`;
+  ngomong(jawaban);
+
+} catch(e) {
+  document.getElementById("loading").remove();
+  chatBox.innerHTML += `<div class="bot">Gagal jawab bro. Error: ${e.message}</div>`;
+  }
     document.getElementById("loading").remove();
     chatBox.innerHTML += `<div class="bot">${jawaban}</div>`;
     ngomong(jawaban);
