@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       method: "POST",
       headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
       body: JSON.stringify({
-        model: "llama3-8b-8192",
+        model: "llama-3.1-8b-instant",
         messages: [{ role: "user", content: message }],
       })
     });
