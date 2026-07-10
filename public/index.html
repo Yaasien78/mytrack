@@ -73,14 +73,20 @@ function playSound() {
     oscillator.stop(audioCtx.currentTime + 0.25);
   }
                                                }
-// 2. LOGIN PI
+// 2. LOGIN PI + SIMPAN KE STORAGE
 let piUsername = null;
 window.addEventListener('load', function(){
-  Pi.init({ version: "2.0", sandbox: true });
+  Pi.init({ version: "2.0", sandbox: false }); // ganti true ke false kalau udah live
   document.getElementById('loginBtn').onclick = function(){
     playSound();
     Pi.authenticate(['username', 'payments']).then(function(auth){
       piUsername = auth.user.username;
+      const token = auth.accessToken;
+
+      // INI PENTING: SIMPAN KE LOCALSTORAGE
+      localStorage.setItem("piToken", token);
+      localStorage.setItem("piUsername", piUsername);
+
       document.getElementById('loginBtn').innerText = 'Hi ' + piUsername;
     }).catch(function(error) { alert("Login gagal: " + error); });
   }
