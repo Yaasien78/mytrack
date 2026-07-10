@@ -34,7 +34,7 @@ footer { background: #0057d9; border-top: 2px solid #fffc00; padding: 6px 15px; 
 <div class="app">
   <header>
     <a href="profil.html" class="logo">My<br>Track</a>
-    <div class="harga">1 Pi = $0.112869 <br> Rp2,032.77</div>
+    <div id="harga-pi" class="harga">1 Pi = $... <br> Rp...</div>
     <a href="market.html" class="pi-logo">π</a>
   </header>
   <iframe id="textFrame" src="text.html" style="flex:1; width:100%; border:none; background:transparent; pointer-events:none;"></iframe>
@@ -152,6 +152,25 @@ document.getElementById('btnQuote').onclick = function(e){
   e.preventDefault();
   document.getElementById('textFrame').contentWindow.postMessage('next', '*');
         }
+  // 6. UPDATE HARGA OTOMATIS DARI COINGECKO
+async function updateHargaPi() {
+  try {
+    let res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr");
+    let data = await res.json();
+    
+    let usd = data["pi-network"].usd;
+    let idr = data["pi-network"].idr.toLocaleString("id-ID");
+
+    document.getElementById("harga-pi").innerHTML = `1 Pi = $${usd} <br> Rp${idr}`;
+    
+  } catch (err) {
+    console.log("Gagal ambil harga:", err);
+  }
+}
+
+// Jalanin pas load + update tiap 10 detik
+updateHargaPi();
+setInterval(updateHargaPi, 10000);
 </script>
 </body>
 </html>
