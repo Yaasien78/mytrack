@@ -176,11 +176,11 @@ async function jawab(){
 chatBox.innerHTML += `<div class="bot" id="loading">AI Tracker lagi mikir...</div>`;
 
 try{
-  const res = await fetch("/api/chat", { // NEMBAK KE VERCEL
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: q })
-  });
+  const res = await fetch("/api/chat", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ message: q })
+});
 
   const data = await res.json();
   document.getElementById("loading").remove();
