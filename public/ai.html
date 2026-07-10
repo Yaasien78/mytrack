@@ -212,6 +212,34 @@ recognition.onend = () => btnMic.style.opacity = "1";
 
 // Enter buat kirim
 input.addEventListener("keypress", e => { if(e.key === "Enter") jawab() })
-</script>
+// 5. FUNGSI MIC + LAMPU IJO
+const btnMic = document.getElementById('mic');
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = 'id-ID';
+
+btnMic.onclick = () => {
+  recognition.start();
+  btnMic.style.background = "lime"; // JADI IJO
+  btnMic.style.boxShadow = "0 0 15px lime"; // efek nyala
+}
+
+recognition.onresult = (event) => {
+  input.value = event.results[0][0].transcript;
+  jawab(); // langsung kirim
+}
+
+recognition.onend = () => {
+  btnMic.style.background = "red"; // BALIK MERAH LAGI
+  btnMic.style.boxShadow = "none";
+}
+
+recognition.onerror = () => {
+  btnMic.style.background = "red"; // KALO ERROR BALIK MERAH
+  btnMic.style.boxShadow = "none";
+  alert("Mic gagal. Cek izin mikrofon di browser");
+}
+
+// Enter buat kirim
+input.addEventListener("keypress", e => { if(e.key === "Enter") jawab() })
 </script> 
 </body></html>
