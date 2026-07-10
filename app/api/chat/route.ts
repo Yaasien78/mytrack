@@ -1,30 +1,31 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
     const { message } = await req.json();
-    const GROQ_API_KEY = process.env.GROQ_API_KEY;
+    const API_KEY = process.env.OPENAI_API_KEY;
 
-    if (!GROQ_API_KEY) {
-      return NextResponse.json({ error: "GROQ_API_KEY kosong" }, { status: 500 });
+    if (!API_KEY) {
+      return NextResponse.json({ error: "API Key kosong" }, { status: 500 });
     }
 
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
-      headers: { 
-        "Authorization": `Bearer ${GROQ_API_KEY}`,
-        "Content-Type": "application/json" 
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${API_KEY}`
       },
       body: JSON.stringify({
-        model: "llama3-8b-8192",
-        messages: [{ role: "user", content: message }]
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: message }],
+        max_tokens: 500
       })
     });
 
     const data = await response.json();
     return NextResponse.json(data);
 
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
