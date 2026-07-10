@@ -194,9 +194,10 @@ try{
   chatBox.innerHTML += `<div class="bot">Gagal jawab bro. Error: ${e.message}</div>`;
   }
   
-// 5. FUNGSI MIC + LAMPU IJO
-const btnMic = document.getElementById('mic');
-const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+// 5. FUNGSI MIC - LAMPU IJO
+const btnMic = document.getElementById("mic");
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; // FIX
+const recognition = new SpeechRecognition(); // FIX
 recognition.lang = 'id-ID';
 
 btnMic.onclick = () => {
