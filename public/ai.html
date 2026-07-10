@@ -127,20 +127,15 @@ const chatBox = document.getElementById('chatBox');
 const input = document.getElementById('q');
 let hargaTerbaru = {usd: "...", idr: "..."};
 
-// INI KODE LOCALSTORAGE CEK LOGIN
+// CEK LOGIN
 const username = localStorage.getItem("piUsername");
-const token = localStorage.getItem("piToken");
-
-// Kalau belum login, tendang balik ke halaman utama
-if(!token || !username){
-  alert("Silakan login dulu di halaman utama");
-  window.location.href = "/"; // ke index.html
+if(!username){
+  alert("Login dulu di halaman utama");
+  window.location.href = "/";
 }
+chatBox.innerHTML = `<div class="bot">Hai ${username} 👋 Ada yang bisa saya bantu?</div>`
 
-// Kalau udah login, sapa
-chatBox.innerHTML += `<div class="bot">Hai ${username} 👋 Ada yang bisa saya bantu?</div>`
-
-  // 1. UPDATE HARGA
+// 1. UPDATE HARGA
 async function updateHarga() {
   try {
     let res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr");
@@ -152,27 +147,14 @@ async function updateHarga() {
 updateHarga();
 setInterval(updateHarga, 10000);
 
-// 2. CEK LOGIN OTOMATIS
-const username = localStorage.getItem("piUsername");
-const token = localStorage.getItem("piToken");
-
-// Kalau belum login, tendang ke halaman utama
-if(!token || !username){
-  alert("Silakan login dulu di halaman utama");
-  window.location.href = "/"; // balik ke index.html
-}
-
-// Kalau udah login, langsung sapa
-chatBox.innerHTML += `<div class="bot">Hai ${username} 👋 Ada yang bisa saya bantu?</div>`
-
-// 3. FUNGSI NGOMONG
+// 2. FUNGSI NGOMONG
 function ngomong(teks){
   const ucapan = new SpeechSynthesisUtterance(teks);
   ucapan.lang = 'id-ID';
   speechSynthesis.speak(ucapan);
 }
 
-// 4. FUNGSI KIRIM PESAN
+// 3. FUNGSI KIRIM - INI YG BIKIN TOMBOL ✈️ HIDUP
 async function jawab(){
   let q = input.value;
   if(q.trim()==="") return;
@@ -183,10 +165,13 @@ async function jawab(){
   if(q.toLowerCase().includes("harga") && q.toLowerCase().includes("pi")) {
     let jawaban = `Harga Pi Network saat ini:\nPi = $${hargaTerbaru.usd}\nRp${hargaTerbaru.idr}`;
     chatBox.innerHTML += `<div class="bot">${jawaban.replace(/\n/g,"<br>")}</div>`;
-    ngomong(jawaban); return;
+    ngomong(jawaban); 
+    chatBox.scrollTop = chatBox.scrollHeight;
+    return;
   }
 
   chatBox.innerHTML += `<div class="bot" id="loading">AI Tracker lagi mikir...</div>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
   try{
     const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: q })});
     const data = await res.json();
@@ -194,13 +179,14 @@ async function jawab(){
     let jawaban = data.choices[0].message.content;
     chatBox.innerHTML += `<div class="bot">${jawaban}</div>`;
     ngomong(jawaban);
+    chatBox.scrollTop = chatBox.scrollHeight;
   } catch(e) {
     document.getElementById("loading").remove();
-    chatBox.innerHTML += `<div class="bot">Gagal jawab bro. Error: ${e.message}</div>`;
+    chatBox.innerHTML += `<div class="bot">Gagal jawab bro. Cek /api/chat</div>`;
   }
 }
 
-// 5. FUNGSI MIC
+// 4. FUNGSI MIC - INI YG BIKIN TOMBOL 🎤 HIDUP
 if(window.SpeechRecognition || window.webkitSpeechRecognition){
   const btnMic = document.getElementById("mic");
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -210,12 +196,13 @@ if(window.SpeechRecognition || window.webkitSpeechRecognition){
   btnMic.onclick = () => { recognition.start(); btnMic.style.background = "lime"; }
   recognition.onresult = (event) => { input.value = event.results[0][0].transcript; jawab(); }
   recognition.onend = () => { btnMic.style.background = "#FF0000"; }
-  recognition.onerror = () => { btnMic.style.background = "#FF0000"; alert("Mic gagal. Cek izin mikrofon"); }
+  recognition.onerror = () => { btnMic.style.background = "#FF0000"; }
 }else{
   document.getElementById("mic").style.display = "none";
 }
 
-// ENTER BUAT KIRIM
+// 5. ENTER BUAT KIRIM
 input.addEventListener("keypress", e => { if(e.key === "Enter") jawab() })
 </script>
-</body></html>
+</body>
+</html>
