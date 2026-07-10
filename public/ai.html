@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+tw<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -127,12 +127,9 @@ const chatBox = document.getElementById('chatBox');
 const input = document.getElementById('q');
 let hargaTerbaru = {usd: "...", idr: "..."};
 
-// CEK LOGIN
-const username = localStorage.getItem("piUsername");
-if(!username){
-  alert("Login dulu di halaman utama");
-  window.location.href = "/";
-}
+// BIKIN BISA BUAT UMUM
+const username = localStorage.getItem("piUsername") || "Pioneer";
+chatBox.innerHTML = `<div class="bot">Hai ${username} 👋 Ada yang bisa saya bantu?</div>`
 chatBox.innerHTML = `<div class="bot">Hai ${username} 👋 Ada yang bisa saya bantu?</div>`
 
 // 1. UPDATE HARGA
