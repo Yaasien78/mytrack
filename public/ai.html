@@ -122,27 +122,41 @@ header{
 </div>
   
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
 <script>
 const chatBox = document.getElementById('chatBox');
 const input = document.getElementById('q');
-const GROQ_API_KEY = "later"; // KEY KAMU
-let currentUser = null;
+let hargaTerbaru = {usd: "...", idr: "..."};
 
-// LOGIN PI
+// 1. UPDATE HARGA PI OTOMATIS
+async function updateHarga() {
+  try {
+    let res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr");
+    let data = await res.json();
+    hargaTerbaru.usd = data["pi-network"].usd;
+    hargaTerbaru.idr = data["pi-network"].idr.toLocaleString("id-ID");
+  } catch(e) {}
+}
+updateHarga();
+setInterval(updateHarga, 10000);
+
+// 2. LOGIN PI
 Pi.init({ version: "2.0", sandbox: false });
-Pi.authenticate(['username','payments'], 
-function(payment){console.log(payment)}, 
-function(auth){
-  currentUser=auth.user; 
-  chatBox.innerHTML += `<div class="bot">Hai ${auth.user.username} 👋</div>`
-})
+Pi.authenticate(['username', 'payments'],
+  function(payment){console.log(payment)},
+  function(auth){
+    chatBox.innerHTML += `<div class="bot">Hai ${auth.user.username} 👋</div>`
+  }
+);
 
+// 3. FUNGSI NGOMONG
 function ngomong(teks){
   const ucapan = new SpeechSynthesisUtterance(teks);
   ucapan.lang = 'id-ID';
   speechSynthesis.speak(ucapan);
 }
 
+// 4. FUNGSI KIRIM PESAN - UDAH DI FIX
 async function jawab(){
   let q = input.value;
   if(q.trim()==="") return;
@@ -150,110 +164,54 @@ async function jawab(){
   input.value = "";
   chatBox.scrollTop = chatBox.scrollHeight;
 
+  // CEK KALO NANYA HARGA
+  if(q.toLowerCase().includes("harga") && q.toLowerCase().includes("pi")) {
+    let jawaban = `📊 Harga Pi Network saat ini:\n1 Pi = $${hargaTerbaru.usd}\nRp${hargaTerbaru.idr}`;
+    chatBox.innerHTML += `<div class="bot">${jawaban.replace(/\n/g,"<br>")}</div>`;
+    ngomong(jawaban);
+    return;
+  }
+
+  // KALO NGGAK NANYA HARGA BARU KE GROQ
+  chatBox.innerHTML += `<div class="bot" id="loading">AI Tracker lagi mikir...</div>`;
   try{
-    chatBox.innerHTML += `<div class="bot" id="loading">AI Tracker lagi mikir...</div>`;
-    
     const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${GROQ_API_KEY}`
-      },
+      headers: { "Authorization": "Bearer " + GROQ_API_KEY, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "llama-3.1-70b-versatile",
-        messages: [
-          {role: "system", content: `Kamu adalah AI Tracker untuk Pioneer Pi Network. Sapa user: ${currentUser?.username}. Jawab singkat bahasa Indonesia. Fokus Pi, GCV, Mainnet.`},
-          {role: "user", content: q}
-        ]
+        model: "llama3-8b-8192",
+        messages: [{role:"user", content: q}]
       })
     });
     const data = await res.json();
+    let jawaban = data.choices[0].message.content;
     document.getElementById("loading").remove();
-    
-    let answer = data.choices[0].message.content;
-    chatBox.innerHTML += `<div class="bot">${answer}</div>`;
-    ngomong(answer);
-  }catch(err){
+    chatBox.innerHTML += `<div class="bot">${jawaban}</div>`;
+    ngomong(jawaban);
+  } catch(e) {
     document.getElementById("loading").remove();
-    chatBox.innerHTML += `<div class="bot">Server AI error. Coba lagi ya</div>`;
+    chatBox.innerHTML += `<div class="bot">Gagal jawab bro. Cek GROQ_API_KEY</div>`;
   }
-  chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// FILE UPLOAD
-document.getElementById('fileInput').onchange = function(e){
-  let file = e.target.files[0];
-  if(file){
-    chatBox.innerHTML += `<div class="user">📎 ${file.name}</div>`;
-    chatBox.innerHTML += `<div class="bot">File diterima Pioneer</div>`;
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
-};
-
-// VOICE MIC
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const recognition = new SpeechRecognition();
+// 5. FUNGSI MIC - UDAH DI AKTIFIN
+const btnMic = document.getElementById('mic');
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = 'id-ID';
-document.getElementById('mic').onclick = function(){
+
+btnMic.onclick = () => {
   recognition.start();
-  this.style.background = "#00FF00";
-};
-recognition.onresult = function(event){
+  btnMic.style.opacity = "0.5";
+}
+recognition.onresult = (event) => {
   input.value = event.results[0][0].transcript;
-  document.getElementById('mic').style.background = "#FF0000";
-  jawab();
-};
-recognition.onend = function(){
-  document.getElementById('mic').style.background = "#FF0000";
-};
-  <script>
-let hargaTerbaru = {usd: "...", idr: "..."};
-
-// 1. AMBIL HARGA DARI COINGECKO TIAP 10 DETIK
-async function updateHarga() {
-  try {
-    let res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd,idr");
-    let data = await res.json();
-    hargaTerbaru.usd = data["pi-network"].usd;
-    hargaTerbaru.idr = data["pi-network"].idr.toLocaleString("id-ID");
-  } catch(e) { console.log("Gagal ambil harga") }
+  jawab(); // langsung kirim
+  btnMic.style.opacity = "1";
 }
-updateHarga();
-setInterval(updateHarga, 10000);
-
-
-// 2. FUNGSI KIRIM PESAN + AI JAWAB
-function kirimPesan() {
-  let input = document.getElementById("inputPesan"); // ganti sesuai id input kamu
-  let pesan = input.value;
-  if(pesan == "") return;
-  
-  addChat("Kamu", pesan);
-  input.value = "";
-
-  let jawaban = "Aku belum ngerti bro 😅 Coba tanya 'harga pi berapa'";
-  
-  if(pesan.toLowerCase().includes("harga") && pesan.toLowerCase().includes("pi")) {
-    jawaban = `📊 Harga Pi Network saat ini:\n1 Pi = $${hargaTerbaru.usd}\nRp${hargaTerbaru.idr}`;
-  }
-  if(pesan.toLowerCase().includes("halo")) {
-    jawaban = "Halo juga bro! Ada yg bisa aku bantu?";
-  }
-
-  setTimeout(() => addChat("AI MyTrack", jawaban), 600);
-}
-
-// 3. FUNGSI TAMPILIN CHAT
-function addChat(nama, teks) {
-  let chatBox = document.getElementById("chatBox"); // ganti sesuai id chat kamu
-  chatBox.innerHTML += `<div><b>${nama}:</b> ${teks.replace(/\n/g,"<br>")}</div><br>`;
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
+recognition.onend = () => btnMic.style.opacity = "1";
 
 // Enter buat kirim
-document.getElementById("inputPesan").addEventListener("keypress", function(e){
-  if(e.key === "Enter") kirimPesan();
-})
-
+input.addEventListener("keypress", e => { if(e.key === "Enter") jawab() })
+</script>
 </script> 
 </body></html>
