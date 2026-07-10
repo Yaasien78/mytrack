@@ -172,19 +172,24 @@ async function jawab(){
 
   chatBox.innerHTML += `<div class="bot" id="loading">AI Tracker lagi mikir...</div>`;
   chatBox.scrollTop = chatBox.scrollHeight;
-  try{
-    const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: q })});
+  
+try {
+    const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({message: q}) });
     const data = await res.json();
+    
     document.getElementById("loading").remove();
-    let jawaban = data.choices[0].message.content;
-    chatBox.innerHTML += `<div class="bot">${jawaban}</div>`;
+    if(data.error) throw new Error(data.error);
+
+    // GROQ BALIKANNYA { reply: "..." }
+    let jawaban = data.reply; 
+    tambahChat("ai", jawaban);
     ngomong(jawaban);
     chatBox.scrollTop = chatBox.scrollHeight;
-  } catch(e) {
+
+} catch(e) {
     document.getElementById("loading").remove();
-    chatBox.innerHTML += `<div class="bot">Gagal jawab bro. Cek /api/chat</div>`;
+    chatBox.innerHTML += `<div class="bot">Gagal jawab bro. Cek /api/chat. Error: ${e.message}</div>`;
   }
-}
 
 // 4. FUNGSI MIC - INI YG BIKIN TOMBOL 🎤 HIDUP
 if(window.SpeechRecognition || window.webkitSpeechRecognition){
