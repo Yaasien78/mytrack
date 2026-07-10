@@ -138,11 +138,18 @@ async function updateHarga() {
 updateHarga();
 setInterval(updateHarga, 10000);
 
-// 2. LOGIN PI - DIAMANKAN
-try{
-  Pi.init({ version: "2.0", sandbox: false });
-  Pi.authenticate(['username'], {onIncompletePayment: ()=>{}});
-}catch(e){ console.log("Buka di Pi Browser buat login") }
+// 2. CEK LOGIN OTOMATIS
+const username = localStorage.getItem("piUsername");
+const token = localStorage.getItem("piToken");
+
+// Kalau belum login, tendang ke halaman utama
+if(!token || !username){
+  alert("Silakan login dulu di halaman utama");
+  window.location.href = "/"; // balik ke index.html
+}
+
+// Kalau udah login, langsung sapa
+chatBox.innerHTML += `<div class="bot">Hai ${username} 👋 Ada yang bisa saya bantu?</div>`
 
 // 3. FUNGSI NGOMONG
 function ngomong(teks){
