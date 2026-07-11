@@ -172,7 +172,7 @@ async function jawab(){
   if(q.toLowerCase().includes("harga") && q.toLowerCase().includes("pi")) {
     let jawaban = `Harga Pi Network saat ini: \nUSD: $${hargaTerbaru.usd} \nRp: Rp${hargaTerbaru.idr}`;
     tambahChat("bot", jawaban.replace(/\n/g,"<br>"));
-   // ngomong(jawaban);
+    ngomong(jawaban);
     chatBox.scrollTop = chatBox.scrollHeight;
     return;
   }
@@ -189,7 +189,7 @@ async function jawab(){
 
     let jawaban = data.reply; 
     tambahChat("ai", jawaban);
-   // ngomong(jawaban);
+    ngomong(jawaban);
     chatBox.scrollTop = chatBox.scrollHeight;
 
   } catch(e) {
