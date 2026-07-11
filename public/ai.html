@@ -154,11 +154,17 @@ function tambahChat(role, teks){
 }
 
 // 3. FUNGSI NGOMONG
-function ngomong(teks){
-  const ucapan = new SpeechSynthesisUtterance(teks);
-  ucapan.lang = 'id-ID';
-  speechSynthesis.speak(ucapan);
-}
+function ngomong(teks) {
+  // Cek dulu HP nya support ga
+  if ('speechSynthesis' in window) {
+    const ucapan = new SpeechSynthesisUtterance(teks);
+    ucapan.lang = "id-ID";
+    ucapan.rate = 1;
+    window.speechSynthesis.speak(ucapan);
+  } else {
+    console.log("Browser tidak support suara");
+  }
+  }
 
 // 4. FUNGSI KIRIM - INI YG BIKIN TOMBOL ✈️ HIDUP
 async function jawab(){
@@ -197,29 +203,31 @@ async function jawab(){
     tambahChat("bot", `Gagal jawab bro. Cek /api/chat. Error: ${e.message}`);
   }
 }
+// 5. FUNGSI MIC HP
+const btnMic = document.getElementById("micBtn");
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-// 5. FUNGSI MIC - INI YG BIKIN TOMBOL 🎤 HIDUP
-if(window.SpeechRecognition || window.webkitSpeechRecognition){
-  const btnMic = document.getElementById("mic");
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SpeechRecognition) {
   const recognition = new SpeechRecognition();
-  recognition.lang = 'id-ID';
-  recognition.continuous = false;
-
+  recognition.lang = "id-ID";
+  
   btnMic.onclick = () => {
     recognition.start();
-    btnMic.style.background = "lime";
-  };
-  recognition.onresult = (event) => { 
-    input.value = event.results[0][0].transcript; 
-    jawab(); 
-  };
-  recognition.onend = () => { btnMic.style.background = "#FF0000"; };
-  recognition.onerror = () => { btnMic.style.background = "#FF0000"; };
+    btnMic.innerText = "🎙️";
+  }
+  
+  recognition.onresult = (event) => {
+    const suara = event.results[0][0].transcript;
+    userInput.value = suara;
+    btnMic.innerText = "🎤";
+    kirimPesan(); 
+  }
+  
+  recognition.onend = () => { btnMic.innerText = "🎤"; }
 } else {
-  document.getElementById("mic").style.display = "none";
-}
-
+  btnMic.style.display = "none"; // sembunyiin kalau ga support
+  }
+  
 // 6. ENTER BUAT KIRIM
 input.addEventListener("keypress", e => { if(e.key === "Enter") jawab() })
 </script>
