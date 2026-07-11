@@ -153,17 +153,18 @@ function tambahChat(role, teks){
   }
 }
 
-// 3. FUNGSI NGOMONG
-function ngomong(teks) {
-  // Cek dulu HP nya support ga
-  if ('speechSynthesis' in window) {
-    const ucapan = new SpeechSynthesisUtterance(teks);
-    ucapan.lang = "id-ID";
-    ucapan.rate = 1;
-    window.speechSynthesis.speak(ucapan);
-  } else {
-    console.log("Browser tidak support suara");
-  }
+// 3. FUNGSI BARU: AI JAWAB PAKE CEK
+function aiJawab(teks) {
+    tambahChat("ai", teks);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // CEK: kalau browser support ngomong baru ngomong
+    const speech = window.speechSynthesis;
+    if (speech) {
+        const ucapan = new SpeechSynthesisUtterance(teks);
+        ucapan.lang = "id-ID";
+        speech.speak(ucapan);
+    }
   }
 
 // 4. FUNGSI KIRIM - INI YG BIKIN TOMBOL ✈️ HIDUP
@@ -177,8 +178,7 @@ async function jawab(){
 
   if(q.toLowerCase().includes("harga") && q.toLowerCase().includes("pi")) {
     let jawaban = `Harga Pi Network saat ini: \nUSD: $${hargaTerbaru.usd} \nRp: Rp${hargaTerbaru.idr}`;
-    tambahChat("bot", jawaban.replace(/\n/g,"<br>"));
-    ngomong(jawaban);
+aiJawab(jawaban); // ganti dari ngomong(jawaban)
     chatBox.scrollTop = chatBox.scrollHeight;
     return;
   }
@@ -193,9 +193,8 @@ async function jawab(){
     document.querySelector(".bot:last-child").remove(); // hapus "lagi mikir"
     if(data.error) throw new Error(data.error);
 
-    let jawaban = data.reply; 
-    tambahChat("ai", jawaban);
-    ngomong(jawaban);
+    let jawaban = data.reply;
+aiJawab(jawaban); // ganti dari tambahChat + ngomong
     chatBox.scrollTop = chatBox.scrollHeight;
 
   } catch(e) {
