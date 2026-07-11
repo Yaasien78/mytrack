@@ -206,7 +206,6 @@ aiJawab(jawaban); // ganti dari tambahChat + ngomong
 const btnMic = document.getElementById("micBtn");
 const inputUser = document.getElementById("userInput");
 
-// 1. Cek browser support mic apa nggak
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 if (SpeechRecognition) {
@@ -217,27 +216,25 @@ if (SpeechRecognition) {
     btnMic.onclick = () => {
         recognition.start();
         btnMic.style.background = "orange";
-        console.log("Lagi dengerin...");
     }
 
     recognition.onresult = (event) => {
         const suara = event.results[0][0].transcript;
         inputUser.value = suara;
-        console.log("Hasil:", suara);
-        kirimPesan(); // langsung kirim
+        btnMic.style.background = "red";
+        jawab(); // langsung kirim
     }
 
-    recognition.onerror = (event) => {
-        alert("Error mic: " + event.error);
+    recognition.onerror = () => {
         btnMic.style.background = "red";
     }
-
+    
     recognition.onend = () => {
         btnMic.style.background = "red";
     }
 
 } else {
-    btnMic.onclick = () => alert("Browser tidak support Speech Recognition");
+    btnMic.style.display = "none"; // kalau ga support sembunyiin aja
   }
     </script>
 </body>
