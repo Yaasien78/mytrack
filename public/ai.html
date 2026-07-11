@@ -202,8 +202,8 @@ async function jawab(){
     document.querySelector(".bot:last-child").remove();
     tambahChat("bot", `Gagal jawab bro. Cek /api/chat. Error: ${e.message}`);
   }
-}
-// 5. FUNGSI MIC HP
+} 
+  
 const btnMic = document.getElementById("micBtn");
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
