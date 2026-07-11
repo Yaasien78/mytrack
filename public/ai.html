@@ -205,35 +205,41 @@ async function jawab(){
 } 
   
 const btnMic = document.getElementById("micBtn");
+const inputUser = document.getElementById("userInput");
+
+// 1. Cek browser support mic apa nggak
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 if (SpeechRecognition) {
     const recognition = new SpeechRecognition();
     recognition.lang = "id-ID";
-    recognition.continuous = false;
+    recognition.interimResults = false;
 
     btnMic.onclick = () => {
         recognition.start();
-        btnMic.style.background = "orange"; // tandain lagi rekam
+        btnMic.style.background = "orange";
+        console.log("Lagi dengerin...");
     }
 
     recognition.onresult = (event) => {
         const suara = event.results[0][0].transcript;
-        document.getElementById("userInput").value = suara;
-        btnMic.style.background = "red"; // balikin warna
+        inputUser.value = suara;
+        console.log("Hasil:", suara);
         kirimPesan(); // langsung kirim
     }
 
-    recognition.onerror = () => {
+    recognition.onerror = (event) => {
+        alert("Error mic: " + event.error);
         btnMic.style.background = "red";
-        alert("Gagal denger bro, coba lagi");
     }
 
-    recognition.onend = () => { btnMic.style.background = "red"; }
+    recognition.onend = () => {
+        btnMic.style.background = "red";
+    }
 
 } else {
-    btnMic.onclick = () => alert("Browser kamu belum support mic");
-  } 
+    btnMic.onclick = () => alert("Browser tidak support Speech Recognition");
+  }
     </script>
 </body>
 </html>
