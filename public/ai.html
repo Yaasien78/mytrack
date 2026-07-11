@@ -153,14 +153,7 @@ function tambahChat(role, teks){
   }
 }
 
-// 3. FUNGSI LAMA: AI NGOMONG LANGSUNG
-function ngomong(teks) {
-    const ucapan = new SpeechSynthesisUtterance(teks);
-    ucapan.lang = "id-ID";
-    speechSynthesis.speak(ucapan);
-  }
-
-// 4. FUNGSI KIRIM - INI YG BIKIN TOMBOL ✈️ HIDUP
+// 3. FUNGSI KIRIM - INI YG BIKIN TOMBOL ✈️ HIDUP
 async function jawab(){
   let q = input.value;
   if(q.trim()==="") return;
@@ -171,8 +164,7 @@ async function jawab(){
 
   if(q.toLowerCase().includes("harga") && q.toLowerCase().includes("pi")) {
     let jawaban = `Harga Pi Network saat ini: \nUSD: $${hargaTerbaru.usd} \nRp: Rp${hargaTerbaru.idr}`;
-tambahChat("ai", jawaban); // hapus aiJawab
-//ngomong(jawaban);          // balikin ngomong
+tambahChat("ai", jawaban); // hapus aiJawab);   
     chatBox.scrollTop = chatBox.scrollHeight;
     return;
   }
@@ -189,7 +181,7 @@ tambahChat("ai", jawaban); // hapus aiJawab
 
     let jawaban = data.reply;
 tambahChat("ai", jawaban); // hapus aiJawab
-//ngomong(jawaban);          // balikin ngomong
+
     chatBox.scrollTop = chatBox.scrollHeight;
 
   } catch(e) {
@@ -201,37 +193,7 @@ tambahChat("ai", jawaban); // hapus aiJawab
 const btnMic = document.getElementById("micBtn");
 const inputUser = document.getElementById("userInput");
 
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-if (SpeechRecognition) {
-    const recognition = new SpeechRecognition();
-    recognition.lang = "id-ID";
-    recognition.interimResults = false;
-
-    btnMic.onclick = () => {
-        recognition.start();
-        btnMic.style.background = "orange";
-    }
-
-    recognition.onresult = (event) => {
-        const suara = event.results[0][0].transcript;
-        inputUser.value = suara;
-        btnMic.style.background = "red";
-        jawab(); // langsung kirim
-    }
-
-    recognition.onerror = () => {
-        btnMic.style.background = "red";
-    }
-    
-    recognition.onend = () => {
-        btnMic.style.background = "red";
-    }
-
-} else {
-    btnMic.style.display = "none"; // kalau ga support sembunyiin aja
-  }
+btnMic.style.display = "none"; // Sembunyiin tombol mic di Pi Browser
     </script>
 </body>
 </html>
-
